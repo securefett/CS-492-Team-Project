@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://catalog"]
+
+[ext_resource type="Script" uid="uid://ci07j5u7x8sc5" path="res://src/Main/scripts/pages/Catalog.gd" id="1"]
+
+[node name="Catalog" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1")
+
+; ── Toolbar ───────────────────────────────────────────────────────────────────
+[node name="Toolbar" type="HBoxContainer" parent="."]
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="SearchBox" type="LineEdit" parent="Toolbar"]
+placeholder_text = "Search by title, author or ISBN…"
+size_flags_horizontal = 3
+
+[node name="GenreFilter" type="OptionButton" parent="Toolbar"]
+[node name="AddBookBtn" type="Button" parent="Toolbar"]
+text = "  + Add Book"
+
+; ── Table ─────────────────────────────────────────────────────────────────────
+[node name="TableScroll" type="ScrollContainer" parent="."]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BookTable" type="GridContainer" parent="TableScroll"]
+columns = 6
+size_flags_horizontal = 3
+
+; Header row (labels added in script)

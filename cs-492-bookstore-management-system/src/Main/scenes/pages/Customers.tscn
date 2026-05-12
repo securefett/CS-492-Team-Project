@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://customers"]
+
+[ext_resource type="Script" uid="uid://duduew08bgmh1" path="res://src/Main/scripts/pages/Customers.gd" id="1"]
+
+[node name="Customers" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1")
+
+[node name="Toolbar" type="HBoxContainer" parent="."]
+size_flags_horizontal = 3
+[node name="SearchBox" type="LineEdit" parent="Toolbar"]
+placeholder_text = "Search customers…"
+size_flags_horizontal = 3
+[node name="AddCustomerBtn" type="Button" parent="Toolbar"]
+text = "  + Add Customer"
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CardGrid" type="GridContainer" parent="Scroll"]
+columns = 3
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+; Customer cards added dynamically by Customers.gd

@@ -1,0 +1,147 @@
+[gd_scene format=3 uid="uid://mhf2udkmba2f"]
+
+[ext_resource type="Script" uid="uid://bl8ga5qkkt28o" path="res://src/Main/scripts/Main.gd" id="1_olxjk"]
+[ext_resource type="PackedScene" uid="uid://dashboard" path="res://src/Main/scenes/pages/Dashboard.tscn" id="2_arwp1"]
+[ext_resource type="PackedScene" uid="uid://catalog" path="res://src/Main/scenes/pages/Catalog.tscn" id="3_tbd8u"]
+[ext_resource type="PackedScene" uid="uid://ddeditbook" path="res://src/Main/scenes/pages/AddEditBook.tscn" id="4_in4v0"]
+[ext_resource type="PackedScene" uid="uid://sales" path="res://src/Main/scenes/pages/Sales.tscn" id="5_xyvvn"]
+[ext_resource type="PackedScene" uid="uid://customers" path="res://src/Main/scenes/pages/Customers.tscn" id="6_y2x2o"]
+[ext_resource type="PackedScene" uid="uid://reports" path="res://src/Main/scenes/pages/Reports.tscn" id="7_wbjyl"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_olxjk"]
+
+[node name="Main" type="Control" unique_id=1590414532]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_olxjk")
+metadata/_edit_use_anchors_ = true
+
+[node name="RootLayout" type="HBoxContainer" parent="." unique_id=287849785]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sidebar" type="PanelContainer" parent="RootLayout" unique_id=1343497446]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="SidebarLayout" type="VBoxContainer" parent="RootLayout/Sidebar" unique_id=2100365598]
+layout_mode = 2
+
+[node name="LogoSection" type="VBoxContainer" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1565810993]
+layout_mode = 2
+
+[node name="AppTitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=1161086493]
+layout_mode = 2
+text = "Rare Pyramid"
+
+[node name="AppSubtitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=1627564125]
+layout_mode = 2
+text = "Management System"
+
+[node name="Separator0" type="HSeparator" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1345727345]
+layout_mode = 2
+
+[node name="NavButtons" type="VBoxContainer" parent="RootLayout/Sidebar/SidebarLayout" unique_id=916016248]
+layout_mode = 2
+
+[node name="NavDashboard" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1327175543]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_olxjk")
+text = "Dashboard"
+
+[node name="NavCatalog" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1825491276]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_olxjk")
+text = "Book Catalog"
+
+[node name="NavAddBook" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=474400308]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_olxjk")
+text = "Add / Edit Book"
+
+[node name="NavSales" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1154836663]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_olxjk")
+text = "Sales / Checkout"
+
+[node name="NavCustomers" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1735537312]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_olxjk")
+text = "Customers"
+
+[node name="NavReports" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1251677937]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_olxjk")
+text = "Reports"
+
+[node name="Spacer" type="Control" parent="RootLayout/Sidebar/SidebarLayout" unique_id=867128577]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="RootLayout/Sidebar/SidebarLayout" unique_id=495533442]
+layout_mode = 2
+
+[node name="FooterLabel" type="Label" parent="RootLayout/Sidebar/SidebarLayout" unique_id=141332906]
+layout_mode = 2
+
+[node name="MainArea" type="VBoxContainer" parent="RootLayout" unique_id=1205894451]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TopBar" type="PanelContainer" parent="RootLayout/MainArea" unique_id=2029041377]
+layout_mode = 2
+
+[node name="TopBarLayout" type="HBoxContainer" parent="RootLayout/MainArea/TopBar" unique_id=127529810]
+layout_mode = 2
+
+[node name="PageTitle" type="Label" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=1209467407]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=383129646]
+layout_mode = 2
+
+[node name="UserLabel" type="Label" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=931320762]
+layout_mode = 2
+
+[node name="PageContainer" type="MarginContainer" parent="RootLayout/MainArea" unique_id=1935892016]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Pages" type="Control" parent="RootLayout/MainArea/PageContainer" unique_id=1624219736]
+layout_mode = 2
+
+[node name="Dashboard" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=990472326 instance=ExtResource("2_arwp1")]
+layout_mode = 0
+
+[node name="Catalog" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1680940563 instance=ExtResource("3_tbd8u")]
+visible = false
+layout_mode = 0
+
+[node name="AddEditBook" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=458581345 instance=ExtResource("4_in4v0")]
+visible = false
+layout_mode = 0
+
+[node name="Sales" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=2114000582 instance=ExtResource("5_xyvvn")]
+visible = false
+layout_mode = 0
+
+[node name="Customers" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=717780924 instance=ExtResource("6_y2x2o")]
+visible = false
+layout_mode = 0
+
+[node name="Reports" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=266442795 instance=ExtResource("7_wbjyl")]
+visible = false
+layout_mode = 0
