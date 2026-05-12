@@ -137,4 +137,4 @@ func _on_save() -> void:
 
 
 func _on_cancel() -> void:
-	get_parent().get_parent().get_parent().get_parent().get_parent().navigate_to("catalog")
+	get_owner().navigate_to("catalog")

@@ -3,12 +3,6 @@ extends Node
 # ══════════════════════════════════════════════════════════════════════════════
 #  BookStore.gd  —  Autoload Singleton
 #  Handles all database access for the Bookstore Management System.
-#
-#  Setup:
-#    1. Install the godot-sqlite plugin (see SQLITE_SETUP.md)
-#    2. In Godot: Project → Project Settings → Autoload
-#       → Add this file as "BookStore"
-#    3. Any script can now call e.g. BookStore.get_all_books()
 # ══════════════════════════════════════════════════════════════════════════════
 
 var db: SQLite

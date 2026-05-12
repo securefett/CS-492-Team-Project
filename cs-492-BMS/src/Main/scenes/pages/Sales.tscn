@@ -2,77 +2,135 @@
 
 [ext_resource type="Script" uid="uid://vt2nagoll8ik" path="res://src/Main/scripts/pages/Sales.gd" id="1"]
 
-[node name="Sales" type="HBoxContainer"]
+[node name="Sales" type="HBoxContainer" unique_id=1226134346]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
 
-; ── Left: Cart ────────────────────────────────────────────────────────────────
-[node name="CartPanel" type="VBoxContainer" parent="."]
+[node name="CartPanel" type="VBoxContainer" parent="." unique_id=644867158]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
-[node name="SearchBar" type="HBoxContainer" parent="CartPanel"]
+[node name="SearchBar" type="HBoxContainer" parent="CartPanel" unique_id=479433166]
+layout_mode = 2
 size_flags_horizontal = 3
-[node name="BookSearch" type="LineEdit" parent="CartPanel/SearchBar"]
+theme_override_constants/separation = 8
+
+[node name="BookSearch" type="LineEdit" parent="CartPanel/SearchBar" unique_id=938617925]
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "Search books to add…"
-size_flags_horizontal = 3
-[node name="AddBtn" type="Button" parent="CartPanel/SearchBar"]
+
+[node name="AddBtn" type="Button" parent="CartPanel/SearchBar" unique_id=1406262171]
+layout_mode = 2
 text = "Add"
 
-[node name="CartScroll" type="ScrollContainer" parent="CartPanel"]
+[node name="SearchResults" type="VBoxContainer" parent="CartPanel" unique_id=220053094]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CartScroll" type="ScrollContainer" parent="CartPanel" unique_id=322973017]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-[node name="CartItems" type="VBoxContainer" parent="CartPanel/CartScroll"]
-size_flags_horizontal = 3
-; Items added dynamically by Sales.gd
 
-; ── Right: Order summary ──────────────────────────────────────────────────────
-[node name="SummaryPanel" type="PanelContainer" parent="."]
+[node name="CartItems" type="VBoxContainer" parent="CartPanel/CartScroll" unique_id=1957532100]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="EmptyLabel" type="Label" parent="CartPanel/CartScroll" unique_id=599634932]
+layout_mode = 2
+text = "No items in cart yet. Search for a book above to get started."
+
+[node name="SummaryPanel" type="PanelContainer" parent="." unique_id=1514265527]
 custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SummaryLayout" type="VBoxContainer" parent="SummaryPanel"]
-theme_override_constants/separation = 12
+[node name="SummaryLayout" type="VBoxContainer" parent="SummaryPanel" unique_id=40821542]
+layout_mode = 2
+theme_override_constants/separation = 10
 
-[node name="SummaryTitle" type="Label" parent="SummaryPanel/SummaryLayout"]
+[node name="SummaryTitle" type="Label" parent="SummaryPanel/SummaryLayout" unique_id=1347200046]
+layout_mode = 2
 text = "Order Summary"
 
-[node name="SubtotalRow" type="HBoxContainer" parent="SummaryPanel/SummaryLayout"]
-[node name="SubtotalLabel" type="Label" parent="SummaryPanel/SummaryLayout/SubtotalRow"]
+[node name="SubtotalRow" type="HBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=1212291250]
+layout_mode = 2
+
+[node name="SubtotalLabel" type="Label" parent="SummaryPanel/SummaryLayout/SubtotalRow" unique_id=1038304941]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Subtotal"
-size_flags_horizontal = 3
-[node name="SubtotalValue" type="Label" parent="SummaryPanel/SummaryLayout/SubtotalRow"]
+
+[node name="SubtotalValue" type="Label" parent="SummaryPanel/SummaryLayout/SubtotalRow" unique_id=1714296122]
+layout_mode = 2
 text = "$0.00"
 
-[node name="TaxRow" type="HBoxContainer" parent="SummaryPanel/SummaryLayout"]
-[node name="TaxLabel" type="Label" parent="SummaryPanel/SummaryLayout/TaxRow"]
+[node name="TaxRow" type="HBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=1715196733]
+layout_mode = 2
+
+[node name="TaxLabel" type="Label" parent="SummaryPanel/SummaryLayout/TaxRow" unique_id=1324570756]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Tax (8%)"
-size_flags_horizontal = 3
-[node name="TaxValue" type="Label" parent="SummaryPanel/SummaryLayout/TaxRow"]
+
+[node name="TaxValue" type="Label" parent="SummaryPanel/SummaryLayout/TaxRow" unique_id=1281080265]
+layout_mode = 2
 text = "$0.00"
 
-[node name="TotalRow" type="HBoxContainer" parent="SummaryPanel/SummaryLayout"]
-[node name="TotalLabel" type="Label" parent="SummaryPanel/SummaryLayout/TotalRow"]
+[node name="TotalRow" type="HBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=306690296]
+layout_mode = 2
+
+[node name="TotalLabel" type="Label" parent="SummaryPanel/SummaryLayout/TotalRow" unique_id=1433155467]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Total"
-size_flags_horizontal = 3
-[node name="TotalValue" type="Label" parent="SummaryPanel/SummaryLayout/TotalRow"]
+
+[node name="TotalValue" type="Label" parent="SummaryPanel/SummaryLayout/TotalRow" unique_id=325954647]
+layout_mode = 2
 text = "$0.00"
 
-[node name="PaymentLabel" type="Label" parent="SummaryPanel/SummaryLayout"]
+[node name="PaymentLabel" type="Label" parent="SummaryPanel/SummaryLayout" unique_id=760678264]
+layout_mode = 2
 text = "Payment Method"
 
-[node name="PaymentOptions" type="HBoxContainer" parent="SummaryPanel/SummaryLayout"]
-[node name="PayCard" type="Button" parent="SummaryPanel/SummaryLayout/PaymentOptions"]
-text = "Card"
-toggle_mode = true
-[node name="PayCash" type="Button" parent="SummaryPanel/SummaryLayout/PaymentOptions"]
-text = "Cash"
-toggle_mode = true
+[node name="PaymentOptions" type="HBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=55235235]
+layout_mode = 2
+theme_override_constants/separation = 8
 
-[node name="CheckoutBtn" type="Button" parent="SummaryPanel/SummaryLayout"]
-text = "Complete Sale"
+[node name="PayCard" type="Button" parent="SummaryPanel/SummaryLayout/PaymentOptions" unique_id=482647430]
+layout_mode = 2
 size_flags_horizontal = 3
+toggle_mode = true
+text = "Card"
+
+[node name="PayCash" type="Button" parent="SummaryPanel/SummaryLayout/PaymentOptions" unique_id=1628320606]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Cash"
+
+[node name="CustomerLabel" type="Label" parent="SummaryPanel/SummaryLayout" unique_id=1232601827]
+layout_mode = 2
+text = "Customer (optional)"
+
+[node name="CustomerOption" type="OptionButton" parent="SummaryPanel/SummaryLayout" unique_id=474598403]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ErrorLabel" type="Label" parent="SummaryPanel/SummaryLayout" unique_id=1671193094]
+visible = false
+layout_mode = 2
+
+[node name="CheckoutBtn" type="Button" parent="SummaryPanel/SummaryLayout" unique_id=1661939543]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Complete Sale"

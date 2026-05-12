@@ -2,33 +2,37 @@
 
 [ext_resource type="Script" uid="uid://ci07j5u7x8sc5" path="res://src/Main/scripts/pages/Catalog.gd" id="1"]
 
-[node name="Catalog" type="VBoxContainer"]
+[node name="Catalog" type="VBoxContainer" unique_id=393922937]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
 
-; ── Toolbar ───────────────────────────────────────────────────────────────────
-[node name="Toolbar" type="HBoxContainer" parent="."]
+[node name="Toolbar" type="HBoxContainer" parent="." unique_id=1825708049]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="SearchBox" type="LineEdit" parent="Toolbar"]
-placeholder_text = "Search by title, author or ISBN…"
+[node name="SearchBox" type="LineEdit" parent="Toolbar" unique_id=1586068192]
+layout_mode = 2
 size_flags_horizontal = 3
+placeholder_text = "Search by title, author or ISBN…"
 
-[node name="GenreFilter" type="OptionButton" parent="Toolbar"]
-[node name="AddBookBtn" type="Button" parent="Toolbar"]
+[node name="GenreFilter" type="OptionButton" parent="Toolbar" unique_id=1344102429]
+layout_mode = 2
+
+[node name="AddBookBtn" type="Button" parent="Toolbar" unique_id=1499838991]
+layout_mode = 2
 text = "  + Add Book"
 
-; ── Table ─────────────────────────────────────────────────────────────────────
-[node name="TableScroll" type="ScrollContainer" parent="."]
+[node name="TableScroll" type="ScrollContainer" parent="." unique_id=1966561569]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="BookTable" type="GridContainer" parent="TableScroll"]
-columns = 6
+[node name="BookTable" type="GridContainer" parent="TableScroll" unique_id=1606836035]
+layout_mode = 2
 size_flags_horizontal = 3
-
-; Header row (labels added in script)
+columns = 7

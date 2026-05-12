@@ -99,7 +99,7 @@ func _on_edit_book(book_id: int) -> void:
 	var main := _get_main()
 	var add_edit_page := main.get_node("RootLayout/MainArea/PageContainer/Pages/AddEditBook")
 	add_edit_page.load_book(book)
-	main.navigate_to("NavAddBook")
+	main.navigate_to("addbook")
 
 
 func _on_delete_book(book_id: int, book_title: String) -> void:
@@ -118,4 +118,4 @@ func _on_delete_book(book_id: int, book_title: String) -> void:
 
 
 func _get_main() -> Node:
-	return get_parent().get_parent().get_parent().get_parent().get_parent()
+	return get_owner()

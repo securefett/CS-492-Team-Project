@@ -8,12 +8,12 @@ extends Control
 
 # Map nav button names → page node names + display titles
 const PAGE_MAP := {
-	"NavDashboard": { "node": "Dashboard",   "title": "Dashboard" },
-	"NavCatalog":   { "node": "Catalog",     "title": "Book Catalog" },
-	"NavAddBook":   { "node": "AddEditBook", "title": "Add / Edit Book" },
-	"NavSales":     { "node": "Sales",       "title": "Sales & Checkout" },
-	"NavCustomers": { "node": "Customers",   "title": "Customers" },
-	"NavReports":   { "node": "Reports",     "title": "Reports & Analytics" },
+	"dashboard": { "node": "Dashboard",   "title": "Dashboard",          "button": "NavDashboard" },
+	"catalog":   { "node": "Catalog",     "title": "Book Catalog",       "button": "NavCatalog"   },
+	"addbook":   { "node": "AddEditBook", "title": "Add / Edit Book",    "button": "NavAddBook"   },
+	"sales":     { "node": "Sales",       "title": "Sales & Checkout",   "button": "NavSales"     },
+	"customers": { "node": "Customers",   "title": "Customers",          "button": "NavCustomers" },
+	"reports":   { "node": "Reports",     "title": "Reports & Analytics","button": "NavReports"   },
 }
 
 # ── Ready ──────────────────────────────────────────────────────────────────────
@@ -30,7 +30,7 @@ func _ready() -> void:
 
 # ── Navigation ─────────────────────────────────────────────────────────────────
 func _on_nav_pressed(btn_name: String) -> void:
-	_navigate(btn_name)
+	_navigate(btn_name.trim_prefix("Nav").to_lower())
 
 func _navigate(key: String) -> void:
 	if not PAGE_MAP.has(key):
@@ -49,11 +49,14 @@ func _navigate(key: String) -> void:
 	page_title.text = info["title"]
 
 # ── Called by child pages that need to trigger navigation ─────────────────────
-# e.g.  get_parent().navigate_to("addbook")  from Catalog page
+# e.g.  get_owner().navigate_to("addbook")  from Catalog page
 func navigate_to(key: String) -> void:
 	_navigate(key)
 
-	# Also sync the toggle buttons
-	for btn in nav_buttons.get_children():
-		if btn is Button and btn.name == "Nav" + key.capitalize():
-			btn.button_pressed = true
+	# Sync the sidebar toggle button using the explicit button name from PAGE_MAP
+	if not PAGE_MAP.has(key):
+		return
+	var btn_name: String = PAGE_MAP[key]["button"]
+	var btn := nav_buttons.get_node_or_null(btn_name) as Button
+	if btn:
+		btn.button_pressed = true
