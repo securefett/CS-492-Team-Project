@@ -2,108 +2,155 @@
 
 [ext_resource type="Script" uid="uid://bdo4xrvme4iyx" path="res://src/Main/scripts/pages/AddEditBook.gd" id="1"]
 
-[node name="AddEditBook" type="ScrollContainer"]
+[node name="AddEditBook" type="ScrollContainer" unique_id=442792583]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
 
-[node name="Content" type="VBoxContainer" parent="."]
+[node name="Content" type="VBoxContainer" parent="." unique_id=925314408]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 20
 
-; ── Section: Book information ─────────────────────────────────────────────────
-[node name="InfoSection" type="VBoxContainer" parent="Content"]
+[node name="ErrorLabel" type="Label" parent="Content" unique_id=1907893117]
+visible = false
+layout_mode = 2
+
+[node name="InfoSection" type="VBoxContainer" parent="Content" unique_id=2061941624]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InfoTitle" type="Label" parent="Content/InfoSection"]
+[node name="InfoTitle" type="Label" parent="Content/InfoSection" unique_id=572926425]
+layout_mode = 2
 text = "Book Information"
 
-[node name="InfoGrid" type="GridContainer" parent="Content/InfoSection"]
+[node name="InfoGrid" type="GridContainer" parent="Content/InfoSection" unique_id=904732873]
+layout_mode = 2
+size_flags_horizontal = 3
 columns = 2
-size_flags_horizontal = 3
 
-[node name="TitleLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+[node name="TitleLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=1205173452]
+layout_mode = 2
 text = "Title"
-[node name="TitleInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
+
+[node name="TitleInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=1618638193]
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "Book title"
-size_flags_horizontal = 3
 
-[node name="AuthorLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+[node name="AuthorLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=1704655356]
+layout_mode = 2
 text = "Author"
-[node name="AuthorInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
+
+[node name="AuthorInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=2050025023]
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "Author name"
-size_flags_horizontal = 3
 
-[node name="ISBNLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+[node name="ISBNLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=1433903310]
+layout_mode = 2
 text = "ISBN"
-[node name="ISBNInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
+
+[node name="ISBNInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=1273166186]
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "978-0-000-00000-0"
-size_flags_horizontal = 3
 
-[node name="GenreLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+[node name="GenreLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=891136553]
+layout_mode = 2
 text = "Genre"
-[node name="GenreOption" type="OptionButton" parent="Content/InfoSection/InfoGrid"]
+
+[node name="GenreOption" type="OptionButton" parent="Content/InfoSection/InfoGrid" unique_id=640077139]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PublisherLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+[node name="PublisherLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=1728151500]
+layout_mode = 2
 text = "Publisher"
-[node name="PublisherInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
+
+[node name="PublisherInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=1855986803]
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "Publisher name"
-size_flags_horizontal = 3
 
-[node name="YearLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+[node name="YearLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=2126432424]
+layout_mode = 2
 text = "Publication Year"
-[node name="YearInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
-placeholder_text = "2024"
-size_flags_horizontal = 3
 
-[node name="DescLabel" type="Label" parent="Content/InfoSection"]
+[node name="YearInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=43555859]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "2024"
+
+[node name="DescLabel" type="Label" parent="Content/InfoSection" unique_id=1318143734]
+layout_mode = 2
 text = "Description"
-[node name="DescInput" type="TextEdit" parent="Content/InfoSection"]
+
+[node name="DescInput" type="TextEdit" parent="Content/InfoSection" unique_id=705524108]
 custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Brief description of the book…"
 
-; ── Section: Pricing & inventory ──────────────────────────────────────────────
-[node name="PricingSection" type="VBoxContainer" parent="Content"]
+[node name="PricingSection" type="VBoxContainer" parent="Content" unique_id=2061095496]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PricingTitle" type="Label" parent="Content/PricingSection"]
+[node name="PricingTitle" type="Label" parent="Content/PricingSection" unique_id=1860637678]
+layout_mode = 2
 text = "Pricing & Inventory"
 
-[node name="PricingGrid" type="GridContainer" parent="Content/PricingSection"]
+[node name="PricingGrid" type="GridContainer" parent="Content/PricingSection" unique_id=327683176]
+layout_mode = 2
+size_flags_horizontal = 3
 columns = 2
-size_flags_horizontal = 3
 
-[node name="PriceLabel" type="Label" parent="Content/PricingSection/PricingGrid"]
+[node name="PriceLabel" type="Label" parent="Content/PricingSection/PricingGrid" unique_id=1596168983]
+layout_mode = 2
 text = "Price ($)"
-[node name="PriceInput" type="LineEdit" parent="Content/PricingSection/PricingGrid"]
-placeholder_text = "0.00"
-size_flags_horizontal = 3
 
-[node name="CostLabel" type="Label" parent="Content/PricingSection/PricingGrid"]
+[node name="PriceInput" type="LineEdit" parent="Content/PricingSection/PricingGrid" unique_id=548180323]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "0.00"
+
+[node name="CostLabel" type="Label" parent="Content/PricingSection/PricingGrid" unique_id=425724169]
+layout_mode = 2
 text = "Cost Price ($)"
-[node name="CostInput" type="LineEdit" parent="Content/PricingSection/PricingGrid"]
+
+[node name="CostInput" type="LineEdit" parent="Content/PricingSection/PricingGrid" unique_id=108436349]
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "0.00"
-size_flags_horizontal = 3
 
-[node name="StockLabel" type="Label" parent="Content/PricingSection/PricingGrid"]
+[node name="StockLabel" type="Label" parent="Content/PricingSection/PricingGrid" unique_id=1272706290]
+layout_mode = 2
 text = "Stock Quantity"
-[node name="StockInput" type="LineEdit" parent="Content/PricingSection/PricingGrid"]
+
+[node name="StockInput" type="LineEdit" parent="Content/PricingSection/PricingGrid" unique_id=523357442]
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "0"
-size_flags_horizontal = 3
 
-[node name="AlertLabel" type="Label" parent="Content/PricingSection/PricingGrid"]
+[node name="AlertLabel" type="Label" parent="Content/PricingSection/PricingGrid" unique_id=1140789540]
+layout_mode = 2
 text = "Low Stock Alert At"
-[node name="AlertInput" type="LineEdit" parent="Content/PricingSection/PricingGrid"]
-placeholder_text = "5"
-size_flags_horizontal = 3
 
-; ── Actions ───────────────────────────────────────────────────────────────────
-[node name="Actions" type="HBoxContainer" parent="Content"]
-[node name="SaveBtn" type="Button" parent="Content/Actions"]
+[node name="AlertInput" type="LineEdit" parent="Content/PricingSection/PricingGrid" unique_id=1671291317]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "5"
+
+[node name="Actions" type="HBoxContainer" parent="Content" unique_id=1133982102]
+layout_mode = 2
+
+[node name="SaveBtn" type="Button" parent="Content/Actions" unique_id=91707033]
+layout_mode = 2
 text = "Save Book"
-[node name="CancelBtn" type="Button" parent="Content/Actions"]
+
+[node name="CancelBtn" type="Button" parent="Content/Actions" unique_id=3515654]
+layout_mode = 2
 text = "Cancel"

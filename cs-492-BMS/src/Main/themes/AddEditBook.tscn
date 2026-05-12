@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://0bnl8sb0i1ow"]
+
+[ext_resource type="Script" uid="uid://bdo4xrvme4iyx" path="res://src/Main/scripts/pages/AddEditBook.gd" id="1"]
+
+[node name="AddEditBook" type="ScrollContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1")
+
+[node name="Content" type="VBoxContainer" parent="."]
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+; ── Section: Book information ─────────────────────────────────────────────────
+[node name="ErrorLabel" type="Label" parent="Content"]
+text = ""
+visible = false
+
+[node name="InfoSection" type="VBoxContainer" parent="Content"]
+size_flags_horizontal = 3
+
+[node name="InfoTitle" type="Label" parent="Content/InfoSection"]
+text = "Add New Book"
+
+[node name="InfoGrid" type="GridContainer" parent="Content/InfoSection"]
+columns = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+text = "Title"
+[node name="TitleInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
+placeholder_text = "Book title"
+size_flags_horizontal = 3
+
+[node name="AuthorLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+text = "Author"
+[node name="AuthorInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
+placeholder_text = "Author name"
+size_flags_horizontal = 3
+
+[node name="ISBNLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+text = "ISBN"
+[node name="ISBNInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
+placeholder_text = "978-0-000-00000-0"
+size_flags_horizontal = 3
+
+[node name="GenreLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+text = "Genre"
+[node name="GenreOption" type="OptionButton" parent="Content/InfoSection/InfoGrid"]
+size_flags_horizontal = 3
+
+[node name="PublisherLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+text = "Publisher"
+[node name="PublisherInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
+placeholder_text = "Publisher name"
+size_flags_horizontal = 3
+
+[node name="YearLabel" type="Label" parent="Content/InfoSection/InfoGrid"]
+text = "Publication Year"
+[node name="YearInput" type="LineEdit" parent="Content/InfoSection/InfoGrid"]
+placeholder_text = "2024"
+size_flags_horizontal = 3
+
+[node name="DescLabel" type="Label" parent="Content/InfoSection"]
+text = "Description"
+[node name="DescInput" type="TextEdit" parent="Content/InfoSection"]
+custom_minimum_size = Vector2(0, 80)
+size_flags_horizontal = 3
+placeholder_text = "Brief description of the book…"
+
+; ── Section: Pricing & inventory ──────────────────────────────────────────────
+[node name="PricingSection" type="VBoxContainer" parent="Content"]
+size_flags_horizontal = 3
+
+[node name="PricingTitle" type="Label" parent="Content/PricingSection"]
+text = "Pricing & Inventory"
+
+[node name="PricingGrid" type="GridContainer" parent="Content/PricingSection"]
+columns = 2
+size_flags_horizontal = 3
+
+[node name="PriceLabel" type="Label" parent="Content/PricingSection/PricingGrid"]
+text = "Price ($)"
+[node name="PriceInput" type="LineEdit" parent="Content/PricingSection/PricingGrid"]
+placeholder_text = "0.00"
+size_flags_horizontal = 3
+
+[node name="CostLabel" type="Label" parent="Content/PricingSection/PricingGrid"]
+text = "Cost Price ($)"
+[node name="CostInput" type="LineEdit" parent="Content/PricingSection/PricingGrid"]
+placeholder_text = "0.00"
+size_flags_horizontal = 3
+
+[node name="StockLabel" type="Label" parent="Content/PricingSection/PricingGrid"]
+text = "Stock Quantity"
+[node name="StockInput" type="LineEdit" parent="Content/PricingSection/PricingGrid"]
+placeholder_text = "0"
+size_flags_horizontal = 3
+
+[node name="AlertLabel" type="Label" parent="Content/PricingSection/PricingGrid"]
+text = "Low Stock Alert At"
+[node name="AlertInput" type="LineEdit" parent="Content/PricingSection/PricingGrid"]
+placeholder_text = "5"
+size_flags_horizontal = 3
+
+; ── Actions ───────────────────────────────────────────────────────────────────
+[node name="Actions" type="HBoxContainer" parent="Content"]
+[node name="SaveBtn" type="Button" parent="Content/Actions"]
+text = "Save Book"
+[node name="CancelBtn" type="Button" parent="Content/Actions"]
+text = "Cancel"

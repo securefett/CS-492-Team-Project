@@ -1,24 +1,12 @@
 extends VBoxContainer
 
-signal edit_book_requested(book_data: Dictionary)
+@onready var search_box:   LineEdit       = $Toolbar/SearchBox
+@onready var genre_filter: OptionButton   = $Toolbar/GenreFilter
+@onready var add_book_btn: Button         = $Toolbar/AddBookBtn
+@onready var book_table:   GridContainer  = $TableScroll/BookTable
 
-@onready var search_box: LineEdit      = $Toolbar/SearchBox
-@onready var genre_filter: OptionButton = $Toolbar/GenreFilter
-@onready var add_book_btn: Button      = $Toolbar/AddBookBtn
-@onready var book_table: GridContainer = $TableScroll/BookTable
-
-const HEADERS := ["Title", "Author", "Genre", "Price", "Stock", "Status"]
+const HEADERS := ["Title", "Author", "Genre", "Price", "Stock", "Status", ""]
 const GENRES  := ["All Genres", "Fiction", "Non-fiction", "Science", "Biography", "Children"]
-
-# Replace with your data autoload later
-var all_books := [
-	{ "title": "The Midnight Library", "author": "Matt Haig",         "genre": "Fiction",       "price": 14.99, "stock": 23 },
-	{ "title": "Atomic Habits",        "author": "James Clear",       "genre": "Non-fiction",   "price": 16.99, "stock": 11 },
-	{ "title": "Project Hail Mary",    "author": "Andy Weir",         "genre": "Science",       "price": 13.99, "stock": 4  },
-	{ "title": "Dune",                 "author": "Frank Herbert",     "genre": "Fiction",       "price": 12.99, "stock": 0  },
-	{ "title": "The Alchemist",        "author": "Paulo Coelho",      "genre": "Fiction",       "price": 11.99, "stock": 18 },
-	{ "title": "Sapiens",              "author": "Yuval Noah Harari", "genre": "Non-fiction",   "price": 17.99, "stock": 7  },
-]
 
 func _ready() -> void:
 	for g in GENRES:
@@ -26,36 +14,108 @@ func _ready() -> void:
 	search_box.text_changed.connect(_on_filter_changed)
 	genre_filter.item_selected.connect(_on_filter_changed.unbind(1))
 	add_book_btn.pressed.connect(_on_add_book)
-	_rebuild_table(all_books)
+	_refresh()
+
+
+# Called when the page becomes visible so the table is always up to date
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
+		_refresh()
+
+
+# ── Data ──────────────────────────────────────────────────────────────────────
+
+func _refresh() -> void:
+	var query := search_box.text if is_node_ready() else ""
+	var genre := genre_filter.get_item_text(genre_filter.selected) if is_node_ready() else ""
+	var books := BookStore.search_books(query, genre)
+	_rebuild_table(books)
+
 
 func _on_filter_changed(_v = null) -> void:
-	var query  := search_box.text.to_lower()
-	var genre  := genre_filter.get_item_text(genre_filter.selected)
-	var filtered := all_books.filter(func(b):
-		var match_search = query.is_empty() or b["title"].to_lower().contains(query) or b["author"].to_lower().contains(query)
-		var match_genre  = genre == "All Genres" or b["genre"] == genre
-		return match_search and match_genre
-	)
-	_rebuild_table(filtered)
+	_refresh()
+
+
+# ── Table ─────────────────────────────────────────────────────────────────────
 
 func _rebuild_table(books: Array) -> void:
 	for child in book_table.get_children():
 		child.queue_free()
-	# Headers
+
+	# Header row
 	for h in HEADERS:
 		var lbl := Label.new()
 		lbl.text = h
 		book_table.add_child(lbl)
-	# Rows
+
+	# Data rows
 	for book in books:
 		var stock: int = book["stock"]
-		var status := "In Stock" if stock > 5 else ("Low Stock" if stock > 0 else "Out of Stock")
-		var row_data := [book["title"], book["author"], book["genre"], "$%.2f" % book["price"], str(stock), status]
-		for cell_text in row_data:
+		var status := "In Stock" if stock > book["low_stock_alert"] \
+					  else ("Low Stock" if stock > 0 else "Out of Stock")
+
+		var cells := [
+			book["title"],
+			book["author"],
+			book["genre"],
+			"$%.2f" % book["price"],
+			str(stock),
+			status,
+		]
+		for cell_text in cells:
 			var lbl := Label.new()
 			lbl.text = cell_text
 			book_table.add_child(lbl)
 
+		# Action buttons cell
+		var actions := HBoxContainer.new()
+
+		var edit_btn := Button.new()
+		edit_btn.text = "Edit"
+		edit_btn.pressed.connect(_on_edit_book.bind(book["id"]))
+
+		var del_btn := Button.new()
+		del_btn.text = "Delete"
+		del_btn.pressed.connect(_on_delete_book.bind(book["id"], book["title"]))
+
+		actions.add_child(edit_btn)
+		actions.add_child(del_btn)
+		book_table.add_child(actions)
+
+
+# ── Actions ───────────────────────────────────────────────────────────────────
+
 func _on_add_book() -> void:
-	# Tell Main to navigate to Add/Edit page
-	get_parent().get_parent().get_parent().get_parent().get_parent().navigate_to("NavAddBook")
+	var main := _get_main()
+	var add_edit_page := main.get_node("RootLayout/MainArea/PageContainer/Pages/AddEditBook")
+	add_edit_page.load_book({})
+	main.navigate_to("addbook")
+
+
+func _on_edit_book(book_id: int) -> void:
+	var book := BookStore.get_book(book_id)
+	if book.is_empty():
+		return
+	var main := _get_main()
+	var add_edit_page := main.get_node("RootLayout/MainArea/PageContainer/Pages/AddEditBook")
+	add_edit_page.load_book(book)
+	main.navigate_to("NavAddBook")
+
+
+func _on_delete_book(book_id: int, book_title: String) -> void:
+	var dialog := AcceptDialog.new()
+	dialog.title = "Delete Book"
+	dialog.dialog_text = "Delete \"%s\"? This cannot be undone." % book_title
+	dialog.get_ok_button().text = "Delete"
+	add_child(dialog)
+	dialog.popup_centered()
+	dialog.confirmed.connect(func():
+		BookStore.delete_book(book_id)
+		_refresh()
+		dialog.queue_free()
+	)
+	dialog.canceled.connect(func(): dialog.queue_free())
+
+
+func _get_main() -> Node:
+	return get_parent().get_parent().get_parent().get_parent().get_parent()
