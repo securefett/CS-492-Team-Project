@@ -17,7 +17,6 @@ func _ready() -> void:
 	_refresh()
 
 
-# Called when the page becomes visible so the table is always up to date
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
 		_refresh()
@@ -42,13 +41,11 @@ func _rebuild_table(books: Array) -> void:
 	for child in book_table.get_children():
 		child.queue_free()
 
-	# Header row
 	for h in HEADERS:
 		var lbl := Label.new()
 		lbl.text = h
 		book_table.add_child(lbl)
 
-	# Data rows
 	for book in books:
 		var stock: int = book["stock"]
 		var status := "In Stock" if stock > book["low_stock_alert"] \
@@ -67,7 +64,7 @@ func _rebuild_table(books: Array) -> void:
 			lbl.text = cell_text
 			book_table.add_child(lbl)
 
-		# Action buttons cell
+		# Action buttons — Edit, Delete, Add to Cart
 		var actions := HBoxContainer.new()
 
 		var edit_btn := Button.new()
@@ -78,15 +75,21 @@ func _rebuild_table(books: Array) -> void:
 		del_btn.text = "Delete"
 		del_btn.pressed.connect(_on_delete_book.bind(book["id"], book["title"]))
 
+		var cart_btn := Button.new()
+		cart_btn.text     = "Add to Cart"
+		cart_btn.disabled = stock <= 0
+		cart_btn.pressed.connect(_on_add_to_cart.bind(book["id"]))
+
 		actions.add_child(edit_btn)
 		actions.add_child(del_btn)
+		actions.add_child(cart_btn)
 		book_table.add_child(actions)
 
 
 # ── Actions ───────────────────────────────────────────────────────────────────
 
 func _on_add_book() -> void:
-	var main := _get_main()
+	var main := get_owner()
 	var add_edit_page := main.get_node("RootLayout/MainArea/PageContainer/Pages/AddEditBook")
 	add_edit_page.load_book({})
 	main.navigate_to("addbook")
@@ -96,7 +99,7 @@ func _on_edit_book(book_id: int) -> void:
 	var book := BookStore.get_book(book_id)
 	if book.is_empty():
 		return
-	var main := _get_main()
+	var main := get_owner()
 	var add_edit_page := main.get_node("RootLayout/MainArea/PageContainer/Pages/AddEditBook")
 	add_edit_page.load_book(book)
 	main.navigate_to("addbook")
@@ -117,5 +120,11 @@ func _on_delete_book(book_id: int, book_title: String) -> void:
 	dialog.canceled.connect(func(): dialog.queue_free())
 
 
-func _get_main() -> Node:
-	return get_owner()
+func _on_add_to_cart(book_id: int) -> void:
+	var book := BookStore.get_book(book_id)
+	if book.is_empty():
+		return
+	var main  := get_owner()
+	var sales := main.get_node("RootLayout/MainArea/PageContainer/Pages/Sales")
+	sales.add_book_to_cart(book)
+	#main.navigate_to("sales")

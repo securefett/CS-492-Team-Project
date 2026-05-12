@@ -53,6 +53,15 @@ func _load_customers() -> void:
 		customer_option.add_item(c["name"])
 
 
+
+# ── Public API — called by other pages ───────────────────────────────────────
+
+# Adds a book to the cart. Called externally e.g. from Catalog.
+func add_book_to_cart(book: Dictionary) -> void:
+	if not is_node_ready():
+		await ready
+	_add_to_cart(book)
+
 # ── Book search dropdown ──────────────────────────────────────────────────────
 
 func _on_search_changed(query: String) -> void:
