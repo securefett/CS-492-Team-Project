@@ -87,6 +87,13 @@ toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Sales / Checkout"
 
+[node name="NavRestock" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=105105751]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("NavGroup")
+text = "  Restock Orders"
+
 [node name="NavCustomers" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=2092868818]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -100,13 +107,6 @@ size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Reports"
-
-[node name="NavRestock" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=105105751]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "  Restock Orders"
 
 [node name="Spacer" type="Control" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1134932047]
 layout_mode = 2
