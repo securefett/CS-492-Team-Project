@@ -6,7 +6,7 @@ extends VBoxContainer
 @onready var book_table:   GridContainer  = $TableScroll/BookTable
 
 const HEADERS := ["Title", "Author", "Genre", "Price", "Stock", "Status", ""]
-const GENRES  := ["All Genres", "Fiction", "Non-fiction", "Science", "Biography", "Children"]
+const GENRES  := ["All Genres", "Fiction", "Non-Fiction", "Sci-Fi", "Biography", "Children"]
 
 func _ready() -> void:
 	for g in GENRES:
