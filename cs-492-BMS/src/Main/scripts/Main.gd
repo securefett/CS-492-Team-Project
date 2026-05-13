@@ -14,6 +14,7 @@ const PAGE_MAP := {
 	"sales":     { "node": "Sales",       "title": "Sales & Checkout",   "button": "NavSales"     },
 	"customers": { "node": "Customers",   "title": "Customers",          "button": "NavCustomers" },
 	"reports":   { "node": "Reports",     "title": "Reports & Analytics","button": "NavReports"   },
+	"restock":   { "node": "Restock",     "title": "Restock Orders",     "button": "NavRestock"   },
 }
 
 # ── Ready ──────────────────────────────────────────────────────────────────────

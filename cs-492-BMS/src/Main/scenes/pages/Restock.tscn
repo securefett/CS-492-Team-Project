@@ -1,0 +1,167 @@
+[gd_scene format=3 uid="uid://restock"]
+
+[ext_resource type="Script" uid="uid://by0koraiq4g4s" path="res://src/Main/scripts/pages/Restock.gd" id="1"]
+
+[node name="Restock" type="HBoxContainer" unique_id=2059524070]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+script = ExtResource("1")
+
+[node name="OrderPanel" type="VBoxContainer" parent="." unique_id=1627084378]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="PanelTitle" type="Label" parent="OrderPanel" unique_id=324349411]
+layout_mode = 2
+text = "Place Restock Order"
+
+[node name="SearchBar" type="HBoxContainer" parent="OrderPanel" unique_id=380866722]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CatalogueSearch" type="LineEdit" parent="OrderPanel/SearchBar" unique_id=1055969434]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search manufacturer catalogue by title, author or ISBN…"
+
+[node name="CatalogueScroll" type="ScrollContainer" parent="OrderPanel" unique_id=911068733]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CatalogueList" type="VBoxContainer" parent="OrderPanel/CatalogueScroll" unique_id=1528115384]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="RightPanel" type="VBoxContainer" parent="." unique_id=845665193]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="FormCard" type="PanelContainer" parent="RightPanel" unique_id=926731795]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FormLayout" type="VBoxContainer" parent="RightPanel/FormCard" unique_id=531681197]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="FormTitle" type="Label" parent="RightPanel/FormCard/FormLayout" unique_id=1098039012]
+layout_mode = 2
+text = "Order Details"
+
+[node name="SelectedLabel" type="Label" parent="RightPanel/FormCard/FormLayout" unique_id=1516450456]
+layout_mode = 2
+text = "No book selected"
+
+[node name="ISBNRow" type="HBoxContainer" parent="RightPanel/FormCard/FormLayout" unique_id=921097563]
+layout_mode = 2
+
+[node name="ISBNLabel" type="Label" parent="RightPanel/FormCard/FormLayout/ISBNRow" unique_id=602603194]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "ISBN"
+
+[node name="ISBNValue" type="Label" parent="RightPanel/FormCard/FormLayout/ISBNRow" unique_id=1866969615]
+layout_mode = 2
+text = "—"
+
+[node name="CostRow" type="HBoxContainer" parent="RightPanel/FormCard/FormLayout" unique_id=611353406]
+layout_mode = 2
+
+[node name="CostLabel" type="Label" parent="RightPanel/FormCard/FormLayout/CostRow" unique_id=1518876642]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "Unit cost"
+
+[node name="CostValue" type="Label" parent="RightPanel/FormCard/FormLayout/CostRow" unique_id=1287969254]
+layout_mode = 2
+text = "—"
+
+[node name="AvailRow" type="HBoxContainer" parent="RightPanel/FormCard/FormLayout" unique_id=1678013828]
+layout_mode = 2
+
+[node name="AvailLabel" type="Label" parent="RightPanel/FormCard/FormLayout/AvailRow" unique_id=957631680]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "Available"
+
+[node name="AvailValue" type="Label" parent="RightPanel/FormCard/FormLayout/AvailRow" unique_id=1113269061]
+layout_mode = 2
+text = "—"
+
+[node name="QtyLabel" type="Label" parent="RightPanel/FormCard/FormLayout" unique_id=470110764]
+layout_mode = 2
+text = "Quantity to order"
+
+[node name="QtyInput" type="SpinBox" parent="RightPanel/FormCard/FormLayout" unique_id=686364387]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 9999.0
+value = 1.0
+
+[node name="NotesLabel" type="Label" parent="RightPanel/FormCard/FormLayout" unique_id=356279052]
+layout_mode = 2
+text = "Notes (optional)"
+
+[node name="NotesInput" type="TextEdit" parent="RightPanel/FormCard/FormLayout" unique_id=1214426168]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "e.g. Urgent restock, seasonal order…"
+
+[node name="TotalRow" type="HBoxContainer" parent="RightPanel/FormCard/FormLayout" unique_id=1044673406]
+layout_mode = 2
+
+[node name="TotalLabel" type="Label" parent="RightPanel/FormCard/FormLayout/TotalRow" unique_id=324856440]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Order total"
+
+[node name="TotalValue" type="Label" parent="RightPanel/FormCard/FormLayout/TotalRow" unique_id=644678103]
+layout_mode = 2
+text = "$0.00"
+
+[node name="ErrorLabel" type="Label" parent="RightPanel/FormCard/FormLayout" unique_id=1861449320]
+visible = false
+layout_mode = 2
+
+[node name="PlaceOrderBtn" type="Button" parent="RightPanel/FormCard/FormLayout" unique_id=1055764069]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Place Order"
+
+[node name="HistoryCard" type="PanelContainer" parent="RightPanel" unique_id=1741141021]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HistoryLayout" type="VBoxContainer" parent="RightPanel/HistoryCard" unique_id=75000019]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="HistoryTitle" type="Label" parent="RightPanel/HistoryCard/HistoryLayout" unique_id=50180415]
+layout_mode = 2
+text = "Purchase Order History"
+
+[node name="HistoryScroll" type="ScrollContainer" parent="RightPanel/HistoryCard/HistoryLayout" unique_id=246608366]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HistoryList" type="VBoxContainer" parent="RightPanel/HistoryCard/HistoryLayout/HistoryScroll" unique_id=329097447]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
