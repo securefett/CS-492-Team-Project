@@ -16,7 +16,7 @@ extends ScrollContainer
 @onready var page_heading:    Label        = $Content/InfoSection/InfoTitle
 @onready var error_label:     Label        = $Content/ErrorLabel
 
-const GENRES := ["Fiction", "Non-fiction", "Science", "Biography", "Children"]
+const GENRES := ["Fiction", "Non-Fiction", "Sci-Fi", "Biography", "Children"]
 
 # When this is > 0 we are editing an existing book, otherwise adding new
 var _edit_id: int = -1

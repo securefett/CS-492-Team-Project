@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 BookStore="*uid://dc8qq6ttq7bxf"
+Manufacturer="*uid://f3u7urmty37f"
 
 [editor_plugins]
 

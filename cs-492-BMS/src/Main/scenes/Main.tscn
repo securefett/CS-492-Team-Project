@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://sales" path="res://src/Main/scenes/pages/Sales.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://customers" path="res://src/Main/scenes/pages/Customers.tscn" id="6"]
 [ext_resource type="PackedScene" uid="uid://reports" path="res://src/Main/scenes/pages/Reports.tscn" id="7"]
+[ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8_cnfob"]
 
 [sub_resource type="ButtonGroup" id="NavGroup"]
 
@@ -85,6 +86,13 @@ size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Sales / Checkout"
+
+[node name="NavRestock" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=105105751]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("NavGroup")
+text = "  Restock Orders"
 
 [node name="NavCustomers" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=2092868818]
 layout_mode = 2
@@ -187,5 +195,11 @@ grow_vertical = 2
 visible = false
 layout_mode = 1
 anchors_preset = 15
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Restock" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=2059524070 instance=ExtResource("8_cnfob")]
+visible = false
+layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2
