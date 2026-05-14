@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dashboard" path="res://src/Main/scenes/pages/Dashboard.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://catalog" path="res://src/Main/scenes/pages/Catalog.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddeditbook" path="res://src/Main/scenes/pages/AddEditBook.tscn" id="4"]
-[ext_resource type="PackedScene" uid="uid://sales" path="res://src/Main/scenes/pages/Sales.tscn" id="5"]
+[ext_resource type="PackedScene" uid="uid://cay5t3du5hwhk" path="res://src/Main/scenes/pages/Sales.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://customers" path="res://src/Main/scenes/pages/Customers.tscn" id="6"]
 [ext_resource type="PackedScene" uid="uid://reports" path="res://src/Main/scenes/pages/Reports.tscn" id="7"]
 [ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8_cnfob"]
@@ -178,16 +178,16 @@ layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Sales" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1894236350 instance=ExtResource("5")]
-visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="Customers" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1035567780 instance=ExtResource("6")]
 visible = false
 layout_mode = 1
 anchors_preset = 15
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sales" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1226134346 instance=ExtResource("5")]
+visible = false
+layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2
 

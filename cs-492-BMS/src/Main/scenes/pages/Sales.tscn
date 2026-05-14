@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://sales"]
+[gd_scene format=3 uid="uid://cay5t3du5hwhk"]
 
 [ext_resource type="Script" uid="uid://vt2nagoll8ik" path="res://src/Main/scripts/pages/Sales.gd" id="1"]
 
@@ -24,7 +24,7 @@ theme_override_constants/separation = 8
 [node name="BookSearch" type="LineEdit" parent="CartPanel/SearchBar" unique_id=938617925]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Search books to add…"
+placeholder_text = "Search books to add..."
 
 [node name="AddBtn" type="Button" parent="CartPanel/SearchBar" unique_id=1406262171]
 layout_mode = 2
@@ -50,7 +50,7 @@ layout_mode = 2
 text = "No items in cart yet. Search for a book above to get started."
 
 [node name="SummaryPanel" type="PanelContainer" parent="." unique_id=1514265527]
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -117,6 +117,98 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 text = "Cash"
+
+[node name="CardDetails" type="VBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=111111001]
+layout_mode = 2
+theme_override_constants/separation = 6
+visible = true
+
+[node name="CardNumberRow" type="VBoxContainer" parent="SummaryPanel/SummaryLayout/CardDetails" unique_id=111111002]
+layout_mode = 2
+
+[node name="CardNumberLabel" type="Label" parent="SummaryPanel/SummaryLayout/CardDetails/CardNumberRow" unique_id=111111003]
+layout_mode = 2
+text = "Card Number"
+
+[node name="CardNumber" type="LineEdit" parent="SummaryPanel/SummaryLayout/CardDetails/CardNumberRow" unique_id=111111004]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "1234 5678 9012 3456"
+max_length = 19
+
+[node name="ExpiryRow" type="HBoxContainer" parent="SummaryPanel/SummaryLayout/CardDetails" unique_id=111111005]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ExpiryCol" type="VBoxContainer" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow" unique_id=111111006]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ExpiryLabel" type="Label" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/ExpiryCol" unique_id=111111007]
+layout_mode = 2
+text = "Expiry (MM/YY)"
+
+[node name="CardExpiry" type="LineEdit" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/ExpiryCol" unique_id=111111008]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "MM/YY"
+max_length = 5
+
+[node name="CVVCol" type="VBoxContainer" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow" unique_id=111111009]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CVVLabel" type="Label" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/CVVCol" unique_id=111111010]
+layout_mode = 2
+text = "CVV"
+
+[node name="CardCVV" type="LineEdit" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/CVVCol" unique_id=111111011]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "123"
+max_length = 4
+secret = true
+
+[node name="CardNameRow" type="VBoxContainer" parent="SummaryPanel/SummaryLayout/CardDetails" unique_id=111111012]
+layout_mode = 2
+
+[node name="CardNameLabel" type="Label" parent="SummaryPanel/SummaryLayout/CardDetails/CardNameRow" unique_id=111111013]
+layout_mode = 2
+text = "Name on Card"
+
+[node name="CardName" type="LineEdit" parent="SummaryPanel/SummaryLayout/CardDetails/CardNameRow" unique_id=111111014]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "J. Smith"
+
+[node name="CashDetails" type="VBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=222222001]
+layout_mode = 2
+theme_override_constants/separation = 6
+visible = false
+
+[node name="TenderedRow" type="VBoxContainer" parent="SummaryPanel/SummaryLayout/CashDetails" unique_id=222222002]
+layout_mode = 2
+
+[node name="TenderedLabel" type="Label" parent="SummaryPanel/SummaryLayout/CashDetails/TenderedRow" unique_id=222222003]
+layout_mode = 2
+text = "Cash Tendered ($)"
+
+[node name="CashTendered" type="LineEdit" parent="SummaryPanel/SummaryLayout/CashDetails/TenderedRow" unique_id=222222004]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "0.00"
+
+[node name="ChangeRow" type="HBoxContainer" parent="SummaryPanel/SummaryLayout/CashDetails" unique_id=222222005]
+layout_mode = 2
+
+[node name="ChangeLabel" type="Label" parent="SummaryPanel/SummaryLayout/CashDetails/ChangeRow" unique_id=222222006]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Change Due"
+
+[node name="ChangeValue" type="Label" parent="SummaryPanel/SummaryLayout/CashDetails/ChangeRow" unique_id=222222007]
+layout_mode = 2
+text = "-"
 
 [node name="CustomerLabel" type="Label" parent="SummaryPanel/SummaryLayout" unique_id=1232601827]
 layout_mode = 2
