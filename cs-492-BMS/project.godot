@@ -20,9 +20,19 @@ config/icon="res://icon.svg"
 BookStore="*uid://dc8qq6ttq7bxf"
 Manufacturer="*uid://f3u7urmty37f"
 
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg")
+
+[gui]
+
+theme/custom="uid://b4gyi83qceybc"
+theme/custom_font="uid://br60fu7lj1vka"
 
 [physics]
 
@@ -31,3 +41,4 @@ enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg")
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+environment/defaults/default_clear_color=Color(0.7529412, 0.7529412, 0.7529412, 1)

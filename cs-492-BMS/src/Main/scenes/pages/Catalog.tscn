@@ -33,6 +33,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
+[node name="VSeparator" type="VSeparator" parent="ContentSplit" unique_id=631650533]
+layout_mode = 2
+
 [node name="ListScroll" type="ScrollContainer" parent="ContentSplit" unique_id=821658911]
 custom_minimum_size = Vector2(260, 0)
 layout_mode = 2
@@ -43,7 +46,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
-[node name="VSeparator" type="VSeparator" parent="ContentSplit" unique_id=631650533]
+[node name="VScrollBar" type="VScrollBar" parent="ContentSplit/ListScroll/BookList" unique_id=911068127]
 layout_mode = 2
 
 [node name="DetailScroll" type="ScrollContainer" parent="ContentSplit" unique_id=1710319035]
