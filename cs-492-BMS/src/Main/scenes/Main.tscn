@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://customers" path="res://src/Main/scenes/pages/Customers.tscn" id="6"]
 [ext_resource type="PackedScene" uid="uid://reports" path="res://src/Main/scenes/pages/Reports.tscn" id="7"]
 [ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8_cnfob"]
+[ext_resource type="PackedScene" path="res://src/Main/scenes/pages/DevTools.tscn" id="10_aaj1p"]
 
 [sub_resource type="Theme" id="Theme_cnfob"]
 
@@ -154,6 +155,13 @@ toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Reports"
 
+[node name="NavDevTools" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=965237607]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("NavGroup")
+text = "Dev Tools"
+
 [node name="Spacer" type="Control" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1134932047]
 layout_mode = 2
 size_flags_vertical = 3
@@ -250,6 +258,12 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Restock" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=2059524070 instance=ExtResource("8_cnfob")]
+visible = false
+layout_mode = 1
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DevTools" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=100000001 instance=ExtResource("10_aaj1p")]
 visible = false
 layout_mode = 1
 grow_horizontal = 2
