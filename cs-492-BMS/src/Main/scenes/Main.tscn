@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bl8ga5qkkt28o" path="res://src/Main/scripts/Main.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://dashboard" path="res://src/Main/scenes/pages/Dashboard.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="2_dohow"]
 [ext_resource type="PackedScene" uid="uid://catalog" path="res://src/Main/scenes/pages/Catalog.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddeditbook" path="res://src/Main/scenes/pages/AddEditBook.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://cay5t3du5hwhk" path="res://src/Main/scenes/pages/Sales.tscn" id="5"]
@@ -9,7 +10,48 @@
 [ext_resource type="PackedScene" uid="uid://reports" path="res://src/Main/scenes/pages/Reports.tscn" id="7"]
 [ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8_cnfob"]
 
+[sub_resource type="Theme" id="Theme_cnfob"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dohow"]
+texture = ExtResource("2_dohow")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fc3xa"]
+texture = ExtResource("2_dohow")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="Theme" id="Theme_dohow"]
+
 [sub_resource type="ButtonGroup" id="NavGroup"]
+
+[sub_resource type="Theme" id="Theme_aaj1p"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aaj1p"]
+texture = ExtResource("2_dohow")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nk8wn"]
+texture = ExtResource("2_dohow")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f3iqa"]
+texture = ExtResource("2_dohow")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
 [node name="Main" type="Control" unique_id=1754351525]
 layout_mode = 3
@@ -18,6 +60,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_cnfob")
 script = ExtResource("1")
 
 [node name="RootLayout" type="HBoxContainer" parent="." unique_id=627972180]
@@ -44,10 +87,12 @@ size_flags_horizontal = 3
 [node name="AppTitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=2112268022]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_dohow")
 text = "📚 BookShop"
 
 [node name="AppSubtitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=761803730]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_fc3xa")
 text = "Management System"
 
 [node name="Separator0" type="HSeparator" parent="RootLayout/Sidebar/SidebarLayout" unique_id=490386850]
@@ -62,6 +107,7 @@ size_flags_vertical = 3
 [node name="NavDashboard" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=2093212178]
 layout_mode = 2
 size_flags_horizontal = 3
+theme = SubResource("Theme_dohow")
 toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Dashboard"
@@ -118,6 +164,8 @@ size_flags_horizontal = 3
 
 [node name="FooterLabel" type="Label" parent="RootLayout/Sidebar/SidebarLayout" unique_id=50525861]
 layout_mode = 2
+theme = SubResource("Theme_aaj1p")
+theme_override_styles/normal = SubResource("StyleBoxTexture_aaj1p")
 text = "v1.0  ·  Admin"
 
 [node name="MainArea" type="VBoxContainer" parent="RootLayout" unique_id=1341298153]
@@ -136,6 +184,7 @@ size_flags_horizontal = 3
 [node name="PageTitle" type="Label" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=254573167]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_nk8wn")
 text = "Dashboard"
 
 [node name="TopBarSpacer" type="Control" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=931137379]
@@ -144,6 +193,7 @@ size_flags_horizontal = 3
 
 [node name="UserLabel" type="Label" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=152597659]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_f3iqa")
 text = "Admin  👤"
 
 [node name="PageContainer" type="MarginContainer" parent="RootLayout/MainArea" unique_id=921538688]
@@ -162,9 +212,10 @@ size_flags_vertical = 3
 
 [node name="Dashboard" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1518456015 instance=ExtResource("2")]
 layout_mode = 1
-anchors_preset = 15
-grow_horizontal = 2
-grow_vertical = 2
+offset_left = -16.0
+offset_top = -26.0
+offset_right = 10.0
+offset_bottom = 15.0
 
 [node name="Catalog" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1563004236 instance=ExtResource("3")]
 visible = false

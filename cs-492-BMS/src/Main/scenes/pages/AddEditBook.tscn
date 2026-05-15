@@ -1,6 +1,111 @@
 [gd_scene format=3 uid="uid://ddeditbook"]
 
 [ext_resource type="Script" uid="uid://bdo4xrvme4iyx" path="res://src/Main/scripts/pages/AddEditBook.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="2_6m0tk"]
+[ext_resource type="Texture2D" uid="uid://cyeavj0tefdhb" path="res://src/Main/themes/textures/tree_panel.png" id="3_mxsls"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d7hcw"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8lx1o"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4ewuo"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7uhst"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6m0tk"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mxsls"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qj3ye"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tn6t6"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hviri"]
+content_margin_left = 6.0
+content_margin_top = 10.0
+content_margin_right = 6.0
+content_margin_bottom = 10.0
+texture = ExtResource("3_mxsls")
+texture_margin_left = 10.0
+texture_margin_top = 5.0
+texture_margin_right = 10.0
+texture_margin_bottom = 5.0
+region_rect = Rect2(0, 0, 23, 23)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j1wss"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ybjh8"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e5ili"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sj7aj"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gaoao"]
+texture = ExtResource("2_6m0tk")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
 [node name="AddEditBook" type="ScrollContainer" unique_id=442792583]
 anchors_preset = 15
@@ -25,6 +130,7 @@ size_flags_horizontal = 3
 
 [node name="InfoTitle" type="Label" parent="Content/InfoSection" unique_id=572926425]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_d7hcw")
 text = "Book Information"
 
 [node name="InfoGrid" type="GridContainer" parent="Content/InfoSection" unique_id=904732873]
@@ -34,6 +140,7 @@ columns = 2
 
 [node name="TitleLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=1205173452]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_8lx1o")
 text = "Title"
 
 [node name="TitleInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=1618638193]
@@ -43,6 +150,7 @@ placeholder_text = "Book title"
 
 [node name="AuthorLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=1704655356]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_4ewuo")
 text = "Author"
 
 [node name="AuthorInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=2050025023]
@@ -52,6 +160,7 @@ placeholder_text = "Author name"
 
 [node name="ISBNLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=1433903310]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_7uhst")
 text = "ISBN"
 
 [node name="ISBNInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=1273166186]
@@ -61,6 +170,7 @@ placeholder_text = "978-0-000-00000-0"
 
 [node name="GenreLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=891136553]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_6m0tk")
 text = "Genre"
 
 [node name="GenreOption" type="OptionButton" parent="Content/InfoSection/InfoGrid" unique_id=640077139]
@@ -69,6 +179,7 @@ size_flags_horizontal = 3
 
 [node name="PublisherLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=1728151500]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_mxsls")
 text = "Publisher"
 
 [node name="PublisherInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=1855986803]
@@ -78,6 +189,7 @@ placeholder_text = "Publisher name"
 
 [node name="YearLabel" type="Label" parent="Content/InfoSection/InfoGrid" unique_id=2126432424]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_qj3ye")
 text = "Publication Year"
 
 [node name="YearInput" type="LineEdit" parent="Content/InfoSection/InfoGrid" unique_id=43555859]
@@ -87,13 +199,16 @@ placeholder_text = "2024"
 
 [node name="DescLabel" type="Label" parent="Content/InfoSection" unique_id=1318143734]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_tn6t6")
 text = "Description"
 
 [node name="DescInput" type="TextEdit" parent="Content/InfoSection" unique_id=705524108]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_hviri")
 placeholder_text = "Brief description of the book…"
+caret_blink = true
 
 [node name="PricingSection" type="VBoxContainer" parent="Content" unique_id=2061095496]
 layout_mode = 2
@@ -101,6 +216,7 @@ size_flags_horizontal = 3
 
 [node name="PricingTitle" type="Label" parent="Content/PricingSection" unique_id=1860637678]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_j1wss")
 text = "Pricing & Inventory"
 
 [node name="PricingGrid" type="GridContainer" parent="Content/PricingSection" unique_id=327683176]
@@ -110,39 +226,47 @@ columns = 2
 
 [node name="PriceLabel" type="Label" parent="Content/PricingSection/PricingGrid" unique_id=1596168983]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_ybjh8")
 text = "Price ($)"
 
 [node name="PriceInput" type="LineEdit" parent="Content/PricingSection/PricingGrid" unique_id=548180323]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "0.00"
+caret_blink = true
 
 [node name="CostLabel" type="Label" parent="Content/PricingSection/PricingGrid" unique_id=425724169]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_e5ili")
 text = "Cost Price ($)"
 
 [node name="CostInput" type="LineEdit" parent="Content/PricingSection/PricingGrid" unique_id=108436349]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "0.00"
+caret_blink = true
 
 [node name="StockLabel" type="Label" parent="Content/PricingSection/PricingGrid" unique_id=1272706290]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_sj7aj")
 text = "Stock Quantity"
 
 [node name="StockInput" type="LineEdit" parent="Content/PricingSection/PricingGrid" unique_id=523357442]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "0"
+caret_blink = true
 
 [node name="AlertLabel" type="Label" parent="Content/PricingSection/PricingGrid" unique_id=1140789540]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_gaoao")
 text = "Low Stock Alert At"
 
 [node name="AlertInput" type="LineEdit" parent="Content/PricingSection/PricingGrid" unique_id=1671291317]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "5"
+caret_blink = true
 
 [node name="Actions" type="HBoxContainer" parent="Content" unique_id=1133982102]
 layout_mode = 2

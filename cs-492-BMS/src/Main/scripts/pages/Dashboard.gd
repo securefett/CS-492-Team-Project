@@ -41,14 +41,15 @@ func _build_genres() -> void:
 		var row := HBoxContainer.new()
 		var name_lbl := Label.new()
 		name_lbl.text = item["name"]
-		name_lbl.custom_minimum_size.x = 90
-		var bar := ProgressBar.new()
-		bar.value = item["pct"]
-		bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		bar.show_percentage = false
+		name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		#name_lbl.custom_minimum_size.x = 90
+		#var bar := ProgressBar.new()
+		#bar.value = item["pct"]
+		#bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		#bar.show_percentage = false
 		var pct_lbl := Label.new()
 		pct_lbl.text = "%d%%" % item["pct"]
 		row.add_child(name_lbl)
-		row.add_child(bar)
+		#row.add_child(bar)
 		row.add_child(pct_lbl)
 		genre_list.add_child(row)

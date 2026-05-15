@@ -1,86 +1,180 @@
 [gd_scene format=3 uid="uid://dashboard"]
 
 [ext_resource type="Script" uid="uid://4t1kpt2g0mwt" path="res://src/Main/scripts/pages/Dashboard.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="2_q08o4"]
 
-[node name="Dashboard" type="ScrollContainer"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_krq5a"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+texture = ExtResource("2_q08o4")
+texture_margin_left = 5.0
+texture_margin_top = 10.0
+texture_margin_right = 5.0
+texture_margin_bottom = 10.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+region_rect = Rect2(0, 0, 16, 16)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q08o4"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+texture = ExtResource("2_q08o4")
+texture_margin_left = 10.0
+texture_margin_top = 5.0
+texture_margin_right = 10.0
+texture_margin_bottom = 5.0
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="Dashboard" type="ScrollContainer" unique_id=219683383]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
 
-[node name="Content" type="VBoxContainer" parent="."]
+[node name="Content" type="VBoxContainer" parent="." unique_id=142837820]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 20
 
-; ── Metric cards row ──────────────────────────────────────────────────────────
-[node name="MetricsRow" type="HBoxContainer" parent="Content"]
-size_flags_horizontal = 3
-theme_override_constants/separation = 12
+[node name="TabContainer" type="TabContainer" parent="Content" unique_id=362921019]
+layout_mode = 2
+current_tab = 1
+tab_0/title = "Sales"
+tab_1/title = "Books"
+tab_2/title = "Inventory"
+tab_3/title = "Customers"
 
-[node name="CardSales" type="PanelContainer" parent="Content/MetricsRow"]
+[node name="CardSales" type="PanelContainer" parent="Content/TabContainer" unique_id=1231064434]
+visible = false
+layout_mode = 2
 size_flags_horizontal = 3
+metadata/_tab_index = 0
+metadata/_tab_name = "Sales"
 
-[node name="CardSalesLayout" type="VBoxContainer" parent="Content/MetricsRow/CardSales"]
-[node name="SalesLabel" type="Label" parent="Content/MetricsRow/CardSales/CardSalesLayout"]
+[node name="CardSalesLayout" type="VBoxContainer" parent="Content/TabContainer/CardSales" unique_id=938996964]
+layout_mode = 2
+
+[node name="SalesLabel" type="Label" parent="Content/TabContainer/CardSales/CardSalesLayout" unique_id=537532061]
+layout_mode = 2
 text = "Total Sales"
-[node name="SalesValue" type="Label" parent="Content/MetricsRow/CardSales/CardSalesLayout"]
+
+[node name="SalesValue" type="Label" parent="Content/TabContainer/CardSales/CardSalesLayout" unique_id=659126007]
+layout_mode = 2
 text = "$8,241"
-[node name="SalesDelta" type="Label" parent="Content/MetricsRow/CardSales/CardSalesLayout"]
+
+[node name="SalesDelta" type="Label" parent="Content/TabContainer/CardSales/CardSalesLayout" unique_id=1702780593]
+layout_mode = 2
 text = "↑ 12% this month"
 
-[node name="CardBooks" type="PanelContainer" parent="Content/MetricsRow"]
+[node name="CardBooks" type="PanelContainer" parent="Content/TabContainer" unique_id=763709796]
+layout_mode = 2
 size_flags_horizontal = 3
+metadata/_tab_index = 1
+metadata/_tab_name = "Books"
 
-[node name="CardBooksLayout" type="VBoxContainer" parent="Content/MetricsRow/CardBooks"]
-[node name="BooksLabel" type="Label" parent="Content/MetricsRow/CardBooks/CardBooksLayout"]
+[node name="CardBooksLayout" type="VBoxContainer" parent="Content/TabContainer/CardBooks" unique_id=2046964333]
+layout_mode = 2
+
+[node name="BooksLabel" type="Label" parent="Content/TabContainer/CardBooks/CardBooksLayout" unique_id=844465131]
+layout_mode = 2
 text = "Books Sold"
-[node name="BooksValue" type="Label" parent="Content/MetricsRow/CardBooks/CardBooksLayout"]
+
+[node name="BooksValue" type="Label" parent="Content/TabContainer/CardBooks/CardBooksLayout" unique_id=1618130806]
+layout_mode = 2
 text = "312"
-[node name="BooksDelta" type="Label" parent="Content/MetricsRow/CardBooks/CardBooksLayout"]
+
+[node name="BooksDelta" type="Label" parent="Content/TabContainer/CardBooks/CardBooksLayout" unique_id=1705659091]
+layout_mode = 2
 text = "↑ 8% this month"
 
-[node name="CardInventory" type="PanelContainer" parent="Content/MetricsRow"]
+[node name="CardInventory" type="PanelContainer" parent="Content/TabContainer" unique_id=1464326535]
+visible = false
+layout_mode = 2
 size_flags_horizontal = 3
+metadata/_tab_index = 2
+metadata/_tab_name = "Inventory"
 
-[node name="CardInventoryLayout" type="VBoxContainer" parent="Content/MetricsRow/CardInventory"]
-[node name="InventoryLabel" type="Label" parent="Content/MetricsRow/CardInventory/CardInventoryLayout"]
+[node name="CardInventoryLayout" type="VBoxContainer" parent="Content/TabContainer/CardInventory" unique_id=1719695590]
+layout_mode = 2
+
+[node name="InventoryLabel" type="Label" parent="Content/TabContainer/CardInventory/CardInventoryLayout" unique_id=1445335554]
+layout_mode = 2
 text = "Inventory"
-[node name="InventoryValue" type="Label" parent="Content/MetricsRow/CardInventory/CardInventoryLayout"]
+
+[node name="InventoryValue" type="Label" parent="Content/TabContainer/CardInventory/CardInventoryLayout" unique_id=425604422]
+layout_mode = 2
 text = "1,084"
-[node name="InventoryDelta" type="Label" parent="Content/MetricsRow/CardInventory/CardInventoryLayout"]
+
+[node name="InventoryDelta" type="Label" parent="Content/TabContainer/CardInventory/CardInventoryLayout" unique_id=795772654]
+layout_mode = 2
 text = "Across 247 titles"
 
-[node name="CardCustomers" type="PanelContainer" parent="Content/MetricsRow"]
+[node name="CardCustomers" type="PanelContainer" parent="Content/TabContainer" unique_id=1792284017]
+visible = false
+layout_mode = 2
 size_flags_horizontal = 3
+metadata/_tab_index = 3
+metadata/_tab_name = "Customers"
 
-[node name="CardCustomersLayout" type="VBoxContainer" parent="Content/MetricsRow/CardCustomers"]
-[node name="CustomersLabel" type="Label" parent="Content/MetricsRow/CardCustomers/CardCustomersLayout"]
+[node name="CardCustomersLayout" type="VBoxContainer" parent="Content/TabContainer/CardCustomers" unique_id=1425511040]
+layout_mode = 2
+
+[node name="CustomersLabel" type="Label" parent="Content/TabContainer/CardCustomers/CardCustomersLayout" unique_id=712561033]
+layout_mode = 2
 text = "Customers"
-[node name="CustomersValue" type="Label" parent="Content/MetricsRow/CardCustomers/CardCustomersLayout"]
+
+[node name="CustomersValue" type="Label" parent="Content/TabContainer/CardCustomers/CardCustomersLayout" unique_id=462691145]
+layout_mode = 2
 text = "156"
-[node name="CustomersDelta" type="Label" parent="Content/MetricsRow/CardCustomers/CardCustomersLayout"]
+
+[node name="CustomersDelta" type="Label" parent="Content/TabContainer/CardCustomers/CardCustomersLayout" unique_id=906575834]
+layout_mode = 2
 text = "↑ 5 new this week"
 
-; ── Bottom row: Top books | Genre breakdown ───────────────────────────────────
-[node name="BottomRow" type="HBoxContainer" parent="Content"]
+[node name="BottomRow" type="HBoxContainer" parent="Content" unique_id=1159367839]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 16
 
-[node name="TopBooksCard" type="PanelContainer" parent="Content/BottomRow"]
+[node name="TopBooksCard" type="PanelContainer" parent="Content/BottomRow" unique_id=1069107807]
+layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_krq5a")
 
-[node name="TopBooksLayout" type="VBoxContainer" parent="Content/BottomRow/TopBooksCard"]
-[node name="TopBooksTitle" type="Label" parent="Content/BottomRow/TopBooksCard/TopBooksLayout"]
+[node name="TopBooksLayout" type="VBoxContainer" parent="Content/BottomRow/TopBooksCard" unique_id=338657000]
+layout_mode = 2
+
+[node name="TopBooksTitle" type="Label" parent="Content/BottomRow/TopBooksCard/TopBooksLayout" unique_id=2021332964]
+layout_mode = 2
 text = "Top Selling Books"
-[node name="TopBooksList" type="VBoxContainer" parent="Content/BottomRow/TopBooksCard/TopBooksLayout"]
-; Rows added dynamically by Dashboard.gd
 
-[node name="GenreCard" type="PanelContainer" parent="Content/BottomRow"]
+[node name="TopBooksList" type="VBoxContainer" parent="Content/BottomRow/TopBooksCard/TopBooksLayout" unique_id=71825799]
+layout_mode = 2
+
+[node name="GenreCard" type="PanelContainer" parent="Content/BottomRow" unique_id=1418970313]
+layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_q08o4")
 
-[node name="GenreLayout" type="VBoxContainer" parent="Content/BottomRow/GenreCard"]
-[node name="GenreTitle" type="Label" parent="Content/BottomRow/GenreCard/GenreLayout"]
+[node name="GenreLayout" type="VBoxContainer" parent="Content/BottomRow/GenreCard" unique_id=576028470]
+clip_contents = true
+layout_mode = 2
+
+[node name="GenreTitle" type="Label" parent="Content/BottomRow/GenreCard/GenreLayout" unique_id=945725424]
+layout_mode = 2
 text = "Sales by Genre"
-[node name="GenreList" type="VBoxContainer" parent="Content/BottomRow/GenreCard/GenreLayout"]
-; Rows added dynamically by Dashboard.gd
+
+[node name="GenreList" type="VBoxContainer" parent="Content/BottomRow/GenreCard/GenreLayout" unique_id=1525118250]
+layout_mode = 2
