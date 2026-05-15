@@ -388,6 +388,17 @@ func get_report_metrics() -> Dictionary:
 	}
 
 
+func get_low_stock_alerts() -> Array:
+	db.query("""
+		SELECT title, stock
+		FROM books
+		WHERE stock <= low_stock_alert
+		ORDER BY stock ASC;
+	""")
+
+	return db.query_result
+
+
 func get_top_books(limit: int = 5) -> Array:
 	db.query_with_bindings("""
 		SELECT

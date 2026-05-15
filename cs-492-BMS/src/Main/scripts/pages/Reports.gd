@@ -13,19 +13,18 @@ var genres := [
 	{ "name": "Other",       "pct": 18 },
 ]
 var key_metrics := []
-var low_stock := [
-	{ "title": "Project Hail Mary", "stock": 4 },
-	{ "title": "Sapiens",           "stock": 7 },
-	{ "title": "Dune",              "stock": 0 },
-	{ "title": "The Road",          "stock": 0 },
-]
+var low_stock := []
 
 func _ready() -> void:
 	_load_key_metrics()
+	_load_low_stock()
 	_build_revenue_chart()
 	_build_genre_legend()
 	_build_metrics()
 	_build_stock_alerts()
+
+func _load_low_stock() -> void:
+	low_stock = BookStore.get_low_stock_alerts()
 
 func _load_key_metrics() -> void:
 	var metrics := BookStore.get_report_metrics()
