@@ -12,12 +12,7 @@ var genres := [
 	{ "name": "Science",     "pct": 17 },
 	{ "name": "Other",       "pct": 18 },
 ]
-var key_metrics := [
-	{ "label": "Avg. order value",   "value": "$26.42" },
-	{ "label": "Return customers",   "value": "68%" },
-	{ "label": "Inventory turnover", "value": "4.2×" },
-	{ "label": "Gross margin",       "value": "43%" },
-]
+var key_metrics := []
 var low_stock := [
 	{ "title": "Project Hail Mary", "stock": 4 },
 	{ "title": "Sapiens",           "stock": 7 },
@@ -26,10 +21,33 @@ var low_stock := [
 ]
 
 func _ready() -> void:
+	_load_key_metrics()
 	_build_revenue_chart()
 	_build_genre_legend()
 	_build_metrics()
 	_build_stock_alerts()
+
+func _load_key_metrics() -> void:
+	var metrics := BookStore.get_report_metrics()
+
+	key_metrics = [
+		{
+			"label": "Total revenue",
+			"value": "$%.2f" % metrics.get("total_revenue", 0.0)
+		},
+		{
+			"label": "Total sales",
+			"value": str(metrics.get("total_sales", 0))
+		},
+		{
+			"label": "Books sold",
+			"value": str(metrics.get("books_sold", 0))
+		},
+		{
+			"label": "Avg. order value",
+			"value": "$%.2f" % metrics.get("average_order_value", 0.0)
+		},
+	]
 
 func _build_revenue_chart() -> void:
 	var max_val: float = monthly_revenue.max()

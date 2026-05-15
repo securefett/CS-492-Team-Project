@@ -362,6 +362,32 @@ func get_dashboard_metrics() -> Dictionary:
 	}
 
 
+func get_report_metrics() -> Dictionary:
+	db.query("""
+		SELECT 
+			COALESCE(SUM(total), 0.0) AS total_revenue,
+			COUNT(*) AS total_sales,
+			COALESCE(AVG(total), 0.0) AS average_order_value
+		FROM sales;
+	""")
+	
+	var row: Dictionary = db.query_result[0] if db.query_result.size() > 0 else {}
+
+	db.query("""
+		SELECT COALESCE(SUM(qty), 0) AS books_sold
+		FROM sale_items;
+	""")
+	
+	var books_sold: int = db.query_result[0]["books_sold"] if db.query_result.size() > 0 else 0
+
+	return {
+		"total_revenue": row.get("total_revenue", 0.0),
+		"total_sales": row.get("total_sales", 0),
+		"books_sold": books_sold,
+		"average_order_value": row.get("average_order_value", 0.0),
+	}
+
+
 func get_top_books(limit: int = 5) -> Array:
 	db.query_with_bindings("""
 		SELECT
