@@ -399,6 +399,24 @@ func get_low_stock_alerts() -> Array:
 	return db.query_result
 
 
+func get_sales_by_genre_report() -> Array:
+	db.query("""
+		SELECT 
+			COALESCE(b.genre, 'Other') AS name,
+			SUM(si.qty) AS sold,
+			CAST(ROUND(
+				(SUM(si.qty) * 100.0) / 
+				(SELECT COALESCE(SUM(qty), 1) FROM sale_items)
+			) AS INTEGER) AS pct
+		FROM sale_items si
+		JOIN books b ON b.id = si.book_id
+		GROUP BY b.genre
+		ORDER BY sold DESC;
+	""")
+
+	return db.query_result
+
+
 func get_top_books(limit: int = 5) -> Array:
 	db.query_with_bindings("""
 		SELECT

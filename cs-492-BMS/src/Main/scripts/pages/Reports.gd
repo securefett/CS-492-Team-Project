@@ -6,18 +6,14 @@ extends ScrollContainer
 @onready var stock_list:    VBoxContainer = $Content/BottomRow/StockCard/StockLayout/StockList
 
 var monthly_revenue := [3200, 4100, 3800, 5200, 5900, 4700, 6800, 6200, 7400, 6100, 7800, 8241]
-var genres := [
-	{ "name": "Fiction",     "pct": 42 },
-	{ "name": "Non-fiction", "pct": 23 },
-	{ "name": "Science",     "pct": 17 },
-	{ "name": "Other",       "pct": 18 },
-]
+var genres := []
 var key_metrics := []
 var low_stock := []
 
 func _ready() -> void:
 	_load_key_metrics()
 	_load_low_stock()
+	_load_genres()
 	_build_revenue_chart()
 	_build_genre_legend()
 	_build_metrics()
@@ -25,6 +21,9 @@ func _ready() -> void:
 
 func _load_low_stock() -> void:
 	low_stock = BookStore.get_low_stock_alerts()
+
+func _load_genres() -> void:
+	genres = BookStore.get_sales_by_genre_report()
 
 func _load_key_metrics() -> void:
 	var metrics := BookStore.get_report_metrics()
