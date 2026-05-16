@@ -26,7 +26,7 @@ func _exit_tree() -> void:
 # ── Schema ────────────────────────────────────────────────────────────────────
 
 func _create_tables() -> void:
-	# Books
+	# Books, possible improvements to replace the primary key id with the ISBN, which is unique and required
 	db.query("""
 		CREATE TABLE IF NOT EXISTS books (
 			id          INTEGER PRIMARY KEY AUTOINCREMENT,
