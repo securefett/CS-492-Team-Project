@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://customers" path="res://src/Main/scenes/pages/Customers.tscn" id="6"]
 [ext_resource type="PackedScene" uid="uid://reports" path="res://src/Main/scenes/pages/Reports.tscn" id="7"]
 [ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8_cnfob"]
-[ext_resource type="PackedScene" path="res://src/Main/scenes/pages/DevTools.tscn" id="10_aaj1p"]
+[ext_resource type="PackedScene" uid="uid://devtools" path="res://src/Main/scenes/pages/DevTools.tscn" id="10_aaj1p"]
 
 [sub_resource type="Theme" id="Theme_cnfob"]
 
@@ -142,6 +142,7 @@ button_group = SubResource("NavGroup")
 text = "  Restock Orders"
 
 [node name="NavCustomers" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=2092868818]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true

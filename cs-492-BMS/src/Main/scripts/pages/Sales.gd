@@ -87,7 +87,7 @@ func add_book_to_cart(book: Dictionary) -> void:
 
 
 # ── Payment method toggle ─────────────────────────────────────────────────────
-
+# This is legacy  code
 func _on_payment_method_changed() -> void:
 	# Enforce mutual exclusion for toggle buttons
 	if pay_card.button_pressed:
@@ -162,7 +162,7 @@ func _on_cvv_changed(text: String) -> void:
 
 
 # ── Cash change calculation ───────────────────────────────────────────────────
-
+# May be legacy
 func _on_cash_tendered_changed(_text: String) -> void:
 	var tendered := cash_tendered.text.to_float()
 	var total    := _get_total()
