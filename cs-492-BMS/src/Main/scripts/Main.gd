@@ -1,46 +1,51 @@
 extends Control
 
-# ── Node references ────────────────────────────────────────────────────────────
-@onready var page_title: Label       = $RootLayout/MainArea/TopBar/TopBarLayout/PageTitle
-@onready var pages: Control          = $RootLayout/MainArea/PageContainer/Pages
+@onready var page_title:   Label          = $RootLayout/MainArea/TopBar/TopBarLayout/PageTitle
+@onready var pages:        Control        = $RootLayout/MainArea/PageContainer/Pages
+@onready var nav_buttons:  VBoxContainer  = $RootLayout/Sidebar/SidebarLayout/NavButtons
+@onready var footer_btn:   Button         = $RootLayout/Sidebar/SidebarLayout/FooterBtn
+@onready var user_label:   Label          = $RootLayout/MainArea/TopBar/TopBarLayout/UserLabel
 
-@onready var nav_buttons: VBoxContainer = $RootLayout/Sidebar/SidebarLayout/NavButtons
-
-# Map nav button names → page node names + display titles
 const PAGE_MAP := {
-	"dashboard": { "node": "Dashboard",   "title": "Dashboard",          "button": "NavDashboard" },
-	"catalog":   { "node": "Catalog",     "title": "Book Catalog",       "button": "NavCatalog"   },
-	"addbook":   { "node": "AddEditBook", "title": "Add / Edit Book",    "button": "NavAddBook"   },
-	"sales":     { "node": "Sales",       "title": "Sales & Checkout",   "button": "NavSales"     },
-	"customers": { "node": "Customers",   "title": "Customers",          "button": "NavCustomers" },
-	"reports":   { "node": "Reports",     "title": "Reports & Analytics","button": "NavReports"   },
-	"restock":   { "node": "Restock",     "title": "Restock Orders",     "button": "NavRestock"   },
+	"dashboard": { "node": "Dashboard",   "title": "Dashboard",           "button": "NavDashboard" },
+	"catalog":   { "node": "Catalog",     "title": "Book Catalog",        "button": "NavCatalog"   },
+	"addbook":   { "node": "AddEditBook", "title": "Add / Edit Book",     "button": "NavAddBook"   },
+	"sales":     { "node": "Sales",       "title": "Sales & Checkout",    "button": "NavSales"     },
+	"customers": { "node": "Customers",   "title": "Customers",           "button": "NavCustomers" },
+	"reports":   { "node": "Reports",     "title": "Reports & Analytics", "button": "NavReports"   },
+	"restock":   { "node": "Restock",     "title": "Restock Orders",      "button": "NavRestock"   },
 	"devtools":  { "node": "DevTools",    "title": "Dev Tools",          "button": "NavDevTools"   },
 }
 
-# ── Ready ──────────────────────────────────────────────────────────────────────
 func _ready() -> void:
-	# Connect every nav button's pressed signal
 	for btn in nav_buttons.get_children():
 		if btn is Button:
 			btn.pressed.connect(_on_nav_pressed.bind(btn.name))
 
-	# Select Dashboard by default
-	var default_btn := nav_buttons.get_node("NavDashboard") as Button
-	default_btn.button_pressed = true
-	_navigate("NavDashboard")
+	footer_btn.pressed.connect(_open_login_dialog)
+	Auth.session_changed.connect(_on_session_changed)
 
-# ── Navigation ─────────────────────────────────────────────────────────────────
+	# Show login immediately on launch — nothing is accessible without an account
+	_update_sidebar_for_role()
+	_open_login_dialog()
+
+
+# ── Navigation ────────────────────────────────────────────────────────────────
+
 func _on_nav_pressed(btn_name: String) -> void:
-	_navigate(btn_name.trim_prefix("Nav").to_lower())
+	var key := btn_name.trim_prefix("Nav").to_lower()
+	if not Auth.has_permission(key):
+		return
+	_navigate(key)
+
 
 func _navigate(key: String) -> void:
 	if not PAGE_MAP.has(key):
+		push_warning("Main._navigate: unknown page key '%s'" % key)
 		return
 
 	var info: Dictionary = PAGE_MAP[key]
 
-	# Hide all pages, show the target
 	for child in pages.get_children():
 		child.visible = false
 
@@ -50,15 +55,65 @@ func _navigate(key: String) -> void:
 
 	page_title.text = info["title"]
 
-# ── Called by child pages that need to trigger navigation ─────────────────────
-# e.g.  get_owner().navigate_to("addbook")  from Catalog page
-func navigate_to(key: String) -> void:
-	_navigate(key)
 
-	# Sync the sidebar toggle button using the explicit button name from PAGE_MAP
+func navigate_to(key: String) -> void:
+	if not Auth.has_permission(key):
+		push_warning("navigate_to: role '%s' does not have permission for '%s'" % [Auth.get_role(), key])
+		return
+	_navigate(key)
 	if not PAGE_MAP.has(key):
 		return
-	var btn_name: String = PAGE_MAP[key]["button"]
-	var btn := nav_buttons.get_node_or_null(btn_name) as Button
+	var btn := nav_buttons.get_node_or_null(PAGE_MAP[key]["button"]) as Button
 	if btn:
 		btn.button_pressed = true
+
+
+# ── Session ───────────────────────────────────────────────────────────────────
+
+func _on_session_changed(account: Dictionary) -> void:
+	_update_sidebar_for_role()
+
+	if account.is_empty():
+		# Logged out — reopen login
+		user_label.text    = "Guest"
+		footer_btn.text    = "v1.0  ·  Log in"
+		_open_login_dialog()
+		return
+
+	var role := Auth.get_role()
+	user_label.text = "%s  👤" % Auth.get_account_name()
+	if Auth.is_guest():
+		footer_btn.text = "v1.0  ·  Guest  ·  Sign in"
+	else:
+		footer_btn.text = "v1.0  ·  %s  ·  %s" % [Auth.get_account_name(), role.capitalize()]
+
+	# Navigate to the first permitted page for this role
+	var permitted := Auth.get_permitted_pages()
+	if permitted.size() > 0:
+		var first_key: String = permitted[0]
+		_navigate(first_key)
+		var btn := nav_buttons.get_node_or_null(PAGE_MAP[first_key]["button"]) as Button
+		if btn:
+			btn.button_pressed = true
+
+
+func _update_sidebar_for_role() -> void:
+	var permitted := Auth.get_permitted_pages()
+	for btn in nav_buttons.get_children():
+		if btn is Button:
+			var key := btn.name.trim_prefix("Nav").to_lower()
+			btn.visible = key in permitted
+
+
+const LoginDialogScene := preload("res://src/Main/scenes/notpages/LoginDialog.tscn")
+
+
+# ── Login dialog ──────────────────────────────────────────────────────────────
+
+func _open_login_dialog() -> void:
+	if get_node_or_null("LoginDialog"):
+		return
+	var dialog := LoginDialogScene.instantiate()
+	dialog.name = "LoginDialog"
+	add_child(dialog)
+	dialog.popup_centered()

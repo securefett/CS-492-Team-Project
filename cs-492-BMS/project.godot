@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="CS492 BMS"
-run/main_scene="uid://main"
+run/main_scene="uid://dfpoqddmdhbhj"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 BookStore="*uid://dc8qq6ttq7bxf"
 Manufacturer="*uid://f3u7urmty37f"
+Auth="*uid://dix3ejgiryxv0"
 
 [display]
 

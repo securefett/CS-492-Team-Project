@@ -1,27 +1,22 @@
 [gd_scene format=3 uid="uid://dfpoqddmdhbhj"]
 
-[ext_resource type="Script" uid="uid://bfsa48vristy6" path="res://src/Main/scripts/Main.gd" id="1_dohow"]
+[ext_resource type="Script" uid="uid://baffxr6waax8y" path="res://src/SaveData/Main.gd" id="1_viu5i"]
 [ext_resource type="PackedScene" uid="uid://dashboard" path="res://src/Main/scenes/pages/Dashboard.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://catalog" path="res://src/Main/scenes/pages/Catalog.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddeditbook" path="res://src/Main/scenes/pages/AddEditBook.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://cay5t3du5hwhk" path="res://src/Main/scenes/pages/Sales.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://customers" path="res://src/Main/scenes/pages/Customers.tscn" id="6"]
 [ext_resource type="PackedScene" uid="uid://reports" path="res://src/Main/scenes/pages/Reports.tscn" id="7"]
-[ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8_cnfob"]
-[ext_resource type="PackedScene" uid="uid://devtools" path="res://src/Main/scenes/pages/DevTools.tscn" id="10_aaj1p"]
+[ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8"]
 
 [sub_resource type="ButtonGroup" id="NavGroup"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_mw774"]
 
 [node name="Main" type="Control" unique_id=731485272]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_dohow")
+script = ExtResource("1_viu5i")
 
 [node name="RootLayout" type="HBoxContainer" parent="." unique_id=772704640]
 layout_mode = 0
@@ -110,13 +105,6 @@ toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Restock Orders"
 
-[node name="NavDevTools" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=685498700]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("ButtonGroup_mw774")
-text = "Dev Tools"
-
 [node name="Spacer" type="Control" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1994959687]
 layout_mode = 2
 size_flags_vertical = 3
@@ -172,56 +160,33 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Dashboard" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1206959654 instance=ExtResource("2")]
-visible = false
-layout_mode = 1
+layout_mode = 0
+anchors_preset = 0
 
 [node name="Catalog" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=851943613 instance=ExtResource("3")]
 visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
+layout_mode = 0
+anchors_preset = 0
 
 [node name="AddEditBook" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1027308620 instance=ExtResource("4")]
 visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
+layout_mode = 0
+anchors_preset = 0
 
 [node name="Sales" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=924612436 instance=ExtResource("5")]
 visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
+layout_mode = 0
+anchors_preset = 0
 
 [node name="Customers" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=228885736 instance=ExtResource("6")]
 visible = false
-layout_mode = 1
-anchors_preset = 15
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
+layout_mode = 0
 
 [node name="Reports" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1504859436 instance=ExtResource("7")]
 visible = false
-layout_mode = 1
-anchors_preset = 15
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
+layout_mode = 0
 
-[node name="Restock" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=171214503 instance=ExtResource("8_cnfob")]
+[node name="Restock" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=171214503 instance=ExtResource("8")]
 visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="DevTools" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=100000001 instance=ExtResource("10_aaj1p")]
-visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
+layout_mode = 0
+anchors_preset = 0
