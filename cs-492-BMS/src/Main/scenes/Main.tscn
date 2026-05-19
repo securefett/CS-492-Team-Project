@@ -1,202 +1,163 @@
-[gd_scene format=3 uid="uid://main"]
+[gd_scene format=3 uid="uid://dfpoqddmdhbhj"]
 
-[ext_resource type="Script" uid="uid://bl8ga5qkkt28o" path="res://src/Main/scripts/Main.gd" id="1"]
+[ext_resource type="Script" uid="uid://bfsa48vristy6" path="res://src/Main/scripts/Main.gd" id="1_dohow"]
 [ext_resource type="PackedScene" uid="uid://dashboard" path="res://src/Main/scenes/pages/Dashboard.tscn" id="2"]
-[ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="2_dohow"]
 [ext_resource type="PackedScene" uid="uid://catalog" path="res://src/Main/scenes/pages/Catalog.tscn" id="3"]
 [ext_resource type="PackedScene" uid="uid://ddeditbook" path="res://src/Main/scenes/pages/AddEditBook.tscn" id="4"]
-[ext_resource type="PackedScene" uid="uid://sales" path="res://src/Main/scenes/pages/Sales.tscn" id="5"]
+[ext_resource type="PackedScene" uid="uid://cay5t3du5hwhk" path="res://src/Main/scenes/pages/Sales.tscn" id="5"]
 [ext_resource type="PackedScene" uid="uid://customers" path="res://src/Main/scenes/pages/Customers.tscn" id="6"]
 [ext_resource type="PackedScene" uid="uid://reports" path="res://src/Main/scenes/pages/Reports.tscn" id="7"]
 [ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8_cnfob"]
-
-[sub_resource type="Theme" id="Theme_cnfob"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dohow"]
-texture = ExtResource("2_dohow")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fc3xa"]
-texture = ExtResource("2_dohow")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="Theme" id="Theme_dohow"]
+[ext_resource type="PackedScene" uid="uid://devtools" path="res://src/Main/scenes/pages/DevTools.tscn" id="10_aaj1p"]
 
 [sub_resource type="ButtonGroup" id="NavGroup"]
 
-[sub_resource type="Theme" id="Theme_aaj1p"]
+[sub_resource type="ButtonGroup" id="ButtonGroup_mw774"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aaj1p"]
-texture = ExtResource("2_dohow")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nk8wn"]
-texture = ExtResource("2_dohow")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f3iqa"]
-texture = ExtResource("2_dohow")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[node name="Main" type="Control" unique_id=1754351525]
+[node name="Main" type="Control" unique_id=731485272]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_cnfob")
-script = ExtResource("1")
+script = ExtResource("1_dohow")
 
-[node name="RootLayout" type="HBoxContainer" parent="." unique_id=627972180]
+[node name="RootLayout" type="HBoxContainer" parent="." unique_id=772704640]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Sidebar" type="PanelContainer" parent="RootLayout" unique_id=1150403028]
+[node name="Sidebar" type="PanelContainer" parent="RootLayout" unique_id=1282969314]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SidebarLayout" type="VBoxContainer" parent="RootLayout/Sidebar" unique_id=57180466]
+[node name="SidebarLayout" type="VBoxContainer" parent="RootLayout/Sidebar" unique_id=787936886]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LogoSection" type="VBoxContainer" parent="RootLayout/Sidebar/SidebarLayout" unique_id=2062911792]
+[node name="LogoSection" type="VBoxContainer" parent="RootLayout/Sidebar/SidebarLayout" unique_id=40328121]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AppTitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=2112268022]
+[node name="AppTitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=698284288]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxTexture_dohow")
 text = "📚 BookShop"
 
-[node name="AppSubtitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=761803730]
+[node name="AppSubtitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=1205589341]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxTexture_fc3xa")
 text = "Management System"
 
-[node name="Separator0" type="HSeparator" parent="RootLayout/Sidebar/SidebarLayout" unique_id=490386850]
+[node name="Separator0" type="HSeparator" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1280080184]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NavButtons" type="VBoxContainer" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1750796345]
+[node name="NavButtons" type="VBoxContainer" parent="RootLayout/Sidebar/SidebarLayout" unique_id=328243936]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="NavDashboard" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=2093212178]
+[node name="NavDashboard" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1269826883]
 layout_mode = 2
 size_flags_horizontal = 3
-theme = SubResource("Theme_dohow")
 toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Dashboard"
 
-[node name="NavCatalog" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1306621843]
+[node name="NavCatalog" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1133638212]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Book Catalog"
 
-[node name="NavAddBook" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=641690675]
+[node name="NavAddBook" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=80911348]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Add / Edit Book"
 
-[node name="NavSales" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1021253175]
+[node name="NavSales" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1287391873]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Sales / Checkout"
 
-[node name="NavRestock" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=105105751]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "  Restock Orders"
-
-[node name="NavCustomers" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=2092868818]
+[node name="NavCustomers" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=172143002]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Customers"
 
-[node name="NavReports" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=457279020]
+[node name="NavReports" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=249643259]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("NavGroup")
 text = "  Reports"
 
-[node name="Spacer" type="Control" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1134932047]
+[node name="NavRestock" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=33941262]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("NavGroup")
+text = "  Restock Orders"
+
+[node name="NavDevTools" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=685498700]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_mw774")
+text = "Dev Tools"
+
+[node name="Spacer" type="Control" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1994959687]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Separator1" type="HSeparator" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1734986838]
+[node name="Separator1" type="HSeparator" parent="RootLayout/Sidebar/SidebarLayout" unique_id=921562912]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FooterLabel" type="Label" parent="RootLayout/Sidebar/SidebarLayout" unique_id=50525861]
+[node name="FooterBtn" type="Button" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1020839667]
 layout_mode = 2
-theme = SubResource("Theme_aaj1p")
-theme_override_styles/normal = SubResource("StyleBoxTexture_aaj1p")
-text = "v1.0  ·  Admin"
+size_flags_horizontal = 3
+text = "v1.0  ·  Log in"
+alignment = 0
 
-[node name="MainArea" type="VBoxContainer" parent="RootLayout" unique_id=1341298153]
+[node name="MainArea" type="VBoxContainer" parent="RootLayout" unique_id=1548619718]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TopBar" type="PanelContainer" parent="RootLayout/MainArea" unique_id=627447861]
+[node name="TopBar" type="PanelContainer" parent="RootLayout/MainArea" unique_id=727179429]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TopBarLayout" type="HBoxContainer" parent="RootLayout/MainArea/TopBar" unique_id=1289867993]
+[node name="TopBarLayout" type="HBoxContainer" parent="RootLayout/MainArea/TopBar" unique_id=521412553]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PageTitle" type="Label" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=254573167]
+[node name="PageTitle" type="Label" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=1877399166]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxTexture_nk8wn")
 text = "Dashboard"
 
-[node name="TopBarSpacer" type="Control" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=931137379]
+[node name="TopBarSpacer" type="Control" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=454180913]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="UserLabel" type="Label" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=152597659]
+[node name="UserLabel" type="Label" parent="RootLayout/MainArea/TopBar/TopBarLayout" unique_id=482693784]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxTexture_f3iqa")
 text = "Admin  👤"
 
-[node name="PageContainer" type="MarginContainer" parent="RootLayout/MainArea" unique_id=921538688]
+[node name="PageContainer" type="MarginContainer" parent="RootLayout/MainArea" unique_id=1505678184]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -205,52 +166,62 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="Pages" type="Control" parent="RootLayout/MainArea/PageContainer" unique_id=1095615189]
+[node name="Pages" type="Control" parent="RootLayout/MainArea/PageContainer" unique_id=738881593]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Dashboard" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1518456015 instance=ExtResource("2")]
+[node name="Dashboard" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1206959654 instance=ExtResource("2")]
+visible = false
 layout_mode = 1
-offset_left = -16.0
-offset_top = -26.0
-offset_right = 10.0
-offset_bottom = 15.0
 
-[node name="Catalog" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1563004236 instance=ExtResource("3")]
+[node name="Catalog" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=851943613 instance=ExtResource("3")]
 visible = false
 layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="AddEditBook" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=811969646 instance=ExtResource("4")]
+[node name="AddEditBook" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1027308620 instance=ExtResource("4")]
 visible = false
 layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="Sales" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1894236350 instance=ExtResource("5")]
+[node name="Sales" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=924612436 instance=ExtResource("5")]
 visible = false
 layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="Customers" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1035567780 instance=ExtResource("6")]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Reports" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1287037078 instance=ExtResource("7")]
+[node name="Customers" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=228885736 instance=ExtResource("6")]
 visible = false
 layout_mode = 1
 anchors_preset = 15
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="Restock" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=2059524070 instance=ExtResource("8_cnfob")]
+[node name="Reports" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1504859436 instance=ExtResource("7")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Restock" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=171214503 instance=ExtResource("8_cnfob")]
 visible = false
 layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="DevTools" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=100000001 instance=ExtResource("10_aaj1p")]
+visible = false
+layout_mode = 1
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true

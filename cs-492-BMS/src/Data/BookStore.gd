@@ -26,7 +26,7 @@ func _exit_tree() -> void:
 # ── Schema ────────────────────────────────────────────────────────────────────
 
 func _create_tables() -> void:
-	# Books
+	# Books, possible improvements to replace the primary key id with the ISBN, which is unique and required
 	db.query("""
 		CREATE TABLE IF NOT EXISTS books (
 			id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -360,6 +360,61 @@ func get_dashboard_metrics() -> Dictionary:
 		"titles":     titles,
 		"customers":  customers,
 	}
+
+
+func get_report_metrics() -> Dictionary:
+	db.query("""
+		SELECT 
+			COALESCE(SUM(total), 0.0) AS total_revenue,
+			COUNT(*) AS total_sales,
+			COALESCE(AVG(total), 0.0) AS average_order_value
+		FROM sales;
+	""")
+	
+	var row: Dictionary = db.query_result[0] if db.query_result.size() > 0 else {}
+
+	db.query("""
+		SELECT COALESCE(SUM(qty), 0) AS books_sold
+		FROM sale_items;
+	""")
+	
+	var books_sold: int = db.query_result[0]["books_sold"] if db.query_result.size() > 0 else 0
+
+	return {
+		"total_revenue": row.get("total_revenue", 0.0),
+		"total_sales": row.get("total_sales", 0),
+		"books_sold": books_sold,
+		"average_order_value": row.get("average_order_value", 0.0),
+	}
+
+
+func get_low_stock_alerts() -> Array:
+	db.query("""
+		SELECT title, stock
+		FROM books
+		WHERE stock <= low_stock_alert
+		ORDER BY stock ASC;
+	""")
+
+	return db.query_result
+
+
+func get_sales_by_genre_report() -> Array:
+	db.query("""
+		SELECT 
+			COALESCE(b.genre, 'Other') AS name,
+			SUM(si.qty) AS sold,
+			CAST(ROUND(
+				(SUM(si.qty) * 100.0) / 
+				(SELECT COALESCE(SUM(qty), 1) FROM sale_items)
+			) AS INTEGER) AS pct
+		FROM sale_items si
+		JOIN books b ON b.id = si.book_id
+		GROUP BY b.genre
+		ORDER BY sold DESC;
+	""")
+
+	return db.query_result
 
 
 func get_top_books(limit: int = 5) -> Array:

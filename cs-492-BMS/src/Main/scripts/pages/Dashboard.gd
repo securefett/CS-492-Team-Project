@@ -3,7 +3,7 @@ extends ScrollContainer
 @onready var top_books_list: VBoxContainer = $Content/BottomRow/TopBooksCard/TopBooksLayout/TopBooksList
 @onready var genre_list: VBoxContainer     = $Content/BottomRow/GenreCard/GenreLayout/GenreList
 
-# Populated by your data layer / autoload later
+#Temporary settings, will load from database, or delete this entire page we will see
 var top_books := [
 	{ "title": "The Midnight Library", "sold": 48 },
 	{ "title": "Atomic Habits",        "sold": 41 },
@@ -36,17 +36,13 @@ func _build_top_books() -> void:
 		row.add_child(sold_lbl)
 		top_books_list.add_child(row)
 
+
 func _build_genres() -> void:
 	for item in genres:
 		var row := HBoxContainer.new()
 		var name_lbl := Label.new()
 		name_lbl.text = item["name"]
 		name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		#name_lbl.custom_minimum_size.x = 90
-		#var bar := ProgressBar.new()
-		#bar.value = item["pct"]
-		#bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		#bar.show_percentage = false
 		var pct_lbl := Label.new()
 		pct_lbl.text = "%d%%" % item["pct"]
 		row.add_child(name_lbl)

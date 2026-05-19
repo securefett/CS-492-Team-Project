@@ -6,30 +6,46 @@ extends ScrollContainer
 @onready var stock_list:    VBoxContainer = $Content/BottomRow/StockCard/StockLayout/StockList
 
 var monthly_revenue := [3200, 4100, 3800, 5200, 5900, 4700, 6800, 6200, 7400, 6100, 7800, 8241]
-var genres := [
-	{ "name": "Fiction",     "pct": 42 },
-	{ "name": "Non-fiction", "pct": 23 },
-	{ "name": "Science",     "pct": 17 },
-	{ "name": "Other",       "pct": 18 },
-]
-var key_metrics := [
-	{ "label": "Avg. order value",   "value": "$26.42" },
-	{ "label": "Return customers",   "value": "68%" },
-	{ "label": "Inventory turnover", "value": "4.2×" },
-	{ "label": "Gross margin",       "value": "43%" },
-]
-var low_stock := [
-	{ "title": "Project Hail Mary", "stock": 4 },
-	{ "title": "Sapiens",           "stock": 7 },
-	{ "title": "Dune",              "stock": 0 },
-	{ "title": "The Road",          "stock": 0 },
-]
+var genres := []
+var key_metrics := []
+var low_stock := []
 
 func _ready() -> void:
+	_load_key_metrics()
+	_load_low_stock()
+	_load_genres()
 	_build_revenue_chart()
 	_build_genre_legend()
 	_build_metrics()
 	_build_stock_alerts()
+
+func _load_low_stock() -> void:
+	low_stock = BookStore.get_low_stock_alerts()
+
+func _load_genres() -> void:
+	genres = BookStore.get_sales_by_genre_report()
+
+func _load_key_metrics() -> void:
+	var metrics := BookStore.get_report_metrics()
+
+	key_metrics = [
+		{
+			"label": "Total revenue",
+			"value": "$%.2f" % metrics.get("total_revenue", 0.0)
+		},
+		{
+			"label": "Total sales",
+			"value": str(metrics.get("total_sales", 0))
+		},
+		{
+			"label": "Books sold",
+			"value": str(metrics.get("books_sold", 0))
+		},
+		{
+			"label": "Avg. order value",
+			"value": "$%.2f" % metrics.get("average_order_value", 0.0)
+		},
+	]
 
 func _build_revenue_chart() -> void:
 	var max_val: float = monthly_revenue.max()

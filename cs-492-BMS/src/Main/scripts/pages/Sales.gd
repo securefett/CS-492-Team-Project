@@ -14,6 +14,18 @@ extends HBoxContainer
 @onready var checkout_btn:   Button        = $SummaryPanel/SummaryLayout/CheckoutBtn
 @onready var error_label:    Label         = $SummaryPanel/SummaryLayout/ErrorLabel
 
+# ── Card detail nodes ──────────────────────────────────────────────────────────
+@onready var card_details:   VBoxContainer = $SummaryPanel/SummaryLayout/CardDetails
+@onready var card_number:    LineEdit      = $SummaryPanel/SummaryLayout/CardDetails/CardNumberRow/CardNumber
+@onready var card_expiry:    LineEdit      = $SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/ExpiryCol/CardExpiry
+@onready var card_cvv:       LineEdit      = $SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/CVVCol/CardCVV
+@onready var card_name:      LineEdit      = $SummaryPanel/SummaryLayout/CardDetails/CardNameRow/CardName
+
+# ── Cash detail nodes ──────────────────────────────────────────────────────────
+@onready var cash_details:   VBoxContainer = $SummaryPanel/SummaryLayout/CashDetails
+@onready var cash_tendered:  LineEdit      = $SummaryPanel/SummaryLayout/CashDetails/TenderedRow/CashTendered
+@onready var change_val:     Label         = $SummaryPanel/SummaryLayout/CashDetails/ChangeRow/ChangeValue
+
 const TAX_RATE := 0.08
 
 # Each entry: { "book": {id, title, author, price, stock}, "qty": int }
@@ -27,8 +39,21 @@ func _ready() -> void:
 	add_btn.pressed.connect(_on_add_pressed)
 	checkout_btn.pressed.connect(_on_checkout)
 
+	pay_card.pressed.connect(_on_payment_method_changed)
+	pay_cash.pressed.connect(_on_payment_method_changed)
+
+	cash_tendered.text_changed.connect(_on_cash_tendered_changed)
+
+	# Card number: restrict to digits + spaces, format as groups of 4
+	card_number.text_changed.connect(_on_card_number_changed)
+	# Expiry: auto-insert slash after MM
+	card_expiry.text_changed.connect(_on_expiry_changed)
+	# CVV: digits only, max 4
+	card_cvv.text_changed.connect(_on_cvv_changed)
+
 	# Default payment to Card
 	pay_card.button_pressed = true
+	_on_payment_method_changed()
 
 	search_results.visible = false
 	error_label.visible    = false
@@ -43,7 +68,7 @@ func _notification(what: int) -> void:
 		_load_customers()
 
 
-# ── Customer dropdown ─────────────────────────────────────────────────────────
+# ── Customer dropdown ──────────────────────────────────────────────────────────
 
 func _load_customers() -> void:
 	_customers = BookStore.get_all_customers()
@@ -53,14 +78,99 @@ func _load_customers() -> void:
 		customer_option.add_item(c["name"])
 
 
+# ── Public API — called by other pages ────────────────────────────────────────
 
-# ── Public API — called by other pages ───────────────────────────────────────
-
-# Adds a book to the cart. Called externally e.g. from Catalog.
 func add_book_to_cart(book: Dictionary) -> void:
 	if not is_node_ready():
 		await ready
 	_add_to_cart(book)
+
+
+# ── Payment method toggle ─────────────────────────────────────────────────────
+# This is legacy  code
+func _on_payment_method_changed() -> void:
+	# Enforce mutual exclusion for toggle buttons
+	if pay_card.button_pressed:
+		pay_cash.button_pressed = false
+	else:
+		pay_card.button_pressed = not pay_cash.button_pressed
+
+	var is_card := pay_card.button_pressed
+	card_details.visible = is_card
+	cash_details.visible = not is_card
+
+	if not is_card:
+		_on_cash_tendered_changed(cash_tendered.text)
+
+
+# ── Card input formatting ─────────────────────────────────────────────────────
+
+func _on_card_number_changed(text: String) -> void:
+	# Strip everything except digits
+	var digits := ""
+	for ch in text:
+		if ch.is_valid_int() or ch == "0":
+			digits += ch
+	digits = digits.left(16)
+
+	# Reformat into groups of 4 separated by spaces
+	var formatted := ""
+	for i in digits.length():
+		if i > 0 and i % 4 == 0:
+			formatted += " "
+		formatted += digits[i]
+
+	# Avoid recursive signal
+	if card_number.text != formatted:
+		card_number.set_block_signals(true)
+		card_number.text = formatted
+		card_number.caret_column = formatted.length()
+		card_number.set_block_signals(false)
+
+
+func _on_expiry_changed(text: String) -> void:
+	var digits := ""
+	for ch in text:
+		if ch.is_valid_int() or ch == "0":
+			digits += ch
+	digits = digits.left(4)
+
+	var formatted := ""
+	if digits.length() > 2:
+		formatted = digits.left(2) + "/" + digits.substr(2)
+	else:
+		formatted = digits
+
+	if card_expiry.text != formatted:
+		card_expiry.set_block_signals(true)
+		card_expiry.text = formatted
+		card_expiry.caret_column = formatted.length()
+		card_expiry.set_block_signals(false)
+
+
+func _on_cvv_changed(text: String) -> void:
+	var digits := ""
+	for ch in text:
+		if ch.is_valid_int() or ch == "0":
+			digits += ch
+	digits = digits.left(4)
+	if card_cvv.text != digits:
+		card_cvv.set_block_signals(true)
+		card_cvv.text = digits
+		card_cvv.caret_column = digits.length()
+		card_cvv.set_block_signals(false)
+
+
+# ── Cash change calculation ───────────────────────────────────────────────────
+# May be legacy
+func _on_cash_tendered_changed(_text: String) -> void:
+	var tendered := cash_tendered.text.to_float()
+	var total    := _get_total()
+	if tendered >= total and total > 0.0:
+		change_val.text = "$%.2f" % (tendered - total)
+	else:
+		change_val.text = "—"
+
 
 # ── Book search dropdown ──────────────────────────────────────────────────────
 
@@ -96,7 +206,6 @@ func _on_result_selected(book: Dictionary) -> void:
 
 
 func _on_add_pressed() -> void:
-	# Pressing Add confirms the first enabled result if one is showing
 	for child in search_results.get_children():
 		if child is Button and not child.disabled:
 			child.pressed.emit()
@@ -104,7 +213,6 @@ func _on_add_pressed() -> void:
 
 
 func _hide_results() -> void:
-	# Small delay so a result button click registers before the list disappears
 	await get_tree().create_timer(0.15).timeout
 	search_results.visible = false
 	for child in search_results.get_children():
@@ -114,7 +222,6 @@ func _hide_results() -> void:
 # ── Cart ──────────────────────────────────────────────────────────────────────
 
 func _add_to_cart(book: Dictionary) -> void:
-	# If already in cart, increment — but don't exceed available stock
 	for entry in cart:
 		if entry["book"]["id"] == book["id"]:
 			if entry["qty"] >= book["stock"]:
@@ -145,7 +252,6 @@ func _make_cart_row(entry: Dictionary) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
-	# Book info
 	var info       := VBoxContainer.new()
 	var title_lbl  := Label.new()
 	var author_lbl := Label.new()
@@ -155,7 +261,6 @@ func _make_cart_row(entry: Dictionary) -> HBoxContainer:
 	info.add_child(title_lbl)
 	info.add_child(author_lbl)
 
-	# Qty controls
 	var minus_btn := Button.new()
 	minus_btn.text = "−"
 	minus_btn.pressed.connect(_on_qty_changed.bind(entry, -1))
@@ -169,12 +274,10 @@ func _make_cart_row(entry: Dictionary) -> HBoxContainer:
 	plus_btn.pressed.connect(_on_qty_changed.bind(entry, 1))
 	plus_btn.disabled = entry["qty"] >= entry["book"]["stock"]
 
-	# Line total
 	var price_lbl      := Label.new()
 	price_lbl.text      = "$%.2f" % (entry["book"]["price"] * entry["qty"])
 	price_lbl.custom_minimum_size.x = 56
 
-	# Remove button
 	var remove_btn  := Button.new()
 	remove_btn.text  = "✕"
 	remove_btn.pressed.connect(_on_remove_item.bind(entry))
@@ -205,6 +308,13 @@ func _on_remove_item(entry: Dictionary) -> void:
 	_refresh_cart()
 
 
+func _get_total() -> float:
+	var subtotal := 0.0
+	for entry in cart:
+		subtotal += entry["book"]["price"] * entry["qty"]
+	return subtotal + subtotal * TAX_RATE
+
+
 func _refresh_totals() -> void:
 	var subtotal := 0.0
 	for entry in cart:
@@ -215,6 +325,10 @@ func _refresh_totals() -> void:
 	tax_val.text      = "$%.2f" % tax
 	total_val.text    = "$%.2f" % total
 
+	# Refresh change display if cash is selected
+	if cash_details.visible:
+		_on_cash_tendered_changed(cash_tendered.text)
+
 
 # ── Checkout ──────────────────────────────────────────────────────────────────
 
@@ -223,15 +337,42 @@ func _on_checkout() -> void:
 		_show_error("Add at least one book before checking out.")
 		return
 
-	var payment := "card" if pay_card.button_pressed else "cash"
+	var is_card := pay_card.button_pressed
 
-	# Resolve optional customer ID (-1 = walk-in)
+	# ── Validate payment details ──────────────────────────────────────────────
+	if is_card:
+		var raw_number := card_number.text.replace(" ", "")
+		if raw_number.length() < 13 or raw_number.length() > 16:
+			_show_error("Please enter a valid card number.")
+			return
+		if card_expiry.text.length() != 5:
+			_show_error("Please enter a valid expiry date (MM/YY).")
+			return
+		if not _is_expiry_valid(card_expiry.text):
+			_show_error("Card expiry date has passed.")
+			return
+		if card_cvv.text.length() < 3:
+			_show_error("Please enter a valid CVV.")
+			return
+		if card_name.text.strip_edges().length() < 2:
+			_show_error("Please enter the name on the card.")
+			return
+	else:
+		var tendered := cash_tendered.text.to_float()
+		if tendered <= 0.0:
+			_show_error("Please enter the cash amount tendered.")
+			return
+		if tendered < _get_total():
+			_show_error("Cash tendered is less than the total due.")
+			return
+
+	var payment := "card" if is_card else "cash"
+
 	var customer_id := -1
 	var selected_idx := customer_option.selected
 	if selected_idx > 0:
 		customer_id = _customers[selected_idx - 1]["id"]
 
-	# Build the items array expected by BookStore.complete_sale()
 	var items: Array = []
 	for entry in cart:
 		items.append({
@@ -242,13 +383,38 @@ func _on_checkout() -> void:
 
 	var sale_id := BookStore.complete_sale(items, payment, customer_id)
 
-	_show_receipt(sale_id)
+	_show_receipt(sale_id, is_card)
 	cart.clear()
 	_refresh_cart()
 	customer_option.selected = 0
+	_clear_payment_fields()
 
 
-func _show_receipt(sale_id: int) -> void:
+func _is_expiry_valid(expiry: String) -> bool:
+	# expiry is "MM/YY"
+	var parts := expiry.split("/")
+	if parts.size() != 2:
+		return false
+	var month := parts[0].to_int()
+	var year  := 2000 + parts[1].to_int()
+	var now   := Time.get_date_dict_from_system()
+	if year > now["year"]:
+		return true
+	if year == now["year"] and month >= now["month"]:
+		return true
+	return false
+
+
+func _clear_payment_fields() -> void:
+	card_number.clear()
+	card_expiry.clear()
+	card_cvv.clear()
+	card_name.clear()
+	cash_tendered.clear()
+	change_val.text = "—"
+
+
+func _show_receipt(sale_id: int, paid_by_card: bool) -> void:
 	var sale_items := BookStore.get_sale_items(sale_id)
 
 	var dialog   := AcceptDialog.new()
@@ -261,13 +427,23 @@ func _show_receipt(sale_id: int) -> void:
 	lines.append("Tax      : %s" % tax_val.text)
 	lines.append("Total    : %s" % total_val.text)
 
+	if paid_by_card:
+		var last4 := card_number.text.replace(" ", "").right(4)
+		lines.append("\nPaid via card ending in %s" % last4)
+	else:
+		var tendered := cash_tendered.text.to_float()
+		var change   := tendered - _get_total()
+		# After cart.clear() total will be 0, so capture before clearing
+		lines.append("\nCash tendered : $%.2f" % tendered)
+		lines.append("Change due    : %s" % change_val.text)
+
 	dialog.dialog_text = "\n".join(lines)
 	add_child(dialog)
 	dialog.popup_centered()
 	dialog.confirmed.connect(func(): dialog.queue_free())
 
 
-# ── Error display ─────────────────────────────────────────────────────────────
+# ── Error display ──────────────────────────────────────────────────────────────
 
 func _show_error(msg: String) -> void:
 	error_label.text    = msg

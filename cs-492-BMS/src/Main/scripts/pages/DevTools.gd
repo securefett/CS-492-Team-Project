@@ -1,0 +1,337 @@
+extends VBoxContainer
+
+# ── Node references ────────────────────────────────────────────────────────────
+@onready var tab_bar:       TabBar        = $TabBar
+@onready var tab_books:     VBoxContainer = $Tabs/Books
+@onready var tab_customers: VBoxContainer = $Tabs/Customers
+@onready var tab_sales:     VBoxContainer = $Tabs/Sales
+@onready var tab_raw:       VBoxContainer = $Tabs/Raw
+
+# Books tab
+@onready var books_grid:       GridContainer = $Tabs/Books/BooksGrid
+@onready var btn_seed_books:   Button        = $Tabs/Books/BooksGrid/SeedBooksBtn
+@onready var btn_clear_books:  Button        = $Tabs/Books/BooksGrid/ClearBooksBtn
+@onready var btn_show_books:   Button        = $Tabs/Books/BooksGrid/ShowBooksBtn
+@onready var btn_low_stock:    Button        = $Tabs/Books/BooksGrid/LowStockBtn
+
+# Customers tab
+@onready var btn_seed_customers:  Button = $Tabs/Customers/CustomerGrid/SeedCustomersBtn
+@onready var btn_clear_customers: Button = $Tabs/Customers/CustomerGrid/ClearCustomersBtn
+@onready var btn_show_customers:  Button = $Tabs/Customers/CustomerGrid/ShowCustomersBtn
+
+# Sales tab
+@onready var btn_seed_sales:  Button = $Tabs/Sales/SalesGrid/SeedSalesBtn
+@onready var btn_clear_sales: Button = $Tabs/Sales/SalesGrid/ClearSalesBtn
+@onready var btn_show_sales:  Button = $Tabs/Sales/SalesGrid/ShowSalesBtn
+
+# Raw tab
+@onready var raw_input:  LineEdit = $Tabs/Raw/InputRow/RawInput
+@onready var raw_run:    Button   = $Tabs/Raw/InputRow/RawRunBtn
+@onready var raw_clear:  Button   = $Tabs/Raw/ClearBtn
+
+# Shared output
+@onready var output_scroll: ScrollContainer = $OutputScroll
+@onready var output_label:  RichTextLabel   = $OutputScroll/OutputLabel
+@onready var status_label:  Label           = $StatusLabel
+
+var _current_tab := 0
+
+# ── Sample data ────────────────────────────────────────────────────────────────
+
+const SEED_BOOKS := [
+	{ "title": "The Hitchhiker's Guide to the Galaxy", "author": "Douglas Adams",    "isbn": "9780345391803", "genre": "Science Fiction", "publisher": "Del Rey",          "year": 1979, "description": "A comedy sci-fi classic.",       "price": 12.99, "cost": 5.00,  "stock": 20, "low_stock_alert": 5 },
+	{ "title": "Dune",                                  "author": "Frank Herbert",    "isbn": "9780441013593", "genre": "Science Fiction", "publisher": "Ace",              "year": 1965, "description": "Epic desert planet saga.",        "price": 14.99, "cost": 6.00,  "stock": 15, "low_stock_alert": 4 },
+	{ "title": "Neuromancer",                           "author": "William Gibson",   "isbn": "9780441569595", "genre": "Science Fiction", "publisher": "Ace",              "year": 1984, "description": "Founding cyberpunk novel.",       "price": 13.99, "cost": 5.50,  "stock": 8,  "low_stock_alert": 3 },
+	{ "title": "Pride and Prejudice",                   "author": "Jane Austen",      "isbn": "9780141439518", "genre": "Classic",         "publisher": "Penguin Classics", "year": 1813, "description": "Timeless Regency romance.",      "price": 8.99,  "cost": 3.00,  "stock": 25, "low_stock_alert": 5 },
+	{ "title": "1984",                                  "author": "George Orwell",    "isbn": "9780451524935", "genre": "Classic",         "publisher": "Signet Classics",  "year": 1949, "description": "Dystopian political fiction.",   "price": 9.99,  "cost": 3.50,  "stock": 30, "low_stock_alert": 5 },
+	{ "title": "The Great Gatsby",                      "author": "F. Scott Fitzgerald", "isbn": "9780743273565", "genre": "Classic",      "publisher": "Scribner",         "year": 1925, "description": "Jazz Age American tragedy.",    "price": 10.99, "cost": 4.00,  "stock": 12, "low_stock_alert": 4 },
+	{ "title": "To Kill a Mockingbird",                 "author": "Harper Lee",       "isbn": "9780061935466", "genre": "Classic",         "publisher": "Harper Perennial", "year": 1960, "description": "A story of racial injustice.",  "price": 11.99, "cost": 4.50,  "stock": 18, "low_stock_alert": 5 },
+	{ "title": "The Name of the Wind",                  "author": "Patrick Rothfuss", "isbn": "9780756404741", "genre": "Fantasy",         "publisher": "DAW Books",        "year": 2007, "description": "Kvothe's legendary tale.",       "price": 15.99, "cost": 7.00,  "stock": 3,  "low_stock_alert": 5 },
+	{ "title": "The Way of Kings",                      "author": "Brandon Sanderson","isbn": "9780765326355", "genre": "Fantasy",         "publisher": "Tor Books",        "year": 2010, "description": "Epic Stormlight Archive #1.",    "price": 17.99, "cost": 8.00,  "stock": 10, "low_stock_alert": 4 },
+	{ "title": "Gone Girl",                             "author": "Gillian Flynn",    "isbn": "9780307588371", "genre": "Thriller",        "publisher": "Crown",            "year": 2012, "description": "Twisted psychological thriller.", "price": 13.49, "cost": 5.75,  "stock": 2,  "low_stock_alert": 5 },
+]
+
+const SEED_CUSTOMERS := [
+	{ "name": "Alice Mercer",   "email": "alice@example.com",   "phone": "555-0101", "notes": "Prefers sci-fi."       },
+	{ "name": "Bob Tanaka",     "email": "bob@example.com",     "phone": "555-0102", "notes": "Regular customer."     },
+	{ "name": "Clara Singh",    "email": "clara@example.com",   "phone": "555-0103", "notes": "Interested in classics."},
+	{ "name": "David Osei",     "email": "david@example.com",   "phone": "555-0104", "notes": ""                      },
+	{ "name": "Eva Kowalski",   "email": "eva@example.com",     "phone": "555-0105", "notes": "Book club organiser."  },
+]
+
+# ── Lifecycle ──────────────────────────────────────────────────────────────────
+
+func _ready() -> void:
+	tab_bar.tab_changed.connect(_on_tab_changed)
+
+	btn_seed_books.pressed.connect(_seed_books)
+	btn_clear_books.pressed.connect(_confirm_clear.bind("books"))
+	btn_show_books.pressed.connect(_show_books)
+	btn_low_stock.pressed.connect(_show_low_stock)
+
+	btn_seed_customers.pressed.connect(_seed_customers)
+	btn_clear_customers.pressed.connect(_confirm_clear.bind("customers"))
+	btn_show_customers.pressed.connect(_show_customers)
+
+	btn_seed_sales.pressed.connect(_seed_sales)
+	btn_clear_sales.pressed.connect(_confirm_clear.bind("sales"))
+	btn_show_sales.pressed.connect(_show_sales)
+
+	raw_run.pressed.connect(_run_raw)
+	raw_clear.pressed.connect(func(): output_label.text = ""; status_label.text = "")
+	raw_input.text_submitted.connect(func(_t): _run_raw())
+
+	_set_status("Ready.")
+	_on_tab_changed(0)
+
+
+func _on_tab_changed(idx: int) -> void:
+	_current_tab = idx
+	tab_books.visible     = idx == 0
+	tab_customers.visible = idx == 1
+	tab_sales.visible     = idx == 2
+	tab_raw.visible       = idx == 3
+
+
+# ── Books ──────────────────────────────────────────────────────────────────────
+
+func _seed_books() -> void:
+	var added := 0
+	for b in SEED_BOOKS:
+		BookStore.add_book(b)
+		added += 1
+	_set_status("Seeded %d books." % added)
+	_show_books()
+
+
+func _show_books() -> void:
+	var rows := BookStore.get_all_books()
+	if rows.is_empty():
+		_print_output("(no books in database)")
+		return
+	var headers := ["ID", "Title", "Author", "Genre", "Price", "Stock", "ISBN"]
+	var data: Array = []
+	for r in rows:
+		data.append([
+			str(r.get("id", "")),
+			r.get("title", ""),
+			r.get("author", ""),
+			r.get("genre", ""),
+			"$%.2f" % r.get("price", 0.0),
+			str(r.get("stock", 0)),
+			r.get("isbn", ""),
+		])
+	_print_table("Books (%d)" % rows.size(), headers, data)
+
+
+func _show_low_stock() -> void:
+	var rows := BookStore.get_low_stock_books()
+	if rows.is_empty():
+		_print_output("No books are at or below their low-stock alert threshold.")
+		return
+	var headers := ["ID", "Title", "Stock", "Alert At", "Author"]
+	var data: Array = []
+	for r in rows:
+		data.append([
+			str(r.get("id", "")),
+			r.get("title", ""),
+			str(r.get("stock", 0)),
+			str(r.get("low_stock_alert", 5)),
+			r.get("author", ""),
+		])
+	_print_table("Low Stock Books (%d)" % rows.size(), headers, data)
+
+
+# ── Customers ─────────────────────────────────────────────────────────────────
+
+func _seed_customers() -> void:
+	var added := 0
+	for c in SEED_CUSTOMERS:
+		BookStore.add_customer(c)
+		added += 1
+	_set_status("Seeded %d customers." % added)
+	_show_customers()
+
+
+func _show_customers() -> void:
+	var rows := BookStore.get_all_customers()
+	if rows.is_empty():
+		_print_output("(no customers in database)")
+		return
+	var headers := ["ID", "Name", "Email", "Phone", "Sales", "Spent"]
+	var data: Array = []
+	for r in rows:
+		data.append([
+			str(r.get("id", "")),
+			r.get("name", ""),
+			r.get("email", ""),
+			r.get("phone", ""),
+			str(r.get("total_sales", 0)),
+			"$%.2f" % r.get("total_spent", 0.0),
+		])
+	_print_table("Customers (%d)" % rows.size(), headers, data)
+
+
+# ── Sales ──────────────────────────────────────────────────────────────────────
+
+func _seed_sales() -> void:
+	var books := BookStore.get_all_books()
+	if books.is_empty():
+		_set_status("Seed books first before seeding sales.", true)
+		return
+	var customers := BookStore.get_all_customers()
+
+	var methods := ["cash", "card"]
+	var rng     := RandomNumberGenerator.new()
+	rng.randomize()
+
+	for i in 6:
+		var book       = books[rng.randi() % books.size()]
+		var qty        := rng.randi_range(1, 3)
+		var customer_id: int = -1
+		if not customers.is_empty():
+			customer_id = customers[rng.randi() % customers.size()]["id"]
+		var method = methods[rng.randi() % 2]
+		BookStore.complete_sale(
+			[{ "book_id": book["id"], "qty": qty, "price": book["price"] }],
+			method,
+			customer_id
+		)
+
+	_set_status("Seeded 6 random sales.")
+	_show_sales()
+
+
+func _show_sales() -> void:
+	var rows := BookStore.get_recent_sales(100)
+	if rows.is_empty():
+		_print_output("(no sales in database)")
+		return
+	var headers := ["ID", "Customer", "Method", "Subtotal", "Tax", "Total", "Date"]
+	var data: Array = []
+	for r in rows:
+		data.append([
+			str(r.get("id", "")),
+			r.get("customer_name", "Walk-in") if r.get("customer_name", "") != "" else "Walk-in",
+			r.get("payment_method", ""),
+			"$%.2f" % r.get("subtotal", 0.0),
+			"$%.2f" % r.get("tax", 0.0),
+			"$%.2f" % r.get("total", 0.0),
+			r.get("created_at", ""),
+		])
+	_print_table("Recent Sales (%d)" % rows.size(), headers, data)
+
+
+# ── Clear / confirm ────────────────────────────────────────────────────────────
+
+func _confirm_clear(table: String) -> void:
+	var dialog := ConfirmationDialog.new()
+	dialog.title = "Confirm Clear"
+	dialog.dialog_text = "Delete ALL rows from [%s]?\n\nThis cannot be undone." % table
+	dialog.min_size = Vector2(340, 120)
+	add_child(dialog)
+	dialog.popup_centered()
+	dialog.confirmed.connect(func():
+		_do_clear(table)
+		dialog.queue_free()
+	)
+	dialog.canceled.connect(func(): dialog.queue_free())
+
+
+func _do_clear(table: String) -> void:
+	match table:
+		"books":
+			BookStore.db.query("DELETE FROM sale_items;")
+			BookStore.db.query("DELETE FROM sales;")
+			BookStore.db.query("DELETE FROM books;")
+			BookStore.db.query("DELETE FROM sqlite_sequence WHERE name='books';")
+			BookStore.db.query("DELETE FROM sqlite_sequence WHERE name='sales';")
+			BookStore.db.query("DELETE FROM sqlite_sequence WHERE name='sale_items';")
+			_set_status("Cleared books, sales, and sale_items (cascade).")
+		"customers":
+			BookStore.db.query("UPDATE sales SET customer_id = NULL;")
+			BookStore.db.query("DELETE FROM customers;")
+			BookStore.db.query("DELETE FROM sqlite_sequence WHERE name='customers';")
+			_set_status("Cleared customers (sales unlinked).")
+		"sales":
+			BookStore.db.query("DELETE FROM sale_items;")
+			BookStore.db.query("DELETE FROM sales;")
+			BookStore.db.query("DELETE FROM sqlite_sequence WHERE name='sales';")
+			BookStore.db.query("DELETE FROM sqlite_sequence WHERE name='sale_items';")
+			_set_status("Cleared sales and sale_items.")
+	_print_output("Table [%s] cleared." % table)
+
+
+# ── Raw query ──────────────────────────────────────────────────────────────────
+
+func _run_raw() -> void:
+	var sql := raw_input.text.strip_edges()
+	if sql.is_empty():
+		return
+
+	BookStore.db.query(sql)
+	var result := BookStore.db.query_result
+
+	if result.is_empty():
+		_print_output("Query executed. No rows returned.")
+		_set_status("OK — 0 rows.")
+		return
+
+	var headers := result[0].keys()
+	var data: Array = []
+	for row in result:
+		var cells: Array = []
+		for key in headers:
+			cells.append(str(row.get(key, "")))
+		data.append(cells)
+
+	_print_table("Result (%d rows)" % result.size(), headers, data)
+	_set_status("OK — %d rows." % result.size())
+
+
+# ── Output helpers ─────────────────────────────────────────────────────────────
+
+func _print_output(text: String) -> void:
+	output_label.text = text
+
+
+func _print_table(title: String, headers: Array, rows: Array) -> void:
+	# Work out column widths
+	var widths: Array = []
+	for h in headers:
+		widths.append(h.length())
+	for row in rows:
+		for i in row.size():
+			widths[i] = max(widths[i], str(row[i]).length())
+
+	var lines: PackedStringArray = []
+
+	var sep := "+"
+	for w in widths:
+		sep += "-".repeat(w + 2) + "+"
+
+	lines.append(title)
+	lines.append(sep)
+
+	var header_row := "|"
+	for i in headers.size():
+		header_row += " " + headers[i].rpad(widths[i]) + " |"
+	lines.append(header_row)
+	lines.append(sep)
+
+	for row in rows:
+		var line := "|"
+		for i in row.size():
+			line += " " + str(row[i]).rpad(widths[i]) + " |"
+		lines.append(line)
+
+	lines.append(sep)
+	output_label.text = "\n".join(lines)
+
+
+func _set_status(msg: String, is_error := false) -> void:
+	status_label.text = msg
+	status_label.add_theme_color_override(
+		"font_color",
+		Color.RED if is_error else Color.GREEN
+	)
