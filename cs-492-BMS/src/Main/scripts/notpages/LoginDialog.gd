@@ -13,10 +13,20 @@ extends Window
 # ── Guest tab ─────────────────────────────────────────────────────────────────
 @onready var guest_sign_in_btn: Button = $Margin/Layout/Tabs/Guest/GuestSignInBtn
 
+# ── Register tab ──────────────────────────────────────────────────────────────
+@onready var reg_name_input:     LineEdit = $Margin/Layout/Tabs/Register/RegNameInput
+@onready var reg_email_input:    LineEdit = $Margin/Layout/Tabs/Register/RegEmailInput
+@onready var reg_username_input: LineEdit = $Margin/Layout/Tabs/Register/RegUsernameInput
+@onready var reg_password_input: LineEdit = $Margin/Layout/Tabs/Register/RegPasswordInput
+@onready var reg_confirm_input:  LineEdit = $Margin/Layout/Tabs/Register/RegConfirmInput
+@onready var reg_create_btn:     Button   = $Margin/Layout/Tabs/Register/RegCreateBtn
+
 # ── Shared ────────────────────────────────────────────────────────────────────
 @onready var error_label: Label  = $Margin/Layout/ErrorLabel
 @onready var logout_btn:  Button = $Margin/Layout/LogoutBtn
 
+# Window height for each tab index (Email, Username, Guest, Register)
+const TAB_HEIGHTS := [450, 450, 300, 450]
 
 func _ready() -> void:
 	# Show Log Out only when switching accounts
@@ -34,6 +44,10 @@ func _ready() -> void:
 
 	# Guest tab
 	guest_sign_in_btn.pressed.connect(_on_guest_sign_in)
+
+	# Register tab
+	reg_create_btn.pressed.connect(_on_register)
+	reg_confirm_input.text_submitted.connect(func(_t): _on_register())
 
 	# Shared
 	logout_btn.pressed.connect(_on_logout)
@@ -81,6 +95,34 @@ func _on_guest_sign_in() -> void:
 func _on_logout() -> void:
 	Auth.logout()
 	queue_free()
+
+
+# ── Register ──────────────────────────────────────────────────────────────────
+
+func _on_register() -> void:
+	_clear_error()
+	var err := Auth.register_account(
+		reg_name_input.text,
+		reg_email_input.text,
+		reg_username_input.text,
+		reg_password_input.text,
+		reg_confirm_input.text
+	)
+	if err != "":
+		_show_error(err)
+		reg_password_input.clear()
+		reg_confirm_input.clear()
+		reg_password_input.grab_focus()
+	else:
+		queue_free()
+
+
+# ── Tab resize ───────────────────────────────────────────────────────────────
+
+func _on_tab_changed(tab_index: int) -> void:
+	_clear_error()
+	var h: int = TAB_HEIGHTS[tab_index] if tab_index < TAB_HEIGHTS.size() else TAB_HEIGHTS[0]
+	size = Vector2i(size.x, h)
 
 
 # ── Close guard ───────────────────────────────────────────────────────────────

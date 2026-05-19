@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://logindialog"]
+[gd_scene format=3 uid="uid://gb80j2s0rvii"]
 
 [ext_resource type="Script" uid="uid://ddtd6yhqo62q0" path="res://src/Main/scripts/notpages/LoginDialog.gd" id="1"]
 
@@ -120,48 +120,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Continue as Guest"
 
-[node name="Register" type="VBoxContainer" parent="Margin/Layout/Tabs" unique_id=1756639275]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 6
-metadata/_tab_index = 3
-
-[node name="RegDescription" type="Label" parent="Margin/Layout/Tabs/Register" unique_id=441501333]
-layout_mode = 2
-text = "Create a new customer account."
-
-[node name="RegNameInput" type="LineEdit" parent="Margin/Layout/Tabs/Register" unique_id=162871244]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Full name"
-
-[node name="RegEmailInput" type="LineEdit" parent="Margin/Layout/Tabs/Register" unique_id=81217918]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Email (optional if username set)"
-
-[node name="RegUsernameInput" type="LineEdit" parent="Margin/Layout/Tabs/Register" unique_id=808854573]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Username (optional if email set)"
-
-[node name="RegPasswordInput" type="LineEdit" parent="Margin/Layout/Tabs/Register" unique_id=1165851506]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Password (min. 6 characters)"
-secret = true
-
-[node name="RegConfirmInput" type="LineEdit" parent="Margin/Layout/Tabs/Register" unique_id=1611011258]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Confirm password"
-secret = true
-
-[node name="RegCreateBtn" type="Button" parent="Margin/Layout/Tabs/Register" unique_id=1439868834]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Create Account"
-
 [node name="ErrorLabel" type="Label" parent="Margin/Layout" unique_id=2102634762]
 visible = false
 layout_mode = 2
@@ -175,5 +133,3 @@ text = "Log Out of Current Account"
 [node name="HintLabel" type="Label" parent="Margin/Layout" unique_id=203690228]
 layout_mode = 2
 text = "Default credentials use 'password' as the password."
-
-[connection signal="tab_changed" from="Margin/Layout/Tabs" to="." method="_on_tab_changed"]

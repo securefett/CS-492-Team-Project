@@ -85,6 +85,12 @@ func _create_table() -> void:
 	if not "username" in col_names:
 		_db.query("ALTER TABLE accounts ADD COLUMN username TEXT UNIQUE;")
 
+	# Migration: add customer_id column if missing (links account to customers table)
+	_db.query("PRAGMA table_info(accounts);")
+	var col_names2 := _db.query_result.map(func(c): return c["name"])
+	if not "customer_id" in col_names2:
+		_db.query("ALTER TABLE accounts ADD COLUMN customer_id INTEGER REFERENCES customers(id) ON DELETE SET NULL;")
+
 	# Migration: make email nullable if it was created NOT NULL.
 	# SQLite can't alter constraints, so we rebuild the table if needed.
 	var email_not_null := false
@@ -258,6 +264,13 @@ func add_account(name: String, email: String, username: String, password: String
 		"INSERT INTO accounts (name, email, username, password, role) VALUES (?, ?, ?, ?, ?);",
 		[name.strip_edges(), email_val, user_val, password, role]
 	)
+
+	# For customer accounts, create a matching entry in the customers table.
+	if role == "customer":
+		_db.query("SELECT last_insert_rowid() AS id;")
+		var account_id: int = _db.query_result[0]["id"]
+		_create_customer_for_account(account_id, name.strip_edges(), email_val)
+
 	return ""
 
 
@@ -266,3 +279,58 @@ func delete_account(account_id: int) -> String:
 		return "You cannot delete the account you are currently logged in as."
 	_db.query_with_bindings("DELETE FROM accounts WHERE id = ?;", [account_id])
 	return ""
+
+
+# Creates a customers row for a new customer account and links it back via customer_id.
+func _create_customer_for_account(account_id: int, name: String, email) -> void:
+	var customer_id: int = BookStore.add_customer({
+		"name":  name,
+		"email": email if email != null else "",
+		"phone": "",
+		"notes": "",
+	})
+	_db.query_with_bindings(
+		"UPDATE accounts SET customer_id = ? WHERE id = ?;",
+		[customer_id, account_id]
+	)
+	# Keep the live session in sync if this account is the one logged in.
+	if _current_account.get("id", -1) == account_id:
+		_current_account["customer_id"] = customer_id
+
+
+# Returns the customers row linked to the given account id, or an empty dict.
+func get_customer_for_account(account_id: int) -> Dictionary:
+	_db.query_with_bindings(
+		"SELECT c.* FROM customers c JOIN accounts a ON a.customer_id = c.id WHERE a.id = ?;",
+		[account_id]
+	)
+	return _db.query_result[0] if not _db.query_result.is_empty() else {}
+
+
+# ── Self-registration (always creates a customer account) ─────────────────────
+
+# Creates a new customer account and immediately logs in as that account.
+# Returns "" on success, or a human-readable error string.
+# At least one of email / username must be provided.
+func register_account(name: String, email: String, username: String, password: String, confirm_password: String) -> String:
+	if name.strip_edges().is_empty():
+		return "Name is required."
+	if email.strip_edges().is_empty() and username.strip_edges().is_empty():
+		return "Please provide an email or a username."
+	if password.is_empty():
+		return "Password is required."
+	if password != confirm_password:
+		return "Passwords do not match."
+	if password.length() < 6:
+		return "Password must be at least 6 characters."
+
+	# Delegate duplicate-checking and insertion to add_account with role locked to customer.
+	var err := add_account(name, email, username, password, "customer")
+	if err != "":
+		return err
+
+	# Auto-login with whichever credential was supplied.
+	if not email.strip_edges().is_empty():
+		return login(email, password)
+	else:
+		return login_with_username(username, password)
