@@ -20,11 +20,19 @@ var genres := [
 	{ "name": "Biography",   "pct": 15 },
 ]
 
+var labelbox = StyleBoxTexture.new()
+
+
 func _ready() -> void:
 	_build_top_books()
 	_build_genres()
 
 func _build_top_books() -> void:
+	labelbox.texture = load("res://src/Main/themes/textures/popup_menu_panel.png")
+	labelbox.texture_margin_top = 10
+	labelbox.texture_margin_bottom = 10
+	labelbox.texture_margin_left = 10
+	labelbox.texture_margin_right = 10
 	for item in top_books:
 		var row := HBoxContainer.new()
 		var title_lbl := Label.new()
@@ -32,12 +40,18 @@ func _build_top_books() -> void:
 		title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var sold_lbl := Label.new()
 		sold_lbl.text = "%d sold" % item["sold"]
+		title_lbl.add_theme_stylebox_override("normal", labelbox)
 		row.add_child(title_lbl)
 		row.add_child(sold_lbl)
 		top_books_list.add_child(row)
 
 
 func _build_genres() -> void:
+	labelbox.texture = load("res://src/Main/themes/textures/popup_menu_panel.png")
+	labelbox.texture_margin_top = 10
+	labelbox.texture_margin_bottom = 10
+	labelbox.texture_margin_left = 10
+	labelbox.texture_margin_right = 10
 	for item in genres:
 		var row := HBoxContainer.new()
 		var name_lbl := Label.new()
@@ -45,6 +59,7 @@ func _build_genres() -> void:
 		name_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var pct_lbl := Label.new()
 		pct_lbl.text = "%d%%" % item["pct"]
+		name_lbl.add_theme_stylebox_override("normal", labelbox)
 		row.add_child(name_lbl)
 		#row.add_child(bar)
 		row.add_child(pct_lbl)

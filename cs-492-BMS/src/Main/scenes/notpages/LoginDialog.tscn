@@ -1,6 +1,74 @@
 [gd_scene format=3 uid="uid://logindialog"]
 
 [ext_resource type="Script" uid="uid://ddtd6yhqo62q0" path="res://src/Main/scripts/notpages/LoginDialog.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://6bd162p1ntod" path="res://src/Main/themes/textures/popup_menu_panel.png" id="2_gb5m2"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nwt5r"]
+texture = ExtResource("2_gb5m2")
+texture_margin_left = 10.0
+texture_margin_top = 5.0
+texture_margin_right = 10.0
+texture_margin_bottom = 5.0
+expand_margin_left = 20.0
+expand_margin_top = 16.0
+expand_margin_right = 20.0
+expand_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_spmyo"]
+texture = ExtResource("2_gb5m2")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fyidl"]
+texture = ExtResource("2_gb5m2")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ka1rb"]
+texture = ExtResource("2_gb5m2")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jv32h"]
+texture = ExtResource("2_gb5m2")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gb5m2"]
+texture = ExtResource("2_gb5m2")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_47abr"]
+texture = ExtResource("2_gb5m2")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mj0t6"]
+texture = ExtResource("2_gb5m2")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n7kcu"]
+texture = ExtResource("2_gb5m2")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
 [node name="LoginDialog" type="Window" unique_id=885720417]
 oversampling_override = 1.0
@@ -8,16 +76,23 @@ title = "Sign In"
 position = Vector2i(0, 28)
 size = Vector2i(380, 450)
 unresizable = true
+borderless = true
 script = ExtResource("1")
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=1233483237]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 16
+
+[node name="Panel" type="Panel" parent="Margin" unique_id=925791898]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_nwt5r")
 
 [node name="Layout" type="VBoxContainer" parent="Margin" unique_id=41574228]
 layout_mode = 2
@@ -25,10 +100,12 @@ theme_override_constants/separation = 12
 
 [node name="Heading" type="Label" parent="Margin/Layout" unique_id=1829729841]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_spmyo")
 text = "📚 BookShop — Sign In"
 
 [node name="Subheading" type="Label" parent="Margin/Layout" unique_id=1242176938]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_fyidl")
 text = "Choose how you'd like to continue."
 
 [node name="Separator" type="HSeparator" parent="Margin/Layout" unique_id=2001889958]
@@ -47,21 +124,25 @@ metadata/_tab_index = 0
 
 [node name="EmailLabel" type="Label" parent="Margin/Layout/Tabs/Email" unique_id=833554286]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_ka1rb")
 text = "Email"
 
 [node name="EmailInput" type="LineEdit" parent="Margin/Layout/Tabs/Email" unique_id=691611110]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "you@bookstore.com"
+caret_blink = true
 
 [node name="EmailPasswordLabel" type="Label" parent="Margin/Layout/Tabs/Email" unique_id=1463809537]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_jv32h")
 text = "Password"
 
 [node name="EmailPasswordInput" type="LineEdit" parent="Margin/Layout/Tabs/Email" unique_id=1662706773]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Password"
+caret_blink = true
 secret = true
 
 [node name="EmailSignInBtn" type="Button" parent="Margin/Layout/Tabs/Email" unique_id=132036046]
@@ -77,21 +158,25 @@ metadata/_tab_index = 1
 
 [node name="UsernameLabel" type="Label" parent="Margin/Layout/Tabs/Username" unique_id=698886765]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_gb5m2")
 text = "Username"
 
 [node name="UsernameInput" type="LineEdit" parent="Margin/Layout/Tabs/Username" unique_id=1044046234]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "e.g. admin"
+caret_blink = true
 
 [node name="UsernamePasswordLabel" type="Label" parent="Margin/Layout/Tabs/Username" unique_id=358016313]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_47abr")
 text = "Password"
 
 [node name="UsernamePasswordInput" type="LineEdit" parent="Margin/Layout/Tabs/Username" unique_id=381841735]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Password"
+caret_blink = true
 secret = true
 
 [node name="UsernameSignInBtn" type="Button" parent="Margin/Layout/Tabs/Username" unique_id=2064853570]
@@ -106,7 +191,9 @@ theme_override_constants/separation = 10
 metadata/_tab_index = 2
 
 [node name="GuestDescription" type="Label" parent="Margin/Layout/Tabs/Guest" unique_id=463346530]
+custom_minimum_size = Vector2(0.01, 0)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_mj0t6")
 text = "Continue without an account.
 You'll have access to the book catalog."
 autowrap_mode = 3
@@ -132,4 +219,5 @@ text = "Log Out of Current Account"
 
 [node name="HintLabel" type="Label" parent="Margin/Layout" unique_id=203690228]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_n7kcu")
 text = "Default credentials use 'password' as the password."
