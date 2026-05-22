@@ -50,7 +50,7 @@ func _on_session_changed(_account: Dictionary) -> void:
 
 func _populate_profile() -> void:
 	var acc := Auth.get_current_account()
-	name_input.text     = acc.get("name",     "")
+	name_input.text     = acc.get("display_name",     "")
 	email_input.text    = acc.get("email",    "") if acc.get("email",    null) != null else ""
 	username_input.text = acc.get("username", "") if acc.get("username", null) != null else ""
 

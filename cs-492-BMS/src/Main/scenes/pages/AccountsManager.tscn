@@ -1,0 +1,171 @@
+[gd_scene format=3 uid="uid://c2hgyrtrjsqj8"]
+
+[ext_resource type="Script" uid="uid://d34xupyj3cid5" path="res://src/Main/scripts/pages/AccountsManager.gd" id="1"]
+
+[node name="AccountsManager" type="VBoxContainer" unique_id=1672527540]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+script = ExtResource("1")
+
+[node name="Toolbar" type="HBoxContainer" parent="." unique_id=1945515136]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SearchBox" type="LineEdit" parent="Toolbar" unique_id=1588131312]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search accounts…"
+
+[node name="AddAccountBtn" type="Button" parent="Toolbar" unique_id=2084589734]
+layout_mode = 2
+text = "  + Add Account"
+
+[node name="Scroll" type="ScrollContainer" parent="." unique_id=1400295772]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CardGrid" type="GridContainer" parent="Scroll" unique_id=1737918580]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+columns = 3
+
+[node name="EditDialog" type="Window" parent="." unique_id=1752805053]
+oversampling_override = 1.0
+title = "Account"
+initial_position = 2
+size = Vector2i(360, 420)
+exclusive = true
+unresizable = true
+
+[node name="Margin" type="MarginContainer" parent="EditDialog" unique_id=1711158120]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Layout" type="VBoxContainer" parent="EditDialog/Margin" unique_id=2014948941]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="DialogTitle" type="Label" parent="EditDialog/Margin/Layout" unique_id=598114811]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Add Account"
+
+[node name="Fields" type="VBoxContainer" parent="EditDialog/Margin/Layout" unique_id=1511046939]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="NameInput" type="LineEdit" parent="EditDialog/Margin/Layout/Fields" unique_id=1758731933]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Full name"
+
+[node name="EmailInput" type="LineEdit" parent="EditDialog/Margin/Layout/Fields" unique_id=1731849940]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Email (optional if username set)"
+
+[node name="UsernameInput" type="LineEdit" parent="EditDialog/Margin/Layout/Fields" unique_id=90137739]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Username (optional if email set)"
+
+[node name="RoleOption" type="OptionButton" parent="EditDialog/Margin/Layout/Fields" unique_id=1485665522]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PasswordInput" type="LineEdit" parent="EditDialog/Margin/Layout/Fields" unique_id=389629550]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Required"
+secret = true
+
+[node name="ConfirmInput" type="LineEdit" parent="EditDialog/Margin/Layout/Fields" unique_id=1597437796]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Confirm password"
+secret = true
+
+[node name="PwSectionLabel" type="Label" parent="EditDialog/Margin/Layout" unique_id=1365890501]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Password"
+
+[node name="ErrorLabel" type="Label" parent="EditDialog/Margin/Layout" unique_id=847108207]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+
+[node name="Buttons" type="HBoxContainer" parent="EditDialog/Margin/Layout" unique_id=1223358214]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="SaveBtn" type="Button" parent="EditDialog/Margin/Layout/Buttons" unique_id=1108689563]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Save"
+
+[node name="CancelBtn" type="Button" parent="EditDialog/Margin/Layout/Buttons" unique_id=1152925930]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="ConfirmDialog" type="Window" parent="." unique_id=1679158564]
+title = "Confirm Delete"
+initial_position = 2
+size = Vector2i(320, 140)
+visible = false
+exclusive = true
+unresizable = true
+
+[node name="Margin" type="MarginContainer" parent="ConfirmDialog" unique_id=334228940]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Layout" type="VBoxContainer" parent="ConfirmDialog/Margin" unique_id=1708200128]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="ConfirmLabel" type="Label" parent="ConfirmDialog/Margin/Layout" unique_id=1648111270]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Are you sure?"
+autowrap_mode = 3
+
+[node name="Buttons" type="HBoxContainer" parent="ConfirmDialog/Margin/Layout" unique_id=1177879319]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="YesBtn" type="Button" parent="ConfirmDialog/Margin/Layout/Buttons" unique_id=734513859]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Delete"
+
+[node name="NoBtn" type="Button" parent="ConfirmDialog/Margin/Layout/Buttons" unique_id=682708317]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Cancel"

@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://b0hx8703mlbvu"]
+
+[ext_resource type="Script" uid="uid://ynu52h3e0whi" path="res://src/Main/scripts/notpages/AccountCard.gd" id="1"]
+
+[node name="AccountCard" type="PanelContainer" unique_id=895509844]
+size_flags_horizontal = 3
+script = ExtResource("1")
+
+[node name="VBox" type="VBoxContainer" parent="." unique_id=1735782140]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="RoleLabel" type="Label" parent="VBox" unique_id=1312971080]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+
+[node name="NameLabel" type="Label" parent="VBox" unique_id=1690481010]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+autowrap_mode = 3
+
+[node name="SubLabel" type="Label" parent="VBox" unique_id=1639307731]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 3
+
+[node name="SinceLabel" type="Label" parent="VBox" unique_id=1042478592]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+
+[node name="BtnRow" type="HBoxContainer" parent="VBox" unique_id=1121210879]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="EditBtn" type="Button" parent="VBox/BtnRow" unique_id=1637813603]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Edit"
+
+[node name="DeleteBtn" type="Button" parent="VBox/BtnRow" unique_id=793981154]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Delete"

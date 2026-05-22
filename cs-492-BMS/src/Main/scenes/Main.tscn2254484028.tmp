@@ -124,7 +124,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("ButtonGroup_mw774")
-text = "Account Manager"
+text = "Account Settings"
 
 [node name="NavDevTools" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=685498700]
 layout_mode = 2
@@ -242,8 +242,7 @@ grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="AccountManager" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1165924997 instance=ExtResource("10_nk8wn")]
-visible = false
+[node name="AccountsManager" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1165924997 instance=ExtResource("10_nk8wn")]
 layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2

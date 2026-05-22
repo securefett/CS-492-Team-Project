@@ -14,8 +14,9 @@ const PAGE_MAP := {
 	"customers": { "node": "Customers",   "title": "Customers",           "button": "NavCustomers" },
 	"reports":   { "node": "Reports",     "title": "Reports & Analytics", "button": "NavReports"   },
 	"restock":   { "node": "Restock",     "title": "Restock Orders",      "button": "NavRestock"   },
-	"account":   { "node": "Account",     "title": "Account Settings",    "button": "NavAccount"   },
-	"devtools":  { "node": "DevTools",    "title": "Dev Tools",           "button": "NavDevTools"   },
+	"accountmanager":    { "node": "AccountManager",      "title": "Account Manager",     "button": "NavAccountManager"   },
+	"accountsettings":   { "node": "AccountSettings",     "title": "Account Settings",    "button": "NavAccountSettings"   },
+	"devtools":          { "node": "DevTools",    "title": "Dev Tools",           "button": "NavDevTools"   },
 }
 
 func _ready() -> void:

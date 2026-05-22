@@ -27,9 +27,10 @@ const ROLE_PERMISSIONS := {
 		"addbook",
 		"sales",
 		"customers",
+		"accountsettings",
+		"accountmanager",
 		"reports",
 		"restock",
-		"account",
 		"devtools"
 	],
 	"employee": [
@@ -37,16 +38,16 @@ const ROLE_PERMISSIONS := {
 		"catalog",
 		"sales",
 		"customers",
-		"account"
 	],
 	"customer": [
 		"catalog",
-		"account",
+		"accountsettings",
 	],
 	"guest": [
 		"catalog",
 	],
 }
+
 
 # ── State ─────────────────────────────────────────────────────────────────────
 
@@ -146,7 +147,7 @@ func login(email: String, password: String) -> String:
 		return "Password is required."
 
 	_db.query_with_bindings(
-		"SELECT * FROM accounts WHERE email = ? AND password = ? LIMIT 1;",
+		"SELECT id, name AS display_name, email, username, password, role, customer_id, created_at FROM accounts WHERE email = ? AND password = ? LIMIT 1;",
 		[email.strip_edges().to_lower(), password]
 	)
 	if _db.query_result.is_empty():
@@ -165,7 +166,7 @@ func login_with_username(username: String, password: String) -> String:
 		return "Password is required."
 
 	_db.query_with_bindings(
-		"SELECT * FROM accounts WHERE username = ? AND password = ? LIMIT 1;",
+		"SELECT id, name AS display_name, email, username, password, role, customer_id, created_at FROM accounts WHERE username = ? AND password = ? LIMIT 1;",
 		[username.strip_edges().to_lower(), password]
 	)
 	if _db.query_result.is_empty():
@@ -179,11 +180,11 @@ func login_with_username(username: String, password: String) -> String:
 # Login as guest — no credentials required, customer-level permissions.
 func login_guest() -> void:
 	_current_account = {
-		"id":       -1,
-		"name":     "Guest",
-		"email":    "",
-		"username": "",
-		"role":     "guest",
+		"id":           -1,
+		"display_name": "Guest",
+		"email":        "",
+		"username":     "",
+		"role":         "guest",
 	}
 	emit_signal("session_changed", _current_account)
 
@@ -210,7 +211,7 @@ func get_role() -> String:
 
 
 func get_account_name() -> String:
-	return _current_account.get("name", "Guest")
+	return _current_account.get("display_name", "Guest")
 
 
 # ── Permissions ───────────────────────────────────────────────────────────────
@@ -230,12 +231,12 @@ func get_permitted_pages() -> Array:
 # ── Account management ────────────────────────────────────────────────────────
 
 func get_all_accounts() -> Array:
-	_db.query("SELECT id, name, email, username, role, created_at FROM accounts ORDER BY role, name;")
+	_db.query("SELECT id, name AS display_name, email, username, role, created_at FROM accounts ORDER BY role, display_name;")
 	return _db.query_result
 
 
-func add_account(name: String, email: String, username: String, password: String, role: String) -> String:
-	if name.strip_edges().is_empty():
+func add_account(display_name: String, email: String, username: String, password: String, role: String) -> String:
+	if display_name.strip_edges().is_empty():
 		return "Name is required."
 	if email.strip_edges().is_empty() and username.strip_edges().is_empty():
 		return "Either an email or a username is required."
@@ -265,14 +266,14 @@ func add_account(name: String, email: String, username: String, password: String
 
 	_db.query_with_bindings(
 		"INSERT INTO accounts (name, email, username, password, role) VALUES (?, ?, ?, ?, ?);",
-		[name.strip_edges(), email_val, user_val, password, role]
+		[display_name.strip_edges(), email_val, user_val, password, role]
 	)
 
 	# For customer accounts, create a matching entry in the customers table.
 	if role == "customer":
 		_db.query("SELECT last_insert_rowid() AS id;")
 		var account_id: int = _db.query_result[0]["id"]
-		_create_customer_for_account(account_id, name.strip_edges(), email_val)
+		_create_customer_for_account(account_id, display_name.strip_edges(), email_val)
 
 	return ""
 
@@ -289,8 +290,8 @@ func delete_account(account_id: int) -> String:
 # Updates the display name, email, and/or username for the given account.
 # Pass the current values unchanged to leave a field as-is.
 # Returns "" on success or a human-readable error string.
-func update_account(account_id: int, name: String, email: String, username: String) -> String:
-	if name.strip_edges().is_empty():
+func update_account(account_id: int, display_name: String, email: String, username: String) -> String:
+	if display_name.strip_edges().is_empty():
 		return "Name is required."
 	if email.strip_edges().is_empty() and username.strip_edges().is_empty():
 		return "Either an email or a username is required."
@@ -317,14 +318,14 @@ func update_account(account_id: int, name: String, email: String, username: Stri
 
 	_db.query_with_bindings(
 		"UPDATE accounts SET name = ?, email = ?, username = ? WHERE id = ?;",
-		[name.strip_edges(), email_val, username_val, account_id]
+		[display_name.strip_edges(), email_val, username_val, account_id]
 	)
 
 	# Sync the linked customers row name/email too.
 	var customer_id: int = _current_account.get("customer_id", -1) if _current_account.get("id", -1) == account_id else -1
 	if customer_id > 0:
 		BookStore.update_customer(customer_id, {
-			"name":  name.strip_edges(),
+			"name":  display_name.strip_edges(),
 			"email": email_val if email_val != null else "",
 			"phone": "",
 			"notes": "",
@@ -332,7 +333,7 @@ func update_account(account_id: int, name: String, email: String, username: Stri
 
 	# Refresh the live session if this is the current account.
 	if _current_account.get("id", -1) == account_id:
-		_current_account["name"]     = name.strip_edges()
+		_current_account["display_name"] = display_name.strip_edges()
 		_current_account["email"]    = email_val
 		_current_account["username"] = username_val
 		emit_signal("session_changed", _current_account)
@@ -366,10 +367,24 @@ func update_password(account_id: int, current_password: String, new_password: St
 	return ""
 
 
+# Changes the role of any account. Admin-only operation — enforce this in the UI.
+# Returns "" on success or an error string.
+func update_account_role(account_id: int, new_role: String) -> String:
+	if new_role not in ROLE_PERMISSIONS or new_role == "guest":
+		return "Invalid role."
+	if _current_account.get("id", -1) == account_id:
+		return "You cannot change your own role."
+	_db.query_with_bindings(
+		"UPDATE accounts SET role = ? WHERE id = ?;",
+		[new_role, account_id]
+	)
+	return ""
+
+
 # Creates a customers row for a new customer account and links it back via customer_id.
-func _create_customer_for_account(account_id: int, name: String, email) -> void:
+func _create_customer_for_account(account_id: int, display_name: String, email) -> void:
 	var customer_id: int = BookStore.add_customer({
-		"name":  name,
+		"name":  display_name,
 		"email": email if email != null else "",
 		"phone": "",
 		"notes": "",
@@ -397,8 +412,8 @@ func get_customer_for_account(account_id: int) -> Dictionary:
 # Creates a new customer account and immediately logs in as that account.
 # Returns "" on success, or a human-readable error string.
 # At least one of email / username must be provided.
-func register_account(name: String, email: String, username: String, password: String, confirm_password: String) -> String:
-	if name.strip_edges().is_empty():
+func register_account(display_name: String, email: String, username: String, password: String, confirm_password: String) -> String:
+	if display_name.strip_edges().is_empty():
 		return "Name is required."
 	if email.strip_edges().is_empty() and username.strip_edges().is_empty():
 		return "Please provide an email or a username."
@@ -410,7 +425,7 @@ func register_account(name: String, email: String, username: String, password: S
 		return "Password must be at least 6 characters."
 
 	# Delegate duplicate-checking and insertion to add_account with role locked to customer.
-	var err := add_account(name, email, username, password, "customer")
+	var err := add_account(display_name, email, username, password, "customer")
 	if err != "":
 		return err
 
