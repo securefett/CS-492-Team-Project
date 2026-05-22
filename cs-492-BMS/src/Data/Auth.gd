@@ -29,6 +29,7 @@ const ROLE_PERMISSIONS := {
 		"customers",
 		"reports",
 		"restock",
+		"account",
 		"devtools"
 	],
 	"employee": [
@@ -36,9 +37,11 @@ const ROLE_PERMISSIONS := {
 		"catalog",
 		"sales",
 		"customers",
+		"account"
 	],
 	"customer": [
 		"catalog",
+		"account",
 	],
 	"guest": [
 		"catalog",
@@ -278,6 +281,88 @@ func delete_account(account_id: int) -> String:
 	if _current_account.get("id", -1) == account_id:
 		return "You cannot delete the account you are currently logged in as."
 	_db.query_with_bindings("DELETE FROM accounts WHERE id = ?;", [account_id])
+	return ""
+
+
+# ── Self-service account editing ─────────────────────────────────────────────
+
+# Updates the display name, email, and/or username for the given account.
+# Pass the current values unchanged to leave a field as-is.
+# Returns "" on success or a human-readable error string.
+func update_account(account_id: int, name: String, email: String, username: String) -> String:
+	if name.strip_edges().is_empty():
+		return "Name is required."
+	if email.strip_edges().is_empty() and username.strip_edges().is_empty():
+		return "Either an email or a username is required."
+
+	# Duplicate checks — exclude the current account from the uniqueness check.
+	if email.strip_edges() != "":
+		_db.query_with_bindings(
+			"SELECT COUNT(*) AS n FROM accounts WHERE email = ? AND id != ?;",
+			[email.strip_edges().to_lower(), account_id]
+		)
+		if _db.query_result[0]["n"] > 0:
+			return "An account with that email already exists."
+
+	if username.strip_edges() != "":
+		_db.query_with_bindings(
+			"SELECT COUNT(*) AS n FROM accounts WHERE username = ? AND id != ?;",
+			[username.strip_edges().to_lower(), account_id]
+		)
+		if _db.query_result[0]["n"] > 0:
+			return "That username is already taken."
+
+	var email_val    = email.strip_edges().to_lower()    if email.strip_edges()    != "" else null
+	var username_val = username.strip_edges().to_lower() if username.strip_edges() != "" else null
+
+	_db.query_with_bindings(
+		"UPDATE accounts SET name = ?, email = ?, username = ? WHERE id = ?;",
+		[name.strip_edges(), email_val, username_val, account_id]
+	)
+
+	# Sync the linked customers row name/email too.
+	var customer_id: int = _current_account.get("customer_id", -1) if _current_account.get("id", -1) == account_id else -1
+	if customer_id > 0:
+		BookStore.update_customer(customer_id, {
+			"name":  name.strip_edges(),
+			"email": email_val if email_val != null else "",
+			"phone": "",
+			"notes": "",
+		})
+
+	# Refresh the live session if this is the current account.
+	if _current_account.get("id", -1) == account_id:
+		_current_account["name"]     = name.strip_edges()
+		_current_account["email"]    = email_val
+		_current_account["username"] = username_val
+		emit_signal("session_changed", _current_account)
+
+	return ""
+
+
+# Changes the password for the given account after verifying the current one.
+# Returns "" on success or a human-readable error string.
+func update_password(account_id: int, current_password: String, new_password: String, confirm_password: String) -> String:
+	if current_password.is_empty():
+		return "Current password is required."
+	if new_password.is_empty():
+		return "New password is required."
+	if new_password.length() < 6:
+		return "New password must be at least 6 characters."
+	if new_password != confirm_password:
+		return "Passwords do not match."
+
+	_db.query_with_bindings(
+		"SELECT id FROM accounts WHERE id = ? AND password = ? LIMIT 1;",
+		[account_id, current_password]
+	)
+	if _db.query_result.is_empty():
+		return "Current password is incorrect."
+
+	_db.query_with_bindings(
+		"UPDATE accounts SET password = ? WHERE id = ?;",
+		[new_password, account_id]
+	)
 	return ""
 
 
