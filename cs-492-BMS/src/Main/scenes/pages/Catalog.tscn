@@ -1,6 +1,19 @@
 [gd_scene format=3 uid="uid://catalog"]
 
 [ext_resource type="Script" uid="uid://ci07j5u7x8sc5" path="res://src/Main/scripts/pages/Catalog.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b80faqmjmqlwk" path="res://src/Main/themes/textures/line_edit.png" id="2_5n3ju"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y5u3a"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+texture = ExtResource("2_5n3ju")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+region_rect = Rect2(0, 0, 23, 23)
 
 [node name="Catalog" type="VBoxContainer" unique_id=393922937]
 anchors_preset = 15
@@ -18,6 +31,7 @@ theme_override_constants/separation = 10
 [node name="SearchBox" type="LineEdit" parent="Toolbar" unique_id=1586068192]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_y5u3a")
 placeholder_text = "Search by title, author or ISBN…"
 
 [node name="GenreFilter" type="OptionButton" parent="Toolbar" unique_id=1344102429]

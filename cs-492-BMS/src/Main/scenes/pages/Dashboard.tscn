@@ -1,7 +1,36 @@
 [gd_scene format=3 uid="uid://dashboard"]
 
 [ext_resource type="Script" uid="uid://4t1kpt2g0mwt" path="res://src/Main/scripts/pages/Dashboard.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://6bd162p1ntod" path="res://src/Main/themes/textures/popup_menu_panel.png" id="2_krq5a"]
 [ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="2_q08o4"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bb22j"]
+texture = ExtResource("2_krq5a")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tluxx"]
+texture = ExtResource("2_krq5a")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hajck"]
+texture = ExtResource("2_krq5a")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oj0fk"]
+texture = ExtResource("2_krq5a")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_krq5a"]
 content_margin_left = 6.0
@@ -18,6 +47,13 @@ expand_margin_right = 5.0
 expand_margin_bottom = 5.0
 region_rect = Rect2(0, 0, 16, 16)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_m4ied"]
+texture = ExtResource("2_krq5a")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q08o4"]
 content_margin_left = 6.0
 content_margin_top = 6.0
@@ -32,6 +68,13 @@ expand_margin_left = 5.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 region_rect = Rect2(0, 0, 16, 16)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a0pls"]
+texture = ExtResource("2_krq5a")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
 [node name="Dashboard" type="ScrollContainer" unique_id=219683383]
 anchors_preset = 15
@@ -50,7 +93,7 @@ theme_override_constants/separation = 20
 
 [node name="TabContainer" type="TabContainer" parent="Content" unique_id=362921019]
 layout_mode = 2
-current_tab = 1
+current_tab = 3
 tab_0/title = "Sales"
 tab_1/title = "Books"
 tab_2/title = "Inventory"
@@ -68,6 +111,7 @@ layout_mode = 2
 
 [node name="SalesLabel" type="Label" parent="Content/TabContainer/CardSales/CardSalesLayout" unique_id=537532061]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_bb22j")
 text = "Total Sales"
 
 [node name="SalesValue" type="Label" parent="Content/TabContainer/CardSales/CardSalesLayout" unique_id=659126007]
@@ -79,6 +123,7 @@ layout_mode = 2
 text = "↑ 12% this month"
 
 [node name="CardBooks" type="PanelContainer" parent="Content/TabContainer" unique_id=763709796]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 metadata/_tab_index = 1
@@ -89,6 +134,7 @@ layout_mode = 2
 
 [node name="BooksLabel" type="Label" parent="Content/TabContainer/CardBooks/CardBooksLayout" unique_id=844465131]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_tluxx")
 text = "Books Sold"
 
 [node name="BooksValue" type="Label" parent="Content/TabContainer/CardBooks/CardBooksLayout" unique_id=1618130806]
@@ -111,6 +157,7 @@ layout_mode = 2
 
 [node name="InventoryLabel" type="Label" parent="Content/TabContainer/CardInventory/CardInventoryLayout" unique_id=1445335554]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_hajck")
 text = "Inventory"
 
 [node name="InventoryValue" type="Label" parent="Content/TabContainer/CardInventory/CardInventoryLayout" unique_id=425604422]
@@ -122,7 +169,6 @@ layout_mode = 2
 text = "Across 247 titles"
 
 [node name="CardCustomers" type="PanelContainer" parent="Content/TabContainer" unique_id=1792284017]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 metadata/_tab_index = 3
@@ -133,6 +179,7 @@ layout_mode = 2
 
 [node name="CustomersLabel" type="Label" parent="Content/TabContainer/CardCustomers/CardCustomersLayout" unique_id=712561033]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_oj0fk")
 text = "Customers"
 
 [node name="CustomersValue" type="Label" parent="Content/TabContainer/CardCustomers/CardCustomersLayout" unique_id=462691145]
@@ -158,6 +205,7 @@ layout_mode = 2
 
 [node name="TopBooksTitle" type="Label" parent="Content/BottomRow/TopBooksCard/TopBooksLayout" unique_id=2021332964]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_m4ied")
 text = "Top Selling Books"
 
 [node name="TopBooksList" type="VBoxContainer" parent="Content/BottomRow/TopBooksCard/TopBooksLayout" unique_id=71825799]
@@ -174,6 +222,7 @@ layout_mode = 2
 
 [node name="GenreTitle" type="Label" parent="Content/BottomRow/GenreCard/GenreLayout" unique_id=945725424]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_a0pls")
 text = "Sales by Genre"
 
 [node name="GenreList" type="VBoxContainer" parent="Content/BottomRow/GenreCard/GenreLayout" unique_id=1525118250]

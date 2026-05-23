@@ -114,6 +114,15 @@ func _on_book_selected(book: Dictionary) -> void:
 
 
 func _populate_detail(book: Dictionary) -> void:
+	
+	#Theme creation for created labels
+	var labelbox = StyleBoxTexture.new()
+	labelbox.texture = load("res://src/Main/themes/textures/popup_menu_panel.png")
+	labelbox.texture_margin_top = 10
+	labelbox.texture_margin_bottom = 10
+	labelbox.texture_margin_left = 10
+	labelbox.texture_margin_right = 10
+	
 	for child in detail_panel.get_children():
 		child.queue_free()
 
@@ -137,11 +146,13 @@ func _populate_detail(book: Dictionary) -> void:
 	title_lbl.text               = book["title"]
 	title_lbl.autowrap_mode      = TextServer.AUTOWRAP_WORD_SMART
 	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_lbl.add_theme_stylebox_override("normal", labelbox)
 	detail_panel.add_child(title_lbl)
 
 	# Author sub-heading
 	var author_lbl := Label.new()
-	author_lbl.text = "by %s" % book["author"]
+	author_lbl.text = "by %s" % book["author"]		
+	author_lbl.add_theme_stylebox_override("normal", labelbox)
 	detail_panel.add_child(author_lbl)
 
 	detail_panel.add_child(HSeparator.new())
@@ -151,8 +162,10 @@ func _populate_detail(book: Dictionary) -> void:
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 		var key_lbl := Label.new()
+		
 		key_lbl.text                  = pair[0] + ":"
 		key_lbl.custom_minimum_size   = Vector2(90, 0)
+		key_lbl.add_theme_stylebox_override("normal", labelbox)
 		row.add_child(key_lbl)
 
 		var val_lbl := Label.new()
