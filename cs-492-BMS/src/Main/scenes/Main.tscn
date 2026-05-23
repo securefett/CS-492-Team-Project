@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8_cnfob"]
 [ext_resource type="PackedScene" uid="uid://devtools" path="res://src/Main/scenes/pages/DevTools.tscn" id="10_aaj1p"]
 [ext_resource type="PackedScene" path="res://src/Main/scenes/pages/AccountSettings.tscn" id="10_fc3xa"]
-[ext_resource type="PackedScene" uid="uid://bvwss8mt3uxcp" path="res://src/Main/scenes/pages/AccountsManager.tscn" id="10_nk8wn"]
+[ext_resource type="PackedScene" uid="uid://c2hgyrtrjsqj8" path="res://src/Main/scenes/pages/AccountsManager.tscn" id="10_nk8wn"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fc3xa"]
 texture = ExtResource("2_aaj1p")
@@ -28,8 +28,6 @@ texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
 [sub_resource type="ButtonGroup" id="NavGroup"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_mw774"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f3iqa"]
 texture = ExtResource("2_aaj1p")
@@ -147,21 +145,21 @@ text = "  Restock Orders"
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
-button_group = SubResource("ButtonGroup_mw774")
+button_group = SubResource("NavGroup")
 text = "Account Settings"
 
 [node name="NavAccountManager" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=953051362]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
-button_group = SubResource("ButtonGroup_mw774")
+button_group = SubResource("NavGroup")
 text = "Account Manager"
 
 [node name="NavDevTools" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=685498700]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
-button_group = SubResource("ButtonGroup_mw774")
+button_group = SubResource("NavGroup")
 text = "Dev Tools"
 
 [node name="Spacer" type="Control" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1994959687]
@@ -276,7 +274,6 @@ grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="AccountManager" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1165924997 instance=ExtResource("10_nk8wn")]
-visible = false
 layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2

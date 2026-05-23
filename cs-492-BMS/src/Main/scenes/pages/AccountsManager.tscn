@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://d34xupyj3cid5" path="res://src/Main/scripts/pages/AccountsManager.gd" id="1"]
 
 [node name="AccountsManager" type="VBoxContainer" unique_id=1672527540]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -41,6 +42,7 @@ oversampling_override = 1.0
 title = "Account"
 initial_position = 2
 size = Vector2i(360, 420)
+visible = false
 exclusive = true
 unresizable = true
 
