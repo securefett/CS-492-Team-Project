@@ -27,8 +27,7 @@ const ROLE_PERMISSIONS := {
 		"addbook",
 		"sales",
 		"customers",
-		"accountsettings",
-		"accountmanager",
+		"accounts",
 		"reports",
 		"restock",
 		"devtools"
@@ -41,13 +40,12 @@ const ROLE_PERMISSIONS := {
 	],
 	"customer": [
 		"catalog",
-		"accountsettings",
+		"account",
 	],
 	"guest": [
 		"catalog",
 	],
 }
-
 
 # ── State ─────────────────────────────────────────────────────────────────────
 
@@ -281,6 +279,14 @@ func add_account(display_name: String, email: String, username: String, password
 func delete_account(account_id: int) -> String:
 	if _current_account.get("id", -1) == account_id:
 		return "You cannot delete the account you are currently logged in as."
+	# Look up any linked customer before the account row is gone.
+	_db.query_with_bindings(
+		"SELECT customer_id FROM accounts WHERE id = ?;", [account_id]
+	)
+	if not _db.query_result.is_empty():
+		var customer_id = _db.query_result[0].get("customer_id", null)
+		if customer_id != null and customer_id > 0:
+			BookStore.delete_customer(customer_id)
 	_db.query_with_bindings("DELETE FROM accounts WHERE id = ?;", [account_id])
 	return ""
 
