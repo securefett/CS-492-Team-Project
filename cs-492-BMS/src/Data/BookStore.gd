@@ -323,6 +323,14 @@ func update_customer(id: int, data: Dictionary) -> void:
 	accounts_changed.emit()
 
 
+func update_customer_notes(id: int, notes: String) -> void:
+	db.query_with_bindings("""
+        UPDATE accounts SET notes = ?
+        WHERE id = ? AND role = 'customer';
+	""", [notes, id])
+	accounts_changed.emit()
+
+
 func delete_customer(id: int) -> void:
 	db.query_with_bindings(
 		"DELETE FROM accounts WHERE id = ? AND role = 'customer';", [id]

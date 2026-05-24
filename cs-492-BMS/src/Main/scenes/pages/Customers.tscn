@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://customers"]
+[gd_scene format=3 uid="uid://bi4x5a1vha80m"]
 
 [ext_resource type="Script" uid="uid://duduew08bgmh1" path="res://src/Main/scripts/pages/Customers.gd" id="1"]
 
@@ -120,18 +120,27 @@ text = "Member since:"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NotesRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info" unique_id=1284412310]
+[node name="NotesRow" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info" unique_id=1284412310]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
 
 [node name="NotesKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow" unique_id=1633205148]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Notes:"
 
-[node name="NotesVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow" unique_id=248028785]
+[node name="NotesVal" type="TextEdit" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow" unique_id=248028785]
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_horizontal = 3
-autowrap_mode = 3
+size_flags_vertical = 3
+wrap_mode = 1
+
+[node name="SaveNotesBtn" type="Button" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow" unique_id=384920011]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Save Notes"
 
 [node name="StatsRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info" unique_id=1327191457]
 layout_mode = 2

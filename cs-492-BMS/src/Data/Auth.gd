@@ -100,9 +100,9 @@ func _seed_accounts() -> void:
 		return
 
 	var defaults := [
-		{ "name": "Admin User",    "email": "admin@bookstore.com",    "username": "admin",    "password": "password", "role": "admin"    },
-		{ "name": "Employee User", "email": "employee@bookstore.com", "username": "employee", "password": "password", "role": "employee" },
-		{ "name": "Customer User", "email": "customer@bookstore.com", "username": "customer", "password": "password", "role": "customer" },
+		{ "name": "Admin User",    "email": "admin@bookstore.com",    "username": "admin",    "password": _hash_password("password"), "role": "admin"    },
+		{ "name": "Employee User", "email": "employee@bookstore.com", "username": "employee", "password": _hash_password("password"), "role": "employee" },
+		{ "name": "Customer User", "email": "customer@bookstore.com", "username": "customer", "password": _hash_password("password"), "role": "customer" },
 	]
 	for acc in defaults:
 		_db.query_with_bindings(
@@ -121,7 +121,7 @@ func login(email: String, password: String) -> String:
 
 	_db.query_with_bindings(
 		"SELECT id, name AS display_name, email, username, password, role, phone, notes, created_at FROM accounts WHERE email = ? AND password = ? LIMIT 1;",
-		[email.strip_edges().to_lower(), password]
+		[email.strip_edges().to_lower(), _hash_password(password)]
 	)
 	if _db.query_result.is_empty():
 		return "Invalid email or password."
@@ -139,7 +139,7 @@ func login_with_username(username: String, password: String) -> String:
 
 	_db.query_with_bindings(
 		"SELECT id, name AS display_name, email, username, password, role, phone, notes, created_at FROM accounts WHERE username = ? AND password = ? LIMIT 1;",
-		[username.strip_edges().to_lower(), password]
+		[username.strip_edges().to_lower(), _hash_password(password)]
 	)
 	if _db.query_result.is_empty():
 		return "Invalid username or password."
@@ -237,7 +237,7 @@ func add_account(display_name: String, email: String, username: String, password
 
 	_db.query_with_bindings(
 		"INSERT INTO accounts (name, email, username, password, role) VALUES (?, ?, ?, ?, ?);",
-		[display_name.strip_edges(), email_val, user_val, password, role]
+		[display_name.strip_edges(), email_val, user_val, _hash_password(password), role]
 	)
 	return ""
 
@@ -303,14 +303,14 @@ func update_password(account_id: int, current_password: String, new_password: St
 
 	_db.query_with_bindings(
 		"SELECT id FROM accounts WHERE id = ? AND password = ? LIMIT 1;",
-		[account_id, current_password]
+		[account_id, _hash_password(current_password)]
 	)
 	if _db.query_result.is_empty():
 		return "Current password is incorrect."
 
 	_db.query_with_bindings(
 		"UPDATE accounts SET password = ? WHERE id = ?;",
-		[new_password, account_id]
+		[_hash_password(new_password), account_id]
 	)
 	return ""
 
@@ -349,3 +349,12 @@ func register_account(display_name: String, email: String, username: String, pas
 		return login(email, password)
 	else:
 		return login_with_username(username, password)
+
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+func _hash_password(plain: String) -> String:
+	var ctx := HashingContext.new()
+	ctx.start(HashingContext.HASH_SHA256)
+	ctx.update(plain.to_utf8_buffer())
+	return ctx.finish().hex_encode()

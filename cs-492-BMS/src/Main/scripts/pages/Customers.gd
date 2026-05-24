@@ -10,14 +10,16 @@ extends VBoxContainer
 @onready var email_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/EmailRow/EmailVal
 @onready var phone_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/PhoneRow/PhoneVal
 @onready var since_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/SinceRow/SinceVal
-@onready var notes_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow/NotesVal
+@onready var notes_val:      TextEdit      = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow/NotesVal
+@onready var save_notes_btn: Button        = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow/SaveNotesBtn
 @onready var purchases_val:  Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow/PurchasesCol/PurchasesVal
 @onready var spent_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow/SpentCol/SpentVal
 @onready var order_list:     VBoxContainer = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order_History/OrderScroll/OrderList
 @onready var no_orders_label: Label        = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order_History/NoOrdersLabel
 
-var _all_customers: Array = []
-var _button_group:  ButtonGroup = ButtonGroup.new()
+var _all_customers:    Array = []
+var _button_group:     ButtonGroup = ButtonGroup.new()
+var _current_customer: Dictionary = {}
 
 # ── Lifecycle ──────────────────────────────────────────────────────────────────
 
@@ -25,6 +27,7 @@ func _ready() -> void:
 	search_box.text_changed.connect(_on_search)
 	BookStore.accounts_changed.connect(_load_customers)
 	visibility_changed.connect(_on_visibility_changed)
+	save_notes_btn.pressed.connect(_on_save_notes_pressed)
 	_load_customers()
 
 # ── Data ───────────────────────────────────────────────────────────────────────
@@ -81,6 +84,7 @@ func _on_customer_pressed(btn: Button) -> void:
 func _show_customer(c: Dictionary) -> void:
 	placeholder.visible   = false
 	customer_info.visible = true
+	_current_customer     = c
 
 	name_label.text    = _str(c.get("name"))
 	email_val.text     = _str(c.get("email"))
@@ -93,6 +97,14 @@ func _show_customer(c: Dictionary) -> void:
 	since_val.text = created_at.substr(0, 10) if created_at.length() >= 10 else created_at
 
 	_load_orders(_int(c.get("id"), -1))
+
+func _on_save_notes_pressed() -> void:
+	var id := _int(_current_customer.get("id"), -1)
+	if id < 0:
+		return
+	var new_notes := notes_val.text
+	BookStore.update_customer_notes(id, new_notes)
+	_current_customer["notes"] = new_notes
 
 func _load_orders(account_id: int) -> void:
 	for child in order_list.get_children():
