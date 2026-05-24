@@ -98,6 +98,8 @@ func _validate() -> String:
 		return "Price must be a valid number."
 	if not stock_input.text.is_valid_int():
 		return "Stock must be a whole number."
+	if int(stock_input.text) < 0:
+		return "Stock cannot be negative."
 	if not alert_input.text.is_valid_int():
 		return "Low stock alert must be a whole number."
 	return ""

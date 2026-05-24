@@ -1,17 +1,7 @@
 [gd_scene format=3 uid="uid://dfpoqddmdhbhj"]
 
 [ext_resource type="Script" uid="uid://bfsa48vristy6" path="res://src/Main/scripts/Main.gd" id="1_dohow"]
-[ext_resource type="PackedScene" uid="uid://dashboard" path="res://src/Main/scenes/pages/Dashboard.tscn" id="2"]
 [ext_resource type="Texture2D" uid="uid://6bd162p1ntod" path="res://src/Main/themes/textures/popup_menu_panel.png" id="2_aaj1p"]
-[ext_resource type="PackedScene" uid="uid://catalog" path="res://src/Main/scenes/pages/Catalog.tscn" id="3"]
-[ext_resource type="PackedScene" uid="uid://ddeditbook" path="res://src/Main/scenes/pages/AddEditBook.tscn" id="4"]
-[ext_resource type="PackedScene" uid="uid://cay5t3du5hwhk" path="res://src/Main/scenes/pages/Sales.tscn" id="5"]
-[ext_resource type="PackedScene" uid="uid://customers" path="res://src/Main/scenes/pages/Customers.tscn" id="6"]
-[ext_resource type="PackedScene" uid="uid://reports" path="res://src/Main/scenes/pages/Reports.tscn" id="7"]
-[ext_resource type="PackedScene" uid="uid://restock" path="res://src/Main/scenes/pages/Restock.tscn" id="8_cnfob"]
-[ext_resource type="PackedScene" uid="uid://devtools" path="res://src/Main/scenes/pages/DevTools.tscn" id="10_aaj1p"]
-[ext_resource type="PackedScene" path="res://src/Main/scenes/pages/AccountSettings.tscn" id="10_fc3xa"]
-[ext_resource type="PackedScene" uid="uid://c2hgyrtrjsqj8" path="res://src/Main/scenes/pages/AccountsManager.tscn" id="10_nk8wn"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fc3xa"]
 texture = ExtResource("2_aaj1p")
@@ -26,8 +16,6 @@ texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
 texture_margin_bottom = 10.0
-
-[sub_resource type="ButtonGroup" id="NavGroup"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f3iqa"]
 texture = ExtResource("2_aaj1p")
@@ -92,76 +80,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="NavDashboard" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1269826883]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "  Dashboard"
-
-[node name="NavCatalog" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1133638212]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "  Book Catalog"
-
-[node name="NavAddBook" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=80911348]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "  Add / Edit Book"
-
-[node name="NavSales" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=1287391873]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "  Sales / Checkout"
-
-[node name="NavCustomers" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=172143002]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "  Customers"
-
-[node name="NavReports" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=249643259]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "  Reports"
-
-[node name="NavRestock" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=33941262]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "  Restock Orders"
-
-[node name="NavAccountSettings" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=359995972]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "Account Settings"
-
-[node name="NavAccountManager" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=953051362]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "Account Manager"
-
-[node name="NavDevTools" type="Button" parent="RootLayout/Sidebar/SidebarLayout/NavButtons" unique_id=685498700]
-layout_mode = 2
-size_flags_horizontal = 3
-toggle_mode = true
-button_group = SubResource("NavGroup")
-text = "Dev Tools"
-
 [node name="Spacer" type="Control" parent="RootLayout/Sidebar/SidebarLayout" unique_id=1994959687]
 layout_mode = 2
 size_flags_vertical = 3
@@ -217,70 +135,3 @@ theme_override_constants/margin_bottom = 7
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="Dashboard" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1206959654 instance=ExtResource("2")]
-visible = false
-layout_mode = 1
-
-[node name="Catalog" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=851943613 instance=ExtResource("3")]
-visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="AddEditBook" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1027308620 instance=ExtResource("4")]
-visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="Sales" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=924612436 instance=ExtResource("5")]
-visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="Customers" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=228885736 instance=ExtResource("6")]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="Reports" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1504859436 instance=ExtResource("7")]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="Restock" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=171214503 instance=ExtResource("8_cnfob")]
-visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="DevTools" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=100000001 instance=ExtResource("10_aaj1p")]
-visible = false
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="AccountManager" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1165924997 instance=ExtResource("10_nk8wn")]
-layout_mode = 1
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="AccountSettings" parent="RootLayout/MainArea/PageContainer/Pages" unique_id=1701423482 instance=ExtResource("10_fc3xa")]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-grow_horizontal = 2
-grow_vertical = 2

@@ -73,6 +73,22 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
+[node name="DetailActions" type="HBoxContainer" parent="ContentSplit/DetailScroll/DetailPanel" unique_id=1535742461]
+visible = false
+layout_mode = 2
+
+[node name="EditBtn" type="Button" parent="ContentSplit/DetailScroll/DetailPanel/DetailActions" unique_id=160204180]
+layout_mode = 2
+text = "Edit"
+
+[node name="DeleteBtn" type="Button" parent="ContentSplit/DetailScroll/DetailPanel/DetailActions" unique_id=2093688390]
+layout_mode = 2
+text = "Delete"
+
+[node name="AddToCartBtn" type="Button" parent="ContentSplit/DetailScroll/DetailPanel/DetailActions" unique_id=714488931]
+layout_mode = 2
+text = "Add to Cart"
+
 [node name="EmptyLabel" type="Label" parent="." unique_id=1466600683]
 visible = false
 layout_mode = 2

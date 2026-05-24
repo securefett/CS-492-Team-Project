@@ -1,84 +1,37 @@
 extends Control
 
-@onready var page_title:   Label          = $RootLayout/MainArea/TopBar/TopBarLayout/PageTitle
-@onready var pages:        Control        = $RootLayout/MainArea/PageContainer/Pages
-@onready var nav_buttons:  VBoxContainer  = $RootLayout/Sidebar/SidebarLayout/NavButtons
-@onready var footer_btn:   Button         = $RootLayout/Sidebar/SidebarLayout/FooterBtn
-@onready var user_label:   Label          = $RootLayout/MainArea/TopBar/TopBarLayout/UserLabel
+@onready var page_title:  Label         = $RootLayout/MainArea/TopBar/TopBarLayout/PageTitle
+@onready var pages:       Control       = $RootLayout/MainArea/PageContainer/Pages
+@onready var nav_buttons: VBoxContainer = $RootLayout/Sidebar/SidebarLayout/NavButtons
+@onready var footer_btn:  Button        = $RootLayout/Sidebar/SidebarLayout/FooterBtn
+@onready var user_label:  Label         = $RootLayout/MainArea/TopBar/TopBarLayout/UserLabel
 
-const PAGE_MAP := {
-	"dashboard": { "node": "Dashboard",   "title": "Dashboard",           "button": "NavDashboard" },
-	"catalog":   { "node": "Catalog",     "title": "Book Catalog",        "button": "NavCatalog"   },
-	"addbook":   { "node": "AddEditBook", "title": "Add / Edit Book",     "button": "NavAddBook"   },
-	"sales":     { "node": "Sales",       "title": "Sales & Checkout",    "button": "NavSales"     },
-	"customers": { "node": "Customers",   "title": "Customers",           "button": "NavCustomers" },
-	"reports":   { "node": "Reports",     "title": "Reports & Analytics", "button": "NavReports"   },
-	"restock":   { "node": "Restock",     "title": "Restock Orders",      "button": "NavRestock"   },
-	"accountmanager":    { "node": "AccountManager",      "title": "Account Manager",     "button": "NavAccountManager"   },
-	"accountsettings":   { "node": "AccountSettings",     "title": "Account Settings",    "button": "NavAccountSettings"   },
-	"devtools":          { "node": "DevTools",    "title": "Dev Tools",           "button": "NavDevTools"   },
-}
+# Shared ButtonGroup so nav buttons behave as a radio set, matching the
+# toggle_mode / button_group setup that was in the scene.
+var _nav_group := ButtonGroup.new()
+
+# Tracks which page key is currently shown — used to restore button state
+# after a rebuild.
+var _active_key := ""
+
 
 func _ready() -> void:
-	for btn in nav_buttons.get_children():
-		if btn is Button:
-			btn.pressed.connect(_on_nav_pressed.bind(btn.name))
-
 	footer_btn.pressed.connect(_open_login_dialog)
 	Auth.session_changed.connect(_on_session_changed)
 
-	# Show login immediately on launch — nothing is accessible without an account
-	_update_sidebar_for_role()
+	# Nothing is accessible without an account; build an empty sidebar and
+	# open the login dialog straight away.
+	_rebuild_nav_and_pages()
 	_open_login_dialog()
-
-
-# ── Navigation ────────────────────────────────────────────────────────────────
-
-func _on_nav_pressed(btn_name: String) -> void:
-	var key := btn_name.trim_prefix("Nav").to_lower()
-	if not Auth.has_permission(key):
-		return
-	_navigate(key)
-
-
-func _navigate(key: String) -> void:
-	if not PAGE_MAP.has(key):
-		push_warning("Main._navigate: unknown page key '%s'" % key)
-		return
-
-	var info: Dictionary = PAGE_MAP[key]
-
-	for child in pages.get_children():
-		child.visible = false
-
-	var target := pages.get_node(info["node"]) as Control
-	if target:
-		target.visible = true
-
-	page_title.text = info["title"]
-
-
-func navigate_to(key: String) -> void:
-	if not Auth.has_permission(key):
-		push_warning("navigate_to: role '%s' does not have permission for '%s'" % [Auth.get_role(), key])
-		return
-	_navigate(key)
-	if not PAGE_MAP.has(key):
-		return
-	var btn := nav_buttons.get_node_or_null(PAGE_MAP[key]["button"]) as Button
-	if btn:
-		btn.button_pressed = true
 
 
 # ── Session ───────────────────────────────────────────────────────────────────
 
 func _on_session_changed(account: Dictionary) -> void:
-	_update_sidebar_for_role()
-
 	if account.is_empty():
-		# Logged out — reopen login
-		user_label.text    = "Guest"
-		footer_btn.text    = "v1.0  ·  Log in"
+		user_label.text  = "Guest"
+		footer_btn.text  = "v1.0  ·  Log in"
+		_rebuild_nav_and_pages()
 		_open_login_dialog()
 		return
 
@@ -89,28 +42,100 @@ func _on_session_changed(account: Dictionary) -> void:
 	else:
 		footer_btn.text = "v1.0  ·  %s  ·  %s" % [Auth.get_account_name(), role.capitalize()]
 
-	# Navigate to the first permitted page for this role
+	_rebuild_nav_and_pages()
+
+	# Navigate to the first permitted page for this role.
 	var permitted := Auth.get_permitted_pages()
 	if permitted.size() > 0:
-		var first_key: String = permitted[0]
-		_navigate(first_key)
-		var btn := nav_buttons.get_node_or_null(PAGE_MAP[first_key]["button"]) as Button
-		if btn:
-			btn.button_pressed = true
+		_navigate(permitted[0])
 
 
-func _update_sidebar_for_role() -> void:
+# ── Build ─────────────────────────────────────────────────────────────────────
+
+func _rebuild_nav_and_pages() -> void:
+	# ── Tear down previous session's nodes ────────────────────────────────────
+	for child in nav_buttons.get_children():
+		child.queue_free()
+	for child in pages.get_children():
+		child.queue_free()
+
+	_active_key = ""
+	page_title.text = ""
+
+	# ── Build only the pages this role is permitted to see ────────────────────
 	var permitted := Auth.get_permitted_pages()
-	for btn in nav_buttons.get_children():
-		if btn is Button:
-			var key := btn.name.trim_prefix("Nav").to_lower()
-			btn.visible = key in permitted
+
+	for key in permitted:
+		if not PageDB.PAGES.has(key):
+			push_warning("Main._rebuild: key '%s' is in Auth permissions but missing from PageDB.PAGES" % key)
+			continue
+
+		var info: Dictionary = PageDB.PAGES[key]
+
+		# Page node
+		var packed := load(info["scene"]) as PackedScene
+		if packed == null:
+			push_error("Main._rebuild: could not load scene for '%s': %s" % [key, info["scene"]])
+			continue
+
+		var page := packed.instantiate() as Control
+		page.name    = key
+		page.visible = false
+		# Match the full-rect anchor layout used in the original scene.
+		page.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		pages.add_child(page)
+
+		# Nav button
+		var btn        := Button.new()
+		btn.name        = "Nav_" + key
+		btn.text        = info["nav"]
+		btn.toggle_mode = true
+		btn.button_group = _nav_group
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btn.pressed.connect(_navigate.bind(key))
+		nav_buttons.add_child(btn)
 
 
-const LoginDialogScene := preload("res://src/Main/scenes/notpages/LoginDialog.tscn")
+# ── Navigation ────────────────────────────────────────────────────────────────
+
+func _navigate(key: String) -> void:
+	if not Auth.has_permission(key):
+		push_warning("Main._navigate: role '%s' does not have permission for '%s'" % [Auth.get_role(), key])
+		return
+
+	if not PageDB.PAGES.has(key):
+		push_warning("Main._navigate: unknown page key '%s'" % key)
+		return
+
+	# Hide all pages, show the target.
+	for child in pages.get_children():
+		child.visible = false
+
+	var target := pages.get_node_or_null(key) as Control
+	if target:
+		target.visible = true
+	else:
+		push_error("Main._navigate: page node '%s' not found — was it built?" % key)
+		return
+
+	page_title.text = PageDB.PAGES[key]["title"]
+	_active_key     = key
+
+	# Keep the matching nav button pressed.
+	var btn := nav_buttons.get_node_or_null("Nav_" + key) as Button
+	if btn:
+		btn.button_pressed = true
+
+
+# Public entry point used by child pages that need to trigger navigation
+# (e.g. "Go to Catalog" links inside Dashboard).
+func navigate_to(key: String) -> void:
+	_navigate(key)
 
 
 # ── Login dialog ──────────────────────────────────────────────────────────────
+
+const LoginDialogScene := preload("res://src/Main/scenes/notpages/LoginDialog.tscn")
 
 func _open_login_dialog() -> void:
 	if get_node_or_null("LoginDialog"):

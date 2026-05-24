@@ -45,10 +45,12 @@ const ROLE_PERMISSIONS := {
 	],
 	"customer": [
 		"catalog",
+		"sales",
 		"accountsettings",
 	],
 	"guest": [
 		"catalog",
+		"sales",
 	],
 }
 

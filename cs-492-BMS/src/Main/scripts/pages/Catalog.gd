@@ -6,8 +6,12 @@ extends VBoxContainer
 @onready var content_split:    HBoxContainer                   = $ContentSplit
 @onready var book_list:        VBoxContainer                   = $ContentSplit/ListScroll/BookList
 @onready var detail_panel:     VBoxContainer                   = $ContentSplit/DetailScroll/DetailPanel
-@onready var empty_label:      Label        = $EmptyLabel
-@onready var no_results_label: Label        = $NoResultsLabel
+@onready var empty_label:      Label         = $EmptyLabel
+@onready var no_results_label: Label         = $NoResultsLabel
+@onready var detail_actions:   HBoxContainer = $ContentSplit/DetailScroll/DetailPanel/DetailActions
+@onready var edit_btn:         Button        = $ContentSplit/DetailScroll/DetailPanel/DetailActions/EditBtn
+@onready var delete_btn:       Button        = $ContentSplit/DetailScroll/DetailPanel/DetailActions/DeleteBtn
+@onready var cart_btn:         Button        = $ContentSplit/DetailScroll/DetailPanel/DetailActions/AddToCartBtn
 
 const GENRES := ["All Genres", "Fiction", "Non-Fiction", "Sci-Fi", "Biography", "Children"]
 
@@ -20,12 +24,33 @@ func _ready() -> void:
 	search_box.text_changed.connect(_on_filter_changed)
 	genre_filter.item_selected.connect(_on_filter_changed.unbind(1))
 	add_book_btn.pressed.connect(_on_add_book)
+
+	# Scene-node action buttons — signals connected once here.
+	edit_btn.pressed.connect(_on_edit_book_pressed)
+	delete_btn.pressed.connect(_on_delete_book_pressed)
+	cart_btn.pressed.connect(_on_add_to_cart_pressed)
+
+	Auth.session_changed.connect(_on_session_changed)
+	_apply_role_visibility()
 	_refresh()
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
+		_apply_role_visibility()
 		_refresh()
+
+
+func _apply_role_visibility() -> void:
+	var role  := Auth.get_role()
+	var staff := role == "admin" or role == "employee"
+	add_book_btn.visible = staff
+	edit_btn.visible     = staff
+	delete_btn.visible   = staff
+
+
+func _on_session_changed(_account: Dictionary) -> void:
+	_apply_role_visibility()
 
 
 # ── Data ──────────────────────────────────────────────────────────────────────
@@ -86,8 +111,10 @@ func _rebuild_list(books: Array) -> void:
 # ── Detail (right panel) ──────────────────────────────────────────────────────
 
 func _clear_detail() -> void:
+	detail_actions.visible = false
 	for child in detail_panel.get_children():
-		child.queue_free()
+		if child != detail_actions:
+			child.queue_free()
 
 	var placeholder := Label.new()
 	placeholder.text               = "Select a book to see details"
@@ -124,7 +151,8 @@ func _populate_detail(book: Dictionary) -> void:
 	labelbox.texture_margin_right = 10
 	
 	for child in detail_panel.get_children():
-		child.queue_free()
+		if child != detail_actions:
+			child.queue_free()
 
 	var stock: int = book["stock"]
 	var status := "In Stock" if stock > book["low_stock_alert"] \
@@ -178,26 +206,10 @@ func _populate_detail(book: Dictionary) -> void:
 
 	detail_panel.add_child(HSeparator.new())
 
-	# Action buttons
-	var actions := HBoxContainer.new()
-
-	var edit_btn := Button.new()
-	edit_btn.text = "Edit"
-	edit_btn.pressed.connect(_on_edit_book.bind(book["id"]))
-
-	var del_btn := Button.new()
-	del_btn.text = "Delete"
-	del_btn.pressed.connect(_on_delete_book.bind(book["id"], book["title"]))
-
-	var cart_btn := Button.new()
-	cart_btn.text     = "Add to Cart"
+	# Move the persistent action bar to the bottom of the detail panel.
+	detail_panel.move_child(detail_actions, -1)
 	cart_btn.disabled = stock <= 0
-	cart_btn.pressed.connect(_on_add_to_cart.bind(book["id"]))
-
-	actions.add_child(edit_btn)
-	actions.add_child(del_btn)
-	actions.add_child(cart_btn)
-	detail_panel.add_child(actions)
+	detail_actions.visible = true
 
 
 # ── Actions ───────────────────────────────────────────────────────────────────
@@ -209,8 +221,10 @@ func _on_add_book() -> void:
 	main.navigate_to("addbook")
 
 
-func _on_edit_book(book_id: int) -> void:
-	var book := BookStore.get_book(book_id)
+func _on_edit_book_pressed() -> void:
+	if _selected_id < 0:
+		return
+	var book := BookStore.get_book(_selected_id)
 	if book.is_empty():
 		return
 	var main := get_owner()
@@ -219,7 +233,14 @@ func _on_edit_book(book_id: int) -> void:
 	main.navigate_to("addbook")
 
 
-func _on_delete_book(book_id: int, book_title: String) -> void:
+func _on_delete_book_pressed() -> void:
+	if _selected_id < 0:
+		return
+	var book := BookStore.get_book(_selected_id)
+	if book.is_empty():
+		return
+	var book_id    := _selected_id
+	var book_title = book["title"]
 	var dialog := AcceptDialog.new()
 	dialog.title = "Delete Book"
 	dialog.dialog_text = "Delete \"%s\"? This cannot be undone." % book_title
@@ -228,16 +249,17 @@ func _on_delete_book(book_id: int, book_title: String) -> void:
 	dialog.popup_centered()
 	dialog.confirmed.connect(func():
 		BookStore.delete_book(book_id)
-		if _selected_id == book_id:
-			_selected_id = -1
+		_selected_id = -1
 		_refresh()
 		dialog.queue_free()
 	)
 	dialog.canceled.connect(func(): dialog.queue_free())
 
 
-func _on_add_to_cart(book_id: int) -> void:
-	var book := BookStore.get_book(book_id)
+func _on_add_to_cart_pressed() -> void:
+	if _selected_id < 0:
+		return
+	var book := BookStore.get_book(_selected_id)
 	if book.is_empty():
 		return
 	var main  := get_owner()
