@@ -164,7 +164,7 @@ func _close_confirm() -> void:
 
 func _on_dialog_save() -> void:
 	d_error_label.visible = false
-	var name     := d_name_input.text
+	var account_name     := d_name_input.text
 	var email    := d_email_input.text
 	var username := d_username_input.text
 	var password := d_password_input.text
@@ -178,10 +178,10 @@ func _on_dialog_save() -> void:
 		if password != confirm:
 			err = "Passwords do not match."
 		else:
-			err = Auth.add_account(name, email, username, password, role)
+			err = Auth.add_account(account_name, email, username, password, role)
 	else:
 		# ── Update profile ────────────────────────────────────────────────────
-		err = Auth.update_account(_editing_id, name, email, username)
+		err = Auth.update_account(_editing_id, account_name, email, username)
 		# Update role separately (guarded inside Auth against self-demotion).
 		if err == "":
 			err = Auth.update_account_role(_editing_id, role)
