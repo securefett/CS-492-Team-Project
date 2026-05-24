@@ -1,35 +1,38 @@
 extends VBoxContainer
 
-@onready var search_box: LineEdit      = $Toolbar/SearchBox
-@onready var add_btn:    Button        = $Toolbar/AddCustomerBtn
-@onready var card_grid:  GridContainer = $Scroll/CardGrid
+@onready var search_box:    LineEdit      = $Toolbar/SearchBox
+@onready var customer_list: VBoxContainer = $Body/LeftPanel/Scroll/CustomerList
+
+# Detail panel nodes
+@onready var placeholder:    Label         = $Body/DetailPanel/DetailContent/Placeholder
+@onready var customer_info:  VBoxContainer = $Body/DetailPanel/DetailContent/CustomerInfo
+@onready var name_label:     Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Header/NameLabel
+@onready var email_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/EmailRow/EmailVal
+@onready var phone_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/PhoneRow/PhoneVal
+@onready var since_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/SinceRow/SinceVal
+@onready var notes_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow/NotesVal
+@onready var purchases_val:  Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow/PurchasesCol/PurchasesVal
+@onready var spent_val:      Label         = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow/SpentCol/SpentVal
+@onready var order_list:     VBoxContainer = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order_History/OrderScroll/OrderList
+@onready var no_orders_label: Label        = $Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order_History/NoOrdersLabel
 
 var _all_customers: Array = []
+var _button_group:  ButtonGroup = ButtonGroup.new()
 
 # ── Lifecycle ──────────────────────────────────────────────────────────────────
 
 func _ready() -> void:
 	search_box.text_changed.connect(_on_search)
-	add_btn.pressed.connect(_on_add)
-
-	# Refresh whenever the DB changes (add / update / delete).
-	BookStore.customers_changed.connect(_load_customers)
-
-	# Refresh whenever this page becomes visible (e.g. tab switch).
+	BookStore.accounts_changed.connect(_load_customers)
 	visibility_changed.connect(_on_visibility_changed)
-
 	_load_customers()
 
 # ── Data ───────────────────────────────────────────────────────────────────────
 
 func _load_customers() -> void:
 	_all_customers = BookStore.get_all_customers()
-	# Re-apply any active search filter instead of blindly showing everything.
 	var q := search_box.text.strip_edges()
-	if q.is_empty():
-		_build_cards(_all_customers)
-	else:
-		_build_cards(BookStore.search_customers(q))
+	_build_list(BookStore.search_customers(q) if not q.is_empty() else _all_customers)
 
 func _on_visibility_changed() -> void:
 	if is_visible_in_tree():
@@ -38,81 +41,96 @@ func _on_visibility_changed() -> void:
 # ── Search ─────────────────────────────────────────────────────────────────────
 
 func _on_search(query: String) -> void:
-	if query.strip_edges().is_empty():
-		_build_cards(_all_customers)
-	else:
-		_build_cards(BookStore.search_customers(query))
+	_build_list(BookStore.search_customers(query) if not query.strip_edges().is_empty() else _all_customers)
 
-# ── Card grid ─────────────────────────────────────────────────────────────────
+# ── Helpers ────────────────────────────────────────────────────────────────────
 
-func _build_cards(customers: Array) -> void:
-	for child in card_grid.get_children():
+# Dictionary.get() only falls back to the default when the key is missing,
+# not when the value is null. This helper covers both cases.
+func _str(value) -> String:
+	return "" if value == null else str(value)
+
+func _flt(value, default: float = 0.0) -> float:
+	return default if value == null else float(value)
+
+func _int(value, default: int = 0) -> int:
+	return default if value == null else int(value)
+
+# ── Customer list ──────────────────────────────────────────────────────────────
+
+func _build_list(customers: Array) -> void:
+	for child in customer_list.get_children():
 		child.queue_free()
+
 	for c in customers:
-		card_grid.add_child(_make_card(c))
+		var btn := Button.new()
+		btn.text                  = _str(c.get("name")) if c.get("name") != null else "Unknown"
+		btn.toggle_mode           = true
+		btn.button_group          = _button_group
+		btn.alignment             = HORIZONTAL_ALIGNMENT_LEFT
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btn.set_meta("customer", c)
+		btn.pressed.connect(_on_customer_pressed.bind(btn))
+		customer_list.add_child(btn)
 
-func _make_card(c: Dictionary) -> PanelContainer:
-	var card   := PanelContainer.new()
-	var layout := VBoxContainer.new()
+func _on_customer_pressed(btn: Button) -> void:
+	_show_customer(btn.get_meta("customer"))
 
-	var parts    := (c.get("name", "?") as String).split(" ")
-	var initials := "?"
-	if parts.size() >= 2:
-		initials = (parts[0][0] + parts[1][0]).to_upper()
-	elif parts.size() == 1 and parts[0].length() > 0:
-		initials = parts[0][0].to_upper()
+# ── Detail panel ───────────────────────────────────────────────────────────────
 
-	var avatar     := Label.new()
-	avatar.text     = initials
-	avatar.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+func _show_customer(c: Dictionary) -> void:
+	placeholder.visible   = false
+	customer_info.visible = true
 
-	var name_lbl    := Label.new()
-	name_lbl.text    = c.get("name", "Unknown")
+	name_label.text    = _str(c.get("name"))
+	email_val.text     = _str(c.get("email"))
+	phone_val.text     = _str(c.get("phone"))
+	notes_val.text     = _str(c.get("notes"))
+	purchases_val.text = str(_int(c.get("total_sales")))
+	spent_val.text     = "$%.2f" % _flt(c.get("total_spent"))
 
-	var email_lbl   := Label.new()
-	email_lbl.text   = c.get("email", "—")
+	var created_at := _str(c.get("created_at"))
+	since_val.text = created_at.substr(0, 10) if created_at.length() >= 10 else created_at
 
-	var phone_lbl   := Label.new()
-	phone_lbl.text   = c.get("phone", "")
-	phone_lbl.visible = phone_lbl.text != ""
+	_load_orders(_int(c.get("id"), -1))
 
-	var since_year := "—"
-	var created_at: String = c.get("created_at", "")
-	if created_at.length() >= 4:
-		since_year = created_at.substr(0, 4)
+func _load_orders(account_id: int) -> void:
+	for child in order_list.get_children():
+		child.queue_free()
 
-	var stats := HBoxContainer.new()
-	stats.alignment = BoxContainer.ALIGNMENT_CENTER
-	for pair in [
-		["Purchases", str(c.get("total_sales", 0))],
-		["Spent",     "$%.2f" % c.get("total_spent", 0.0)],
-		["Since",     since_year],
-	]:
-		var col := VBoxContainer.new()
-		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var key := Label.new()
-		key.text = pair[0]
-		key.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		var val := Label.new()
-		val.text = pair[1]
-		val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		col.add_child(key)
-		col.add_child(val)
-		stats.add_child(col)
+	if account_id < 0:
+		no_orders_label.visible = true
+		return
 
-	layout.add_child(avatar)
-	layout.add_child(name_lbl)
-	layout.add_child(email_lbl)
-	layout.add_child(phone_lbl)
-	layout.add_child(stats)
-	card.add_child(layout)
-	card.custom_minimum_size = Vector2(200, 0)
-	return card
+	var orders := BookStore.get_customer_sales(account_id)
 
-# ── Actions ────────────────────────────────────────────────────────────────────
+	if orders.is_empty():
+		no_orders_label.visible = true
+		return
 
-func _on_add() -> void:
-	# TODO: open an Add Customer dialog or sub-page.
-	# No manual _load_customers() call needed here — BookStore will emit
-	# customers_changed after add_customer(), which triggers it automatically.
-	print("Add customer pressed")
+	no_orders_label.visible = false
+
+	for sale in orders:
+		var row := HBoxContainer.new()
+
+		var date_lbl  := Label.new()
+		var total_lbl := Label.new()
+		var pay_lbl   := Label.new()
+		var items_lbl := Label.new()
+
+		var date_str := _str(sale.get("created_at"))
+		date_lbl.text  = date_str.substr(0, 10) if date_str.length() >= 10 else date_str
+		total_lbl.text = "$%.2f" % _flt(sale.get("total"))
+		pay_lbl.text   = _str(sale.get("payment_method"))
+		items_lbl.text = "%d item(s)" % _int(sale.get("item_count"))
+
+		date_lbl.size_flags_horizontal  = Control.SIZE_EXPAND_FILL
+		total_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		pay_lbl.size_flags_horizontal   = Control.SIZE_EXPAND_FILL
+		items_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+		row.add_child(date_lbl)
+		row.add_child(total_lbl)
+		row.add_child(pay_lbl)
+		row.add_child(items_lbl)
+		order_list.add_child(row)

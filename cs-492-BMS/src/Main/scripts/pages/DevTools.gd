@@ -20,9 +20,10 @@ extends VBoxContainer
 @onready var btn_show_customers:  Button = $Tabs/Customers/CustomerGrid/ShowCustomersBtn
 
 # Sales tab
-@onready var btn_seed_sales:  Button = $Tabs/Sales/SalesGrid/SeedSalesBtn
-@onready var btn_clear_sales: Button = $Tabs/Sales/SalesGrid/ClearSalesBtn
-@onready var btn_show_sales:  Button = $Tabs/Sales/SalesGrid/ShowSalesBtn
+@onready var btn_seed_sales:           Button = $Tabs/Sales/SalesGrid/SeedSalesBtn
+@onready var btn_seed_historical_sales: Button = $Tabs/Sales/SalesGrid/SeedHistoricalSalesBtn
+@onready var btn_clear_sales:          Button = $Tabs/Sales/SalesGrid/ClearSalesBtn
+@onready var btn_show_sales:           Button = $Tabs/Sales/SalesGrid/ShowSalesBtn
 
 # Raw tab
 @onready var raw_input:  LineEdit = $Tabs/Raw/InputRow/RawInput
@@ -52,11 +53,11 @@ const SEED_BOOKS := [
 ]
 
 const SEED_CUSTOMERS := [
-	{ "name": "Alice Mercer",   "email": "alice@example.com",   "phone": "555-0101", "notes": "Prefers sci-fi."       },
-	{ "name": "Bob Tanaka",     "email": "bob@example.com",     "phone": "555-0102", "notes": "Regular customer."     },
-	{ "name": "Clara Singh",    "email": "clara@example.com",   "phone": "555-0103", "notes": "Interested in classics."},
-	{ "name": "David Osei",     "email": "david@example.com",   "phone": "555-0104", "notes": ""                      },
-	{ "name": "Eva Kowalski",   "email": "eva@example.com",     "phone": "555-0105", "notes": "Book club organiser."  },
+	{ "name": "Alice Mercer",  "email": "alice@example.com",  "username": "alice",  "password": "password", "phone": "555-0101", "notes": "Prefers sci-fi."        },
+	{ "name": "Bob Tanaka",    "email": "bob@example.com",    "username": "bob",    "password": "password", "phone": "555-0102", "notes": "Regular customer."      },
+	{ "name": "Clara Singh",   "email": "clara@example.com",  "username": "clara",  "password": "password", "phone": "555-0103", "notes": "Interested in classics." },
+	{ "name": "David Osei",    "email": "david@example.com",  "username": "david",  "password": "password", "phone": "555-0104", "notes": ""                        },
+	{ "name": "Eva Kowalski",  "email": "eva@example.com",    "username": "eva",    "password": "password", "phone": "555-0105", "notes": "Book club organiser."    },
 ]
 
 # ── Lifecycle ──────────────────────────────────────────────────────────────────
@@ -74,6 +75,7 @@ func _ready() -> void:
 	btn_show_customers.pressed.connect(_show_customers)
 
 	btn_seed_sales.pressed.connect(_seed_sales)
+	btn_seed_historical_sales.pressed.connect(_seed_historical_sales)
 	btn_clear_sales.pressed.connect(_confirm_clear.bind("sales"))
 	btn_show_sales.pressed.connect(_show_sales)
 
@@ -188,17 +190,83 @@ func _seed_sales() -> void:
 	for i in 6:
 		var book       = books[rng.randi() % books.size()]
 		var qty        := rng.randi_range(1, 3)
-		var customer_id: int = -1
+		var account_id: int = -1
 		if not customers.is_empty():
-			customer_id = customers[rng.randi() % customers.size()]["id"]
+			account_id = customers[rng.randi() % customers.size()]["id"]
 		var method = methods[rng.randi() % 2]
 		BookStore.complete_sale(
 			[{ "book_id": book["id"], "qty": qty, "price": book["price"] }],
 			method,
-			customer_id
+			account_id
 		)
 
 	_set_status("Seeded 6 random sales.")
+	_show_sales()
+
+func _seed_historical_sales() -> void:
+	var books := BookStore.get_all_books()
+	if books.is_empty():
+		_set_status("Seed books first before seeding sales.", true)
+		return
+	var customers := BookStore.get_all_customers()
+	var methods   := ["cash", "card"]
+	var rng       := RandomNumberGenerator.new()
+	rng.randomize()
+
+	# Generate ~120 sales spread across the past 12 months with realistic
+	# day-of-month and multi-item variance for chart/report testing.
+	var now       := Time.get_date_dict_from_system()
+	var this_year := int(now["year"])
+	var this_month := int(now["month"])
+
+	var added := 0
+	for month_offset in 12:
+		# Work backwards: offset 0 = this month, 11 = 11 months ago.
+		var m := this_month - month_offset
+		var y := this_year
+		while m <= 0:
+			m += 12
+			y -= 1
+
+		# Vary sales volume per month (8–18) so the chart has natural peaks.
+		var count := rng.randi_range(8, 18)
+		for _i in count:
+			var day := rng.randi_range(1, 28)  # 28 is safe for all months
+			var hour   := rng.randi_range(9, 20)
+			var minute := rng.randi_range(0, 59)
+			var ts := "%04d-%02d-%02d %02d:%02d:00" % [y, m, day, hour, minute]
+
+			# 1–3 line items per sale
+			var item_count := rng.randi_range(1, 3)
+			var cart: Array = []
+			for _j in item_count:
+				var book = books[rng.randi() % books.size()]
+				cart.append({ "book_id": book["id"], "qty": rng.randi_range(1, 2), "price": book["price"] })
+
+			var account_id: int = -1
+			if not customers.is_empty():
+				account_id = customers[rng.randi() % customers.size()]["id"]
+			var method: String = methods[rng.randi() % 2]
+
+			# Insert sale header with the backdated timestamp.
+			var subtotal := 0.0
+			for item in cart:
+				subtotal += item["price"] * item["qty"]
+			var tax   := subtotal * 0.08
+			var total := subtotal + tax
+			BookStore.db.query_with_bindings(
+				"INSERT INTO sales (account_id, payment_method, subtotal, tax, total, created_at) VALUES (?, ?, ?, ?, ?, ?);",
+				[account_id if account_id > 0 else null, method, subtotal, tax, total, ts]
+			)
+			var sale_id: int = BookStore.db.last_insert_rowid
+			for item in cart:
+				BookStore.db.query_with_bindings(
+					"INSERT INTO sale_items (sale_id, book_id, qty, price) VALUES (?, ?, ?, ?);",
+					[sale_id, item["book_id"], item["qty"], item["price"]]
+				)
+			added += 1
+
+	_set_status("Seeded %d historical sales across 12 months." % added)
 	_show_sales()
 
 
@@ -212,7 +280,7 @@ func _show_sales() -> void:
 	for r in rows:
 		data.append([
 			str(r.get("id", "")),
-			r.get("customer_name", "Walk-in") if r.get("customer_name", "") != "" else "Walk-in",
+			r.get("account_name", "Walk-in") if r.get("account_name", "") != "" else "Walk-in",
 			r.get("payment_method", ""),
 			"$%.2f" % r.get("subtotal", 0.0),
 			"$%.2f" % r.get("tax", 0.0),
@@ -249,10 +317,9 @@ func _do_clear(table: String) -> void:
 			BookStore.db.query("DELETE FROM sqlite_sequence WHERE name='sale_items';")
 			_set_status("Cleared books, sales, and sale_items (cascade).")
 		"customers":
-			BookStore.db.query("UPDATE sales SET customer_id = NULL;")
-			BookStore.db.query("DELETE FROM customers;")
-			BookStore.db.query("DELETE FROM sqlite_sequence WHERE name='customers';")
-			_set_status("Cleared customers (sales unlinked).")
+			BookStore.db.query("UPDATE sales SET account_id = NULL WHERE account_id IN (SELECT id FROM accounts WHERE role = 'customer');")
+			BookStore.db.query("DELETE FROM accounts WHERE role = 'customer';")
+			_set_status("Cleared customer accounts (sales unlinked).")
 		"sales":
 			BookStore.db.query("DELETE FROM sale_items;")
 			BookStore.db.query("DELETE FROM sales;")

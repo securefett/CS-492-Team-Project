@@ -30,7 +30,7 @@ const AccountCardScene := preload("res://src/Main/scenes/notpages/AccountCard.ts
 @onready var d_save_btn:        Button   = $EditDialog/Margin/Layout/Buttons/SaveBtn
 @onready var d_cancel_btn:      Button   = $EditDialog/Margin/Layout/Buttons/CancelBtn
 
-var _editing_id:      int    = -1   # -1 means creating a new account
+var _editing_id:          int    = -1   # -1 means creating a new account
 var _pending_delete_id:   int    = -1
 var _pending_delete_name: String = ""
 
@@ -67,7 +67,6 @@ func _refresh(filter: String = "") -> void:
 				or str(acc.get("username", "")).to_lower().contains(q)):
 			continue
 		_make_card(acc)
-
 
 
 func _make_card(acc: Dictionary) -> PanelContainer:
@@ -118,6 +117,10 @@ func _open_dialog_for_edit(acc: Dictionary) -> void:
 	d_error_label.visible  = false
 	edit_dialog.popup_centered()
 	d_name_input.grab_focus()
+	# TODO: if you want admins to edit phone/notes for customer-role accounts,
+	# add PhoneInput and NotesInput fields to the EditDialog scene and wire them
+	# up here, then pass them through to a new Auth.update_account_details()
+	# function or directly via BookStore.update_customer().
 
 
 func _close_dialog() -> void:

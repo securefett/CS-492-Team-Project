@@ -79,85 +79,85 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 current_tab = 0
 
-[node name="Account_Info" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs" unique_id=809971565]
+[node name="Account Info" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs" unique_id=809971565]
 layout_mode = 2
 theme_override_constants/separation = 8
 metadata/_tab_index = 0
 
-[node name="EmailRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info" unique_id=226097125]
+[node name="EmailRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info" unique_id=226097125]
 layout_mode = 2
 
-[node name="EmailKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/EmailRow" unique_id=1688389925]
+[node name="EmailKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/EmailRow" unique_id=1688389925]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Email:"
 
-[node name="EmailVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/EmailRow" unique_id=1440495255]
+[node name="EmailVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/EmailRow" unique_id=1440495255]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PhoneRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info" unique_id=347084289]
+[node name="PhoneRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info" unique_id=347084289]
 layout_mode = 2
 
-[node name="PhoneKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/PhoneRow" unique_id=1508316816]
+[node name="PhoneKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/PhoneRow" unique_id=1508316816]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Phone:"
 
-[node name="PhoneVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/PhoneRow" unique_id=2029009523]
+[node name="PhoneVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/PhoneRow" unique_id=2029009523]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="SinceRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info" unique_id=996700032]
+[node name="SinceRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info" unique_id=996700032]
 layout_mode = 2
 
-[node name="SinceKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/SinceRow" unique_id=542956671]
+[node name="SinceKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/SinceRow" unique_id=542956671]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Member since:"
 
-[node name="SinceVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/SinceRow" unique_id=1960458986]
+[node name="SinceVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/SinceRow" unique_id=1960458986]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NotesRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info" unique_id=1284412310]
+[node name="NotesRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info" unique_id=1284412310]
 layout_mode = 2
 
-[node name="NotesKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow" unique_id=1633205148]
+[node name="NotesKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/NotesRow" unique_id=1633205148]
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 text = "Notes:"
 
-[node name="NotesVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/NotesRow" unique_id=248028785]
+[node name="NotesVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/NotesRow" unique_id=248028785]
 layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
 
-[node name="StatsRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info" unique_id=1327191457]
+[node name="StatsRow" type="HBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info" unique_id=1327191457]
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="PurchasesCol" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow" unique_id=1912744810]
+[node name="PurchasesCol" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/StatsRow" unique_id=1912744810]
 layout_mode = 2
 
-[node name="PurchasesKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow/PurchasesCol" unique_id=321081175]
+[node name="PurchasesKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/StatsRow/PurchasesCol" unique_id=321081175]
 layout_mode = 2
 text = "Purchases"
 
-[node name="PurchasesVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow/PurchasesCol" unique_id=738233172]
+[node name="PurchasesVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/StatsRow/PurchasesCol" unique_id=738233172]
 layout_mode = 2
 
-[node name="SpentCol" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow" unique_id=1336993198]
+[node name="SpentCol" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/StatsRow" unique_id=1336993198]
 layout_mode = 2
 
-[node name="SpentKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow/SpentCol" unique_id=1588862263]
+[node name="SpentKey" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/StatsRow/SpentCol" unique_id=1588862263]
 layout_mode = 2
 text = "Total Spent"
 
-[node name="SpentVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account_Info/StatsRow/SpentCol" unique_id=293570800]
+[node name="SpentVal" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Account Info/StatsRow/SpentCol" unique_id=293570800]
 layout_mode = 2
 
-[node name="Order_History" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs" unique_id=960272852]
+[node name="Order History" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs" unique_id=960272852]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -165,17 +165,17 @@ size_flags_vertical = 3
 theme_override_constants/separation = 8
 metadata/_tab_index = 1
 
-[node name="OrderScroll" type="ScrollContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order_History" unique_id=1250247782]
+[node name="OrderScroll" type="ScrollContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order History" unique_id=1250247782]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="OrderList" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order_History/OrderScroll" unique_id=1117207524]
+[node name="OrderList" type="VBoxContainer" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order History/OrderScroll" unique_id=1117207524]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="NoOrdersLabel" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order_History" unique_id=1284672185]
+[node name="NoOrdersLabel" type="Label" parent="Body/DetailPanel/DetailContent/CustomerInfo/Tabs/Order History" unique_id=1284672185]
 visible = false
 layout_mode = 2
 text = "No orders found."

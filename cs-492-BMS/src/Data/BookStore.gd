@@ -330,6 +330,25 @@ func delete_customer(id: int) -> void:
 	accounts_changed.emit()
 
 
+func get_customer_sales(account_id: int) -> Array:
+	db.query_with_bindings("""
+		SELECT
+			s.id,
+			s.created_at,
+			s.payment_method,
+			s.subtotal,
+			s.tax,
+			s.total,
+			COUNT(si.id) AS item_count
+		FROM sales s
+		LEFT JOIN sale_items si ON si.sale_id = s.id
+		WHERE s.account_id = ?
+		GROUP BY s.id
+		ORDER BY s.created_at DESC;
+	""", [account_id])
+	return db.query_result
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  SALES
 # ══════════════════════════════════════════════════════════════════════════════

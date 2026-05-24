@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://devtools"]
 
-[ext_resource type="Script" path="res://src/Main/scripts/pages/DevTools.gd" id="1"]
+[ext_resource type="Script" uid="uid://ttpfxk23yjag" path="res://src/Main/scripts/pages/DevTools.gd" id="1"]
 
 [node name="DevTools" type="VBoxContainer" unique_id=100000001]
 anchors_preset = 15
@@ -11,169 +11,173 @@ size_flags_vertical = 3
 theme_override_constants/separation = 0
 script = ExtResource("1")
 
-[node name="Header" type="PanelContainer" parent="." unique_id=100000002]
+[node name="Header" type="PanelContainer" parent="." unique_id=2037567447]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HeaderLabel" type="Label" parent="Header" unique_id=100000003]
+[node name="HeaderLabel" type="Label" parent="Header" unique_id=660855559]
 layout_mode = 2
-text = "Developer Tools"
 theme_override_font_sizes/font_size = 18
+text = "Developer Tools"
 
-[node name="TabBar" type="TabBar" parent="." unique_id=100000004]
+[node name="TabBar" type="TabBar" parent="." unique_id=12318503]
 layout_mode = 2
 size_flags_horizontal = 3
+current_tab = 0
 tab_count = 4
 tab_0/title = "Books"
 tab_1/title = "Customers"
 tab_2/title = "Sales"
 tab_3/title = "Raw SQL"
 
-[node name="Tabs" type="MarginContainer" parent="." unique_id=100000005]
+[node name="Tabs" type="MarginContainer" parent="." unique_id=1474844008]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_right = 8
 theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Books" type="VBoxContainer" parent="Tabs" unique_id=100000010]
+[node name="Books" type="VBoxContainer" parent="Tabs" unique_id=361827629]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="SectionLabel" type="Label" parent="Tabs/Books" unique_id=100000011]
+[node name="SectionLabel" type="Label" parent="Tabs/Books" unique_id=1677722255]
 layout_mode = 2
-text = "Books Table"
 theme_override_font_sizes/font_size = 14
+text = "Books Table"
 
-[node name="BooksGrid" type="GridContainer" parent="Tabs/Books" unique_id=100000012]
+[node name="BooksGrid" type="GridContainer" parent="Tabs/Books" unique_id=330122008]
 layout_mode = 2
-columns = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
+columns = 2
 
-[node name="SeedBooksBtn" type="Button" parent="Tabs/Books/BooksGrid" unique_id=100000013]
+[node name="SeedBooksBtn" type="Button" parent="Tabs/Books/BooksGrid" unique_id=1935417878]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Seed Sample Books (10)"
 
-[node name="ShowBooksBtn" type="Button" parent="Tabs/Books/BooksGrid" unique_id=100000014]
+[node name="ShowBooksBtn" type="Button" parent="Tabs/Books/BooksGrid" unique_id=422912760]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Show All Books"
 
-[node name="LowStockBtn" type="Button" parent="Tabs/Books/BooksGrid" unique_id=100000015]
+[node name="LowStockBtn" type="Button" parent="Tabs/Books/BooksGrid" unique_id=1447466234]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Show Low Stock"
 
-[node name="ClearBooksBtn" type="Button" parent="Tabs/Books/BooksGrid" unique_id=100000016]
+[node name="ClearBooksBtn" type="Button" parent="Tabs/Books/BooksGrid" unique_id=1064801519]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Clear Books (+ Sales)"
 
-[node name="Customers" type="VBoxContainer" parent="Tabs" unique_id=100000020]
+[node name="Customers" type="VBoxContainer" parent="Tabs" unique_id=791621090]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="SectionLabel" type="Label" parent="Tabs/Customers" unique_id=100000021]
+[node name="SectionLabel" type="Label" parent="Tabs/Customers" unique_id=1415327670]
 layout_mode = 2
-text = "Customers Table"
 theme_override_font_sizes/font_size = 14
+text = "Customers Table"
 
-[node name="CustomerGrid" type="GridContainer" parent="Tabs/Customers" unique_id=100000022]
+[node name="CustomerGrid" type="GridContainer" parent="Tabs/Customers" unique_id=1096886894]
 layout_mode = 2
-columns = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
+columns = 2
 
-[node name="SeedCustomersBtn" type="Button" parent="Tabs/Customers/CustomerGrid" unique_id=100000023]
+[node name="SeedCustomersBtn" type="Button" parent="Tabs/Customers/CustomerGrid" unique_id=133429370]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Seed Sample Customers (5)"
 
-[node name="ShowCustomersBtn" type="Button" parent="Tabs/Customers/CustomerGrid" unique_id=100000024]
+[node name="ShowCustomersBtn" type="Button" parent="Tabs/Customers/CustomerGrid" unique_id=456879766]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Show All Customers"
 
-[node name="ClearCustomersBtn" type="Button" parent="Tabs/Customers/CustomerGrid" unique_id=100000025]
+[node name="ClearCustomersBtn" type="Button" parent="Tabs/Customers/CustomerGrid" unique_id=590698306]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Clear Customers"
 
-[node name="Sales" type="VBoxContainer" parent="Tabs" unique_id=100000030]
+[node name="Sales" type="VBoxContainer" parent="Tabs" unique_id=1387456759]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="SectionLabel" type="Label" parent="Tabs/Sales" unique_id=100000031]
+[node name="SectionLabel" type="Label" parent="Tabs/Sales" unique_id=1279788299]
 layout_mode = 2
-text = "Sales Table"
 theme_override_font_sizes/font_size = 14
+text = "Sales Table"
 
-[node name="SalesGrid" type="GridContainer" parent="Tabs/Sales" unique_id=100000032]
+[node name="SalesGrid" type="GridContainer" parent="Tabs/Sales" unique_id=1661666135]
 layout_mode = 2
-columns = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
+columns = 2
 
-[node name="SeedSalesBtn" type="Button" parent="Tabs/Sales/SalesGrid" unique_id=100000033]
+[node name="SeedSalesBtn" type="Button" parent="Tabs/Sales/SalesGrid" unique_id=1230443831]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Seed Random Sales (6)"
 
-[node name="ShowSalesBtn" type="Button" parent="Tabs/Sales/SalesGrid" unique_id=100000034]
+[node name="SeedHistoricalSalesBtn" type="Button" parent="Tabs/Sales/SalesGrid" unique_id=1411331095]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Seed Historical Sales (12 mo)"
+
+[node name="ShowSalesBtn" type="Button" parent="Tabs/Sales/SalesGrid" unique_id=844222673]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Show Recent Sales"
 
-[node name="ClearSalesBtn" type="Button" parent="Tabs/Sales/SalesGrid" unique_id=100000035]
+[node name="ClearSalesBtn" type="Button" parent="Tabs/Sales/SalesGrid" unique_id=1377283815]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Clear Sales"
 
-[node name="Raw" type="VBoxContainer" parent="Tabs" unique_id=100000040]
+[node name="Raw" type="VBoxContainer" parent="Tabs" unique_id=838385881]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="SectionLabel" type="Label" parent="Tabs/Raw" unique_id=100000041]
+[node name="SectionLabel" type="Label" parent="Tabs/Raw" unique_id=1752688707]
 layout_mode = 2
-text = "Raw SQL Query"
 theme_override_font_sizes/font_size = 14
+text = "Raw SQL Query"
 
-[node name="InputRow" type="HBoxContainer" parent="Tabs/Raw" unique_id=100000042]
+[node name="InputRow" type="HBoxContainer" parent="Tabs/Raw" unique_id=1067925188]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="RawInput" type="LineEdit" parent="Tabs/Raw/InputRow" unique_id=100000043]
+[node name="RawInput" type="LineEdit" parent="Tabs/Raw/InputRow" unique_id=660483809]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "SELECT * FROM books LIMIT 10;"
 
-[node name="RawRunBtn" type="Button" parent="Tabs/Raw/InputRow" unique_id=100000044]
+[node name="RawRunBtn" type="Button" parent="Tabs/Raw/InputRow" unique_id=1084525377]
 layout_mode = 2
 text = "Run"
 
-[node name="ClearBtn" type="Button" parent="Tabs/Raw" unique_id=100000045]
+[node name="ClearBtn" type="Button" parent="Tabs/Raw" unique_id=1026980514]
 layout_mode = 2
 text = "Clear Output"
 
-[node name="StatusLabel" type="Label" parent="." unique_id=100000050]
+[node name="StatusLabel" type="Label" parent="." unique_id=1492674968]
 layout_mode = 2
-text = ""
 
-[node name="OutputScroll" type="ScrollContainer" parent="." unique_id=100000060]
+[node name="OutputScroll" type="ScrollContainer" parent="." unique_id=1828240039]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="OutputLabel" type="RichTextLabel" parent="OutputScroll" unique_id=100000061]
+[node name="OutputLabel" type="RichTextLabel" parent="OutputScroll" unique_id=649464948]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-bbcode_enabled = false
 fit_content = true
