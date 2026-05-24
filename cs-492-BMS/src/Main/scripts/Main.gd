@@ -55,9 +55,9 @@ func _on_session_changed(account: Dictionary) -> void:
 func _rebuild_nav_and_pages() -> void:
 	# ── Tear down previous session's nodes ────────────────────────────────────
 	for child in nav_buttons.get_children():
-		child.queue_free()
+		child.free()
 	for child in pages.get_children():
-		child.queue_free()
+		child.free()
 
 	_active_key = ""
 	page_title.text = ""
@@ -131,6 +131,33 @@ func _navigate(key: String) -> void:
 # (e.g. "Go to Catalog" links inside Dashboard).
 func navigate_to(key: String) -> void:
 	_navigate(key)
+
+
+# ── Cross-page API ────────────────────────────────────────────────────────────
+# Pages must never reach into sibling nodes directly — they call these instead.
+# Main is the only script that knows which pages exist at any given moment.
+
+# Called by Catalog when the user clicks Add Book or Edit Book.
+# Passes the book data to AddEditBook (or an empty dict for a new book),
+# then navigates there. Safe to call even if addbook isn't built for this role.
+func open_add_edit_book(data: Dictionary) -> void:
+	var page := pages.get_node_or_null("addbook")
+	if page == null:
+		push_warning("Main.open_add_edit_book: 'addbook' page is not available for this role.")
+		return
+	page.load_book(data)
+	_navigate("addbook")
+
+
+# Called by Catalog when the user clicks Add to Cart.
+# Passes the book to Sales without navigating away, matching the original
+# commented-out behaviour in Catalog.gd.
+func add_book_to_cart(book: Dictionary) -> void:
+	var page := pages.get_node_or_null("sales")
+	if page == null:
+		push_warning("Main.add_book_to_cart: 'sales' page is not available for this role.")
+		return
+	page.add_book_to_cart(book)
 
 
 # ── Login dialog ──────────────────────────────────────────────────────────────

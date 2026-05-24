@@ -215,10 +215,7 @@ func _populate_detail(book: Dictionary) -> void:
 # ── Actions ───────────────────────────────────────────────────────────────────
 
 func _on_add_book() -> void:
-	var main := get_owner()
-	var add_edit_page := main.get_node("RootLayout/MainArea/PageContainer/Pages/AddEditBook")
-	add_edit_page.load_book({})
-	main.navigate_to("addbook")
+	get_tree().current_scene.open_add_edit_book({})
 
 
 func _on_edit_book_pressed() -> void:
@@ -227,10 +224,7 @@ func _on_edit_book_pressed() -> void:
 	var book := BookStore.get_book(_selected_id)
 	if book.is_empty():
 		return
-	var main := get_owner()
-	var add_edit_page := main.get_node("RootLayout/MainArea/PageContainer/Pages/AddEditBook")
-	add_edit_page.load_book(book)
-	main.navigate_to("addbook")
+	get_tree().current_scene.open_add_edit_book(book)
 
 
 func _on_delete_book_pressed() -> void:
@@ -262,7 +256,4 @@ func _on_add_to_cart_pressed() -> void:
 	var book := BookStore.get_book(_selected_id)
 	if book.is_empty():
 		return
-	var main  := get_owner()
-	var sales := main.get_node("RootLayout/MainArea/PageContainer/Pages/Sales")
-	sales.add_book_to_cart(book)
-	#main.navigate_to("sales")
+	get_tree().current_scene.add_book_to_cart(book)

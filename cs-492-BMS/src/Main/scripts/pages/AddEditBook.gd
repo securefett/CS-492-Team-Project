@@ -139,4 +139,4 @@ func _on_save() -> void:
 
 
 func _on_cancel() -> void:
-	get_owner().navigate_to("catalog")
+	get_tree().current_scene.navigate_to("catalog")

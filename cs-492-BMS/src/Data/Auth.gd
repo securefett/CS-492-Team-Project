@@ -29,7 +29,6 @@ const ROLE_PERMISSIONS := {
 		"addbook",
 		"sales",
 		"customers",
-		"accounts",
 		"reports",
 		"restock",
 		"accountmanager",

@@ -10,6 +10,7 @@ extends HBoxContainer
 @onready var total_val:      Label         = $SummaryPanel/SummaryLayout/TotalRow/TotalValue
 @onready var pay_card:       Button        = $SummaryPanel/SummaryLayout/PaymentOptions/PayCard
 @onready var pay_cash:       Button        = $SummaryPanel/SummaryLayout/PaymentOptions/PayCash
+@onready var customer_label:  Label         = $SummaryPanel/SummaryLayout/CustomerLabel
 @onready var customer_option: OptionButton = $SummaryPanel/SummaryLayout/CustomerOption
 @onready var checkout_btn:   Button        = $SummaryPanel/SummaryLayout/CheckoutBtn
 @onready var error_label:    Label         = $SummaryPanel/SummaryLayout/ErrorLabel
@@ -39,8 +40,10 @@ func _ready() -> void:
 	add_btn.pressed.connect(_on_add_pressed)
 	checkout_btn.pressed.connect(_on_checkout)
 
-	pay_card.pressed.connect(_on_payment_method_changed)
-	pay_cash.pressed.connect(_on_payment_method_changed)
+	# ButtonGroup handles mutual exclusion automatically; listen to toggled on
+	# either button to react to the selection change.
+	pay_card.toggled.connect(_on_payment_method_changed)
+	pay_cash.toggled.connect(_on_payment_method_changed)
 
 	cash_tendered.text_changed.connect(_on_cash_tendered_changed)
 
@@ -51,21 +54,32 @@ func _ready() -> void:
 	# CVV: digits only, max 4
 	card_cvv.text_changed.connect(_on_cvv_changed)
 
-	# Default payment to Card
+	# Default payment to Card (ButtonGroup keeps the other deselected)
 	pay_card.button_pressed = true
-	_on_payment_method_changed()
+	_on_payment_method_changed(true)
 
 	search_results.visible = false
 	error_label.visible    = false
 	empty_label.visible    = true
 
+	_apply_role_visibility()
 	_load_customers()
 	_refresh_totals()
 
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_VISIBILITY_CHANGED and visible:
+		_apply_role_visibility()
 		_load_customers()
+
+
+# ── Role-based UI visibility ───────────────────────────────────────────────────
+
+func _apply_role_visibility() -> void:
+	var role := Auth.get_role()
+	var is_staff := role == "admin" or role == "employee"
+	customer_label.visible  = is_staff
+	customer_option.visible = is_staff
 
 
 # ── Customer dropdown ──────────────────────────────────────────────────────────
@@ -87,14 +101,10 @@ func add_book_to_cart(book: Dictionary) -> void:
 
 
 # ── Payment method toggle ─────────────────────────────────────────────────────
-# This is legacy  code
-func _on_payment_method_changed() -> void:
-	# Enforce mutual exclusion for toggle buttons
-	if pay_card.button_pressed:
-		pay_cash.button_pressed = false
-	else:
-		pay_card.button_pressed = not pay_cash.button_pressed
 
+func _on_payment_method_changed(_pressed: bool = true) -> void:
+	# ButtonGroup ensures only one button is active at a time; we only need to
+	# react when a button becomes pressed (ignore the deselection callback).
 	var is_card := pay_card.button_pressed
 	card_details.visible = is_card
 	cash_details.visible = not is_card
@@ -369,9 +379,16 @@ func _on_checkout() -> void:
 	var payment := "card" if is_card else "cash"
 
 	var customer_id := -1
-	var selected_idx := customer_option.selected
-	if selected_idx > 0:
-		customer_id = _customers[selected_idx - 1]["id"]
+	var role := Auth.get_role()
+	if role == "customer" or role == "guest":
+		# For customer/guest accounts, attribute the sale to the logged-in account
+		# (guest has id = -1, which complete_sale already handles as NULL).
+		customer_id = Auth.get_current_account().get("id", -1)
+	else:
+		# Staff: use the dropdown selection
+		var selected_idx := customer_option.selected
+		if selected_idx > 0:
+			customer_id = _customers[selected_idx - 1]["id"]
 
 	var items: Array = []
 	for entry in cart:
@@ -386,7 +403,8 @@ func _on_checkout() -> void:
 	_show_receipt(sale_id, is_card)
 	cart.clear()
 	_refresh_cart()
-	customer_option.selected = 0
+	if customer_option.visible:
+		customer_option.selected = 0
 	_clear_payment_fields()
 
 

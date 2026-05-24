@@ -1,6 +1,8 @@
-[gd_scene format=3 uid="uid://cay5t3du5hwhk"]
+[gd_scene format=3 uid="uid://bxvh3pl5r7cpc"]
 
 [ext_resource type="Script" uid="uid://vt2nagoll8ik" path="res://src/Main/scripts/pages/Sales.gd" id="1"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_payment"]
 
 [node name="Sales" type="HBoxContainer" unique_id=1226134346]
 anchors_preset = 15
@@ -110,18 +112,20 @@ theme_override_constants/separation = 8
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_payment")
 text = "Card"
 
 [node name="PayCash" type="Button" parent="SummaryPanel/SummaryLayout/PaymentOptions" unique_id=1628320606]
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
+button_group = SubResource("ButtonGroup_payment")
 text = "Cash"
 
 [node name="CardDetails" type="VBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=111111001]
 layout_mode = 2
 theme_override_constants/separation = 6
-visible = true
 
 [node name="CardNumberRow" type="VBoxContainer" parent="SummaryPanel/SummaryLayout/CardDetails" unique_id=111111002]
 layout_mode = 2
@@ -182,9 +186,9 @@ size_flags_horizontal = 3
 placeholder_text = "J. Smith"
 
 [node name="CashDetails" type="VBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=222222001]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 6
-visible = false
 
 [node name="TenderedRow" type="VBoxContainer" parent="SummaryPanel/SummaryLayout/CashDetails" unique_id=222222002]
 layout_mode = 2
