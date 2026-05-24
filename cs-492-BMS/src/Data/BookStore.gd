@@ -5,6 +5,8 @@ extends Node
 #  Handles all database access for the Bookstore Management System.
 # ══════════════════════════════════════════════════════════════════════════════
 
+signal accounts_changed
+
 var db: SQLite
 
 const DB_PATH := "user://bookstore.db"
@@ -26,42 +28,99 @@ func _exit_tree() -> void:
 # ── Schema ────────────────────────────────────────────────────────────────────
 
 func _create_tables() -> void:
-	# Books, possible improvements to replace the primary key id with the ISBN, which is unique and required
+	# Books
 	db.query("""
 		CREATE TABLE IF NOT EXISTS books (
-			id          INTEGER PRIMARY KEY AUTOINCREMENT,
-			title       TEXT    NOT NULL,
-			author      TEXT    NOT NULL,
-			isbn        TEXT    UNIQUE,
-			genre       TEXT,
-			publisher   TEXT,
-			year        INTEGER,
-			description TEXT,
-			price       REAL    NOT NULL DEFAULT 0.0,
-			cost        REAL    NOT NULL DEFAULT 0.0,
-			stock       INTEGER NOT NULL DEFAULT 0,
-			low_stock_alert INTEGER NOT NULL DEFAULT 5,
-			created_at  TEXT    DEFAULT (datetime('now'))
+			id               INTEGER PRIMARY KEY AUTOINCREMENT,
+			title            TEXT    NOT NULL,
+			author           TEXT    NOT NULL,
+			isbn             TEXT    UNIQUE,
+			genre            TEXT,
+			publisher        TEXT,
+			year             INTEGER,
+			description      TEXT,
+			price            REAL    NOT NULL DEFAULT 0.0,
+			cost             REAL    NOT NULL DEFAULT 0.0,
+			stock            INTEGER NOT NULL DEFAULT 0,
+			low_stock_alert  INTEGER NOT NULL DEFAULT 5,
+			created_at       TEXT    DEFAULT (datetime('now'))
 		);
 	""")
 
-	# Customers
+	# Unified accounts table (covers both login/auth and customer data).
+	# Roles: admin, employee, customer, guest.
+	# phone/notes are meaningful for customer-role rows but harmless on others.
 	db.query("""
-		CREATE TABLE IF NOT EXISTS customers (
+		CREATE TABLE IF NOT EXISTS accounts (
 			id         INTEGER PRIMARY KEY AUTOINCREMENT,
 			name       TEXT NOT NULL,
 			email      TEXT UNIQUE,
+			username   TEXT UNIQUE,
+			password   TEXT NOT NULL DEFAULT '',
+			role       TEXT NOT NULL DEFAULT 'customer',
 			phone      TEXT,
 			notes      TEXT,
 			created_at TEXT DEFAULT (datetime('now'))
 		);
 	""")
 
+	# ── Migrations (safe to run on every launch) ──────────────────────────────
+
+	# If the old `customers` table still exists, migrate its rows into accounts
+	# and re-point sales.customer_id before dropping it.
+	db.query("SELECT name FROM sqlite_master WHERE type='table' AND name='customers';")
+	if not db.query_result.is_empty():
+		db.query("""
+			BEGIN TRANSACTION;
+
+			-- Bring over any customers that don't already have an accounts row
+			-- (matched on email; unmatched rows get a blank password/role=customer).
+			INSERT OR IGNORE INTO accounts (id, name, email, phone, notes, role, created_at)
+			SELECT id, name, email, phone, notes, 'customer', created_at
+			FROM customers
+			WHERE email IS NULL OR email NOT IN (SELECT email FROM accounts WHERE email IS NOT NULL);
+
+			-- Re-point the sales FK if the column is still called customer_id.
+			-- (The rename to account_id happens below.)
+			DROP TABLE customers;
+
+			COMMIT;
+		""")
+
+	# Rename sales.customer_id → sales.account_id if not done yet.
+	db.query("PRAGMA table_info(sales);")
+	var sales_cols := db.query_result.map(func(c): return c["name"])
+	if "customer_id" in sales_cols and not "account_id" in sales_cols:
+		db.query("""
+			BEGIN TRANSACTION;
+			CREATE TABLE sales_new (
+				id             INTEGER PRIMARY KEY AUTOINCREMENT,
+				account_id     INTEGER REFERENCES accounts(id) ON DELETE SET NULL,
+				payment_method TEXT    NOT NULL DEFAULT 'cash',
+				subtotal       REAL    NOT NULL DEFAULT 0.0,
+				tax            REAL    NOT NULL DEFAULT 0.0,
+				total          REAL    NOT NULL DEFAULT 0.0,
+				created_at     TEXT    DEFAULT (datetime('now'))
+			);
+			INSERT INTO sales_new SELECT id, customer_id, payment_method, subtotal, tax, total, created_at FROM sales;
+			DROP TABLE sales;
+			ALTER TABLE sales_new RENAME TO sales;
+			COMMIT;
+		""")
+
+	# Add phone/notes to accounts if missing (older unified DBs).
+	db.query("PRAGMA table_info(accounts);")
+	var acc_cols := db.query_result.map(func(c): return c["name"])
+	if not "phone" in acc_cols:
+		db.query("ALTER TABLE accounts ADD COLUMN phone TEXT;")
+	if not "notes" in acc_cols:
+		db.query("ALTER TABLE accounts ADD COLUMN notes TEXT;")
+
 	# Sales (one row per transaction)
 	db.query("""
 		CREATE TABLE IF NOT EXISTS sales (
 			id             INTEGER PRIMARY KEY AUTOINCREMENT,
-			customer_id    INTEGER REFERENCES customers(id) ON DELETE SET NULL,
+			account_id     INTEGER REFERENCES accounts(id) ON DELETE SET NULL,
 			payment_method TEXT    NOT NULL DEFAULT 'cash',
 			subtotal       REAL    NOT NULL DEFAULT 0.0,
 			tax            REAL    NOT NULL DEFAULT 0.0,
@@ -74,8 +133,8 @@ func _create_tables() -> void:
 	db.query("""
 		CREATE TABLE IF NOT EXISTS sale_items (
 			id       INTEGER PRIMARY KEY AUTOINCREMENT,
-			sale_id  INTEGER NOT NULL REFERENCES sales(id)  ON DELETE CASCADE,
-			book_id  INTEGER NOT NULL REFERENCES books(id)  ON DELETE RESTRICT,
+			sale_id  INTEGER NOT NULL REFERENCES sales(id)    ON DELETE CASCADE,
+			book_id  INTEGER NOT NULL REFERENCES books(id)    ON DELETE RESTRICT,
 			qty      INTEGER NOT NULL DEFAULT 1,
 			price    REAL    NOT NULL DEFAULT 0.0
 		);
@@ -180,7 +239,6 @@ func get_low_stock_books() -> Array:
 
 
 func update_stock(book_id: int, delta: int) -> void:
-	# Pass a negative delta to reduce stock (e.g. after a sale)
 	db.query_with_bindings(
 		"UPDATE books SET stock = stock + ? WHERE id = ?;",
 		[delta, book_id]
@@ -188,19 +246,20 @@ func update_stock(book_id: int, delta: int) -> void:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  CUSTOMERS
+#  CUSTOMERS  (accounts with role = 'customer')
 # ══════════════════════════════════════════════════════════════════════════════
 
 func get_all_customers() -> Array:
 	db.query("""
 		SELECT
-			c.*,
-			COUNT(s.id)   AS total_sales,
+			a.*,
+			COUNT(s.id)                 AS total_sales,
 			COALESCE(SUM(s.total), 0.0) AS total_spent
-		FROM customers c
-		LEFT JOIN sales s ON s.customer_id = c.id
-		GROUP BY c.id
-		ORDER BY c.name ASC;
+		FROM accounts a
+		LEFT JOIN sales s ON s.account_id = a.id
+		WHERE a.role = 'customer'
+		GROUP BY a.id
+		ORDER BY a.name ASC;
 	""")
 	return db.query_result
 
@@ -209,44 +268,51 @@ func search_customers(query: String) -> Array:
 	var q := "%" + query + "%"
 	db.query_with_bindings("""
 		SELECT
-			c.*,
-			COUNT(s.id) AS total_sales,
+			a.*,
+			COUNT(s.id)                 AS total_sales,
 			COALESCE(SUM(s.total), 0.0) AS total_spent
-		FROM customers c
-		LEFT JOIN sales s ON s.customer_id = c.id
-		WHERE c.name LIKE ? OR c.email LIKE ?
-		GROUP BY c.id
-		ORDER BY c.name ASC;
+		FROM accounts a
+		LEFT JOIN sales s ON s.account_id = a.id
+		WHERE a.role = 'customer'
+		  AND (a.name LIKE ? OR a.email LIKE ?)
+		GROUP BY a.id
+		ORDER BY a.name ASC;
 	""", [q, q])
 	return db.query_result
 
 
 func get_customer(id: int) -> Dictionary:
-	db.query_with_bindings("SELECT * FROM customers WHERE id = ?;", [id])
+	db.query_with_bindings(
+		"SELECT * FROM accounts WHERE id = ? AND role = 'customer';", [id]
+	)
 	return db.query_result[0] if db.query_result.size() > 0 else {}
 
 
 func add_customer(data: Dictionary) -> int:
 	db.query_with_bindings("""
-		INSERT INTO customers (name, email, phone, notes)
-		VALUES (?, ?, ?, ?);
+		INSERT INTO accounts (name, email, phone, notes, role, username, password)
+		VALUES (?, ?, ?, ?, 'customer', ?, ?);
 	""", [
 		data.get("name", ""),
 		data.get("email", ""),
 		data.get("phone", ""),
 		data.get("notes", ""),
+		data.get("username", null),
+		data.get("password", ""),
 	])
-	return db.last_insert_rowid
+	var new_id: int = db.last_insert_rowid
+	accounts_changed.emit()
+	return new_id
 
 
 func update_customer(id: int, data: Dictionary) -> void:
 	db.query_with_bindings("""
-		UPDATE customers SET
+		UPDATE accounts SET
 			name  = ?,
 			email = ?,
 			phone = ?,
 			notes = ?
-		WHERE id = ?;
+		WHERE id = ? AND role = 'customer';
 	""", [
 		data.get("name", ""),
 		data.get("email", ""),
@@ -254,10 +320,14 @@ func update_customer(id: int, data: Dictionary) -> void:
 		data.get("notes", ""),
 		id,
 	])
+	accounts_changed.emit()
 
 
 func delete_customer(id: int) -> void:
-	db.query_with_bindings("DELETE FROM customers WHERE id = ?;", [id])
+	db.query_with_bindings(
+		"DELETE FROM accounts WHERE id = ? AND role = 'customer';", [id]
+	)
+	accounts_changed.emit()
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -265,19 +335,18 @@ func delete_customer(id: int) -> void:
 # ══════════════════════════════════════════════════════════════════════════════
 
 # cart_items: Array of { "book_id": int, "qty": int, "price": float }
-func complete_sale(cart_items: Array, payment_method: String, customer_id: int = -1) -> int:
+func complete_sale(cart_items: Array, payment_method: String, account_id: int = -1) -> int:
 	var subtotal := 0.0
 	for item in cart_items:
 		subtotal += item["price"] * item["qty"]
 	var tax   := subtotal * 0.08
 	var total := subtotal + tax
 
-	# Insert the sale header
 	db.query_with_bindings("""
-		INSERT INTO sales (customer_id, payment_method, subtotal, tax, total)
+		INSERT INTO sales (account_id, payment_method, subtotal, tax, total)
 		VALUES (?, ?, ?, ?, ?);
 	""", [
-		customer_id if customer_id > 0 else null,
+		account_id if account_id > 0 else null,
 		payment_method,
 		subtotal,
 		tax,
@@ -285,7 +354,6 @@ func complete_sale(cart_items: Array, payment_method: String, customer_id: int =
 	])
 	var sale_id: int = db.last_insert_rowid
 
-	# Insert each line item and decrement stock
 	for item in cart_items:
 		db.query_with_bindings("""
 			INSERT INTO sale_items (sale_id, book_id, qty, price)
@@ -300,9 +368,9 @@ func get_recent_sales(limit: int = 50) -> Array:
 	db.query_with_bindings("""
 		SELECT
 			s.*,
-			c.name AS customer_name
+			a.name AS account_name
 		FROM sales s
-		LEFT JOIN customers c ON c.id = s.customer_id
+		LEFT JOIN accounts a ON a.id = s.account_id
 		ORDER BY s.created_at DESC
 		LIMIT ?;
 	""", [limit])
@@ -327,7 +395,6 @@ func get_sale_items(sale_id: int) -> Array:
 # ══════════════════════════════════════════════════════════════════════════════
 
 func get_dashboard_metrics() -> Dictionary:
-	# Total revenue this month
 	db.query("""
 		SELECT COALESCE(SUM(total), 0.0) AS revenue
 		FROM sales
@@ -335,7 +402,6 @@ func get_dashboard_metrics() -> Dictionary:
 	""")
 	var revenue: float = db.query_result[0]["revenue"] if db.query_result.size() > 0 else 0.0
 
-	# Books sold this month
 	db.query("""
 		SELECT COALESCE(SUM(si.qty), 0) AS books_sold
 		FROM sale_items si
@@ -344,13 +410,11 @@ func get_dashboard_metrics() -> Dictionary:
 	""")
 	var books_sold: int = db.query_result[0]["books_sold"] if db.query_result.size() > 0 else 0
 
-	# Total inventory
 	db.query("SELECT COALESCE(SUM(stock), 0) AS inventory, COUNT(*) AS titles FROM books;")
 	var inventory: int = db.query_result[0]["inventory"] if db.query_result.size() > 0 else 0
 	var titles: int    = db.query_result[0]["titles"]    if db.query_result.size() > 0 else 0
 
-	# Total customers
-	db.query("SELECT COUNT(*) AS total FROM customers;")
+	db.query("SELECT COUNT(*) AS total FROM accounts WHERE role = 'customer';")
 	var customers: int = db.query_result[0]["total"] if db.query_result.size() > 0 else 0
 
 	return {
@@ -364,26 +428,24 @@ func get_dashboard_metrics() -> Dictionary:
 
 func get_report_metrics() -> Dictionary:
 	db.query("""
-		SELECT 
-			COALESCE(SUM(total), 0.0) AS total_revenue,
-			COUNT(*) AS total_sales,
-			COALESCE(AVG(total), 0.0) AS average_order_value
+		SELECT
+			COALESCE(SUM(total), 0.0)  AS total_revenue,
+			COUNT(*)                   AS total_sales,
+			COALESCE(AVG(total), 0.0)  AS average_order_value
 		FROM sales;
 	""")
-	
 	var row: Dictionary = db.query_result[0] if db.query_result.size() > 0 else {}
 
 	db.query("""
 		SELECT COALESCE(SUM(qty), 0) AS books_sold
 		FROM sale_items;
 	""")
-	
 	var books_sold: int = db.query_result[0]["books_sold"] if db.query_result.size() > 0 else 0
 
 	return {
-		"total_revenue": row.get("total_revenue", 0.0),
-		"total_sales": row.get("total_sales", 0),
-		"books_sold": books_sold,
+		"total_revenue":       row.get("total_revenue", 0.0),
+		"total_sales":         row.get("total_sales", 0),
+		"books_sold":          books_sold,
 		"average_order_value": row.get("average_order_value", 0.0),
 	}
 
@@ -395,17 +457,16 @@ func get_low_stock_alerts() -> Array:
 		WHERE stock <= low_stock_alert
 		ORDER BY stock ASC;
 	""")
-
 	return db.query_result
 
 
 func get_sales_by_genre_report() -> Array:
 	db.query("""
-		SELECT 
+		SELECT
 			COALESCE(b.genre, 'Other') AS name,
 			SUM(si.qty) AS sold,
 			CAST(ROUND(
-				(SUM(si.qty) * 100.0) / 
+				(SUM(si.qty) * 100.0) /
 				(SELECT COALESCE(SUM(qty), 1) FROM sale_items)
 			) AS INTEGER) AS pct
 		FROM sale_items si
@@ -413,7 +474,6 @@ func get_sales_by_genre_report() -> Array:
 		GROUP BY b.genre
 		ORDER BY sold DESC;
 	""")
-
 	return db.query_result
 
 
