@@ -453,6 +453,330 @@ func get_dashboard_metrics() -> Dictionary:
 	}
 
 
+# Parameterised replacement for get_dashboard_metrics().
+# Returns current-period metrics plus enough data for change-vs-prior deltas.
+#
+#   result = {
+#     "revenue":       float,   # current period
+#     "prev_revenue":  float,
+#     "books_sold":    int,
+#     "prev_books_sold": int,
+#     "inventory":     int,     # point-in-time (no period filter)
+#     "titles":        int,
+#     "customers":     int,     # total registered
+#     "new_customers":     int, # new in current period
+#     "prev_new_customers": int,
+#   }
+func get_dashboard_metrics_for(range_key: String) -> Dictionary:
+	var r = BookStore.date_range_for(range_key)
+ 
+	# Revenue — current period.
+	db.query_with_bindings("""
+		SELECT COALESCE(SUM(total), 0.0) AS revenue
+		FROM sales
+		WHERE date(created_at) BETWEEN ? AND ?;
+	""", [r["from"], r["to"]])
+	var revenue: float = db.query_result[0]["revenue"] if db.query_result.size() > 0 else 0.0
+ 
+	# Revenue — prior period.
+	db.query_with_bindings("""
+		SELECT COALESCE(SUM(total), 0.0) AS revenue
+		FROM sales
+		WHERE date(created_at) BETWEEN ? AND ?;
+	""", [r["prev_from"], r["prev_to"]])
+	var prev_revenue: float = db.query_result[0]["revenue"] if db.query_result.size() > 0 else 0.0
+ 
+	# Books sold — current.
+	db.query_with_bindings("""
+		SELECT COALESCE(SUM(si.qty), 0) AS books_sold
+		FROM sale_items si
+		JOIN sales s ON s.id = si.sale_id
+		WHERE date(s.created_at) BETWEEN ? AND ?;
+	""", [r["from"], r["to"]])
+	var books_sold: int = db.query_result[0]["books_sold"] if db.query_result.size() > 0 else 0
+ 
+	# Books sold — prior.
+	db.query_with_bindings("""
+		SELECT COALESCE(SUM(si.qty), 0) AS books_sold
+		FROM sale_items si
+		JOIN sales s ON s.id = si.sale_id
+		WHERE date(s.created_at) BETWEEN ? AND ?;
+	""", [r["prev_from"], r["prev_to"]])
+	var prev_books_sold: int = db.query_result[0]["books_sold"] if db.query_result.size() > 0 else 0
+ 
+	# Inventory — point-in-time.
+	db.query("SELECT COALESCE(SUM(stock), 0) AS inventory, COUNT(*) AS titles FROM books;")
+	var inventory: int = db.query_result[0]["inventory"] if db.query_result.size() > 0 else 0
+	var titles: int    = db.query_result[0]["titles"]    if db.query_result.size() > 0 else 0
+ 
+	# Total customers — point-in-time.
+	db.query("SELECT COUNT(*) AS total FROM accounts WHERE role = 'customer';")
+	var customers: int = db.query_result[0]["total"] if db.query_result.size() > 0 else 0
+ 
+	# New customers — current period.
+	db.query_with_bindings("""
+		SELECT COUNT(*) AS n FROM accounts
+		WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?;
+	""", [r["from"], r["to"]])
+	var new_customers: int = db.query_result[0]["n"] if db.query_result.size() > 0 else 0
+ 
+	# New customers — prior period.
+	db.query_with_bindings("""
+		SELECT COUNT(*) AS n FROM accounts
+		WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?;
+	""", [r["prev_from"], r["prev_to"]])
+	var prev_new_customers: int = db.query_result[0]["n"] if db.query_result.size() > 0 else 0
+ 
+	return {
+		"revenue":            revenue,
+		"prev_revenue":       prev_revenue,
+		"books_sold":         books_sold,
+		"prev_books_sold":    prev_books_sold,
+		"inventory":          inventory,
+		"titles":             titles,
+		"customers":          customers,
+		"new_customers":      new_customers,
+		"prev_new_customers": prev_new_customers,
+	}
+
+
+# Returns a time-series Array for bar graph rendering.
+# Each element: { "label": String, "value": float }
+#
+# metric:    "revenue" | "books_sold" | "new_customers"
+# range_key: "month" | "6months" | "year" | "alltime"
+#            ("today" callers should skip the graph entirely)
+#
+# Granularity is determined by range_key:
+#   month    → one bar per day  (DD)
+#   6months  → one bar per month (Mon YY)
+#   year     → one bar per month (Mon)
+#   alltime  → one bar per year  (YYYY)
+func get_time_series_for(range_key: String, metric: String) -> Array:
+	var r := BookStore.date_range_for(range_key)
+ 
+	match range_key:
+ 
+		"month":
+			# One bar per calendar day in the current month.
+			match metric:
+				"revenue":
+					db.query_with_bindings("""
+						SELECT strftime('%d', created_at) AS lbl,
+						       COALESCE(SUM(total), 0.0)  AS val
+						FROM sales
+						WHERE date(created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+				"books_sold":
+					db.query_with_bindings("""
+						SELECT strftime('%d', s.created_at) AS lbl,
+						       COALESCE(SUM(si.qty), 0)     AS val
+						FROM sale_items si JOIN sales s ON s.id = si.sale_id
+						WHERE date(s.created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+				"new_customers":
+					db.query_with_bindings("""
+						SELECT strftime('%d', created_at) AS lbl,
+						       COUNT(*)                   AS val
+						FROM accounts
+						WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+ 
+		"6months":
+			# One bar per month over the last 6 months, labelled "Mon YY".
+			match metric:
+				"revenue":
+					db.query_with_bindings("""
+						SELECT strftime('%Y-%m', created_at) AS lbl,
+						       COALESCE(SUM(total), 0.0)     AS val
+						FROM sales
+						WHERE date(created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+				"books_sold":
+					db.query_with_bindings("""
+						SELECT strftime('%Y-%m', s.created_at) AS lbl,
+						       COALESCE(SUM(si.qty), 0)        AS val
+						FROM sale_items si JOIN sales s ON s.id = si.sale_id
+						WHERE date(s.created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+				"new_customers":
+					db.query_with_bindings("""
+						SELECT strftime('%Y-%m', created_at) AS lbl,
+						       COUNT(*)                      AS val
+						FROM accounts
+						WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+ 
+		"year":
+			# One bar per month in the current year, labelled "Mon".
+			match metric:
+				"revenue":
+					db.query_with_bindings("""
+						SELECT strftime('%m', created_at) AS lbl,
+						       COALESCE(SUM(total), 0.0)  AS val
+						FROM sales
+						WHERE date(created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+				"books_sold":
+					db.query_with_bindings("""
+						SELECT strftime('%m', s.created_at) AS lbl,
+						       COALESCE(SUM(si.qty), 0)     AS val
+						FROM sale_items si JOIN sales s ON s.id = si.sale_id
+						WHERE date(s.created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+				"new_customers":
+					db.query_with_bindings("""
+						SELECT strftime('%m', created_at) AS lbl,
+						       COUNT(*)                   AS val
+						FROM accounts
+						WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+ 
+		_:  # "alltime"
+			# One bar per year.
+			match metric:
+				"revenue":
+					db.query_with_bindings("""
+						SELECT strftime('%Y', created_at) AS lbl,
+						       COALESCE(SUM(total), 0.0)  AS val
+						FROM sales
+						WHERE date(created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+				"books_sold":
+					db.query_with_bindings("""
+						SELECT strftime('%Y', s.created_at) AS lbl,
+						       COALESCE(SUM(si.qty), 0)     AS val
+						FROM sale_items si JOIN sales s ON s.id = si.sale_id
+						WHERE date(s.created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+				"new_customers":
+					db.query_with_bindings("""
+						SELECT strftime('%Y', created_at) AS lbl,
+						       COUNT(*)                   AS val
+						FROM accounts
+						WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?
+						GROUP BY lbl ORDER BY lbl ASC;
+					""", [r["from"], r["to"]])
+ 
+	# Convert raw query rows and pretty-print labels.
+	var month_names := ["Jan","Feb","Mar","Apr","May","Jun",
+						"Jul","Aug","Sep","Oct","Nov","Dec"]
+	var result: Array = []
+	for row in db.query_result:
+		var raw_lbl: String = str(row.get("lbl", ""))
+		var val: float      = float(row.get("val", 0))
+		var pretty: String
+ 
+		match range_key:
+			"month":
+				pretty = raw_lbl.lstrip("0")          # "01" → "1"
+			"6months":
+				# raw_lbl = "YYYY-MM"
+				var parts := raw_lbl.split("-")
+				var mi    := int(parts[1]) - 1
+				var yr    := parts[0].right(2)         # last two digits
+				pretty = "%s '%s" % [month_names[clamp(mi, 0, 11)], yr]
+			"year":
+				var mi := int(raw_lbl) - 1
+				pretty = month_names[clamp(mi, 0, 11)]
+			_:  # alltime
+				pretty = raw_lbl                       # "2023"
+ 
+		result.append({ "label": pretty, "value": val })
+ 
+	return result
+ 
+
+# Returns the ISO date strings that bound a named time range and its prior
+# equivalent period, so callers can compute change vs previous period.
+#
+#   result = {
+#     "from":      "YYYY-MM-DD",   # start of current period (inclusive)
+#     "to":        "YYYY-MM-DD",   # end   of current period (inclusive, = today)
+#     "prev_from": "YYYY-MM-DD",   # start of prior  period
+#     "prev_to":   "YYYY-MM-DD",   # end   of prior  period
+#   }
+#
+# range_key must be one of: "today" | "month" | "6months" | "year" | "alltime"
+static func date_range_for(range_key: String) -> Dictionary:
+	var now  := Time.get_date_dict_from_system()
+	var y    = now["year"]
+	var m    = now["month"]
+	var d    = now["day"]
+	var today := "%04d-%02d-%02d" % [y, m, d]
+ 
+	match range_key:
+		"today":
+			# Prior period = yesterday.
+			var yesterday := _offset_date(y, m, d, -1)
+			return {
+				"from":      today,
+				"to":        today,
+				"prev_from": yesterday,
+				"prev_to":   yesterday,
+			}
+ 
+		"month":
+			# Current calendar month vs the calendar month before it.
+			var cur_from  := "%04d-%02d-01" % [y, m]
+			var prev_y    = y if m > 1 else y - 1
+			var prev_m    = m - 1 if m > 1 else 12
+			var prev_from := "%04d-%02d-01" % [prev_y, prev_m]
+			var prev_to   := _last_day_of_month(prev_y, prev_m)
+			return {
+				"from":      cur_from,
+				"to":        today,
+				"prev_from": prev_from,
+				"prev_to":   prev_to,
+			}
+ 
+		"6months":
+			# Last 180 days vs the 180 days before that.
+			var from      := _offset_date(y, m, d, -179)
+			var prev_to   := _offset_date(y, m, d, -180)
+			var prev_from := _offset_date(y, m, d, -359)
+			return {
+				"from":      from,
+				"to":        today,
+				"prev_from": prev_from,
+				"prev_to":   prev_to,
+			}
+ 
+		"year":
+			# Current calendar year vs the calendar year before it.
+			var cur_from  := "%04d-01-01" % y
+			var prev_from := "%04d-01-01" % (y - 1)
+			var prev_to   := "%04d-12-31" % (y - 1)
+			return {
+				"from":      cur_from,
+				"to":        today,
+				"prev_from": prev_from,
+				"prev_to":   prev_to,
+			}
+ 
+		_:  # "alltime"
+			# No meaningful prior period; use identical range so delta = 0.
+			return {
+				"from":      "2000-01-01",
+				"to":        today,
+				"prev_from": "2000-01-01",
+				"prev_to":   today,
+			}
+ 
+
+
+
 func get_report_metrics() -> Dictionary:
 	db.query("""
 		SELECT
@@ -545,3 +869,23 @@ func get_monthly_revenue(year: int = -1) -> Array:
 		ORDER BY month ASC;
 	""", [str(year)])
 	return db.query_result
+
+
+# Returns a "YYYY-MM-DD" string offset by `days` from the given date.
+# Handles month/year rollovers via Unix timestamp arithmetic.
+static func _offset_date(y: int, m: int, d: int, days: int) -> String:
+	var unix := Time.get_unix_time_from_datetime_dict({
+		"year": y, "month": m, "day": d,
+		"hour": 0, "minute": 0, "second": 0
+	})
+	unix += days * 86400
+	var dt := Time.get_datetime_dict_from_unix_time(unix)
+	return "%04d-%02d-%02d" % [dt["year"], dt["month"], dt["day"]]
+ 
+ 
+# Returns the last day of a given month as "YYYY-MM-DD".
+static func _last_day_of_month(y: int, m: int) -> String:
+	# Step to the first of the next month, then back one day.
+	var next_m := m + 1 if m < 12 else 1
+	var next_y := y if m < 12 else y + 1
+	return _offset_date(next_y, next_m, 1, -1)

@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://cxkyd2632gqvu"]
+
+[ext_resource type="Script" uid="uid://dp150bsaok0au" path="res://src/Main/scripts/notpages/LowStockCard.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://6bd162p1ntod" path="res://src/Main/themes/textures/popup_menu_panel.png" id="2_label"]
+[ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="3_panel"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_panel"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+texture = ExtResource("3_panel")
+texture_margin_left = 5.0
+texture_margin_top = 10.0
+texture_margin_right = 5.0
+texture_margin_bottom = 10.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+region_rect = Rect2(0, 0, 16, 16)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_label"]
+texture = ExtResource("2_label")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[node name="LowStockCard" type="PanelContainer" unique_id=1995851298]
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_panel")
+script = ExtResource("1")
+
+[node name="Layout" type="VBoxContainer" parent="." unique_id=1031183039]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Layout" unique_id=1698451725]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_label")
+text = "Low Stock Alerts"
+
+[node name="List" type="VBoxContainer" parent="Layout" unique_id=799360603]
+layout_mode = 2
