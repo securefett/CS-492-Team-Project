@@ -63,6 +63,25 @@ func _create_tables() -> void:
 			created_at TEXT DEFAULT (datetime('now'))
 		);
 	""")
+	
+		# Add missing account columns BEFORE migrating customers
+	db.query("PRAGMA table_info(accounts);")
+	var acc_cols := db.query_result.map(func(c): return c["name"])
+
+	if not "phone" in acc_cols:
+		db.query("ALTER TABLE accounts ADD COLUMN phone TEXT;")
+
+	if not "notes" in acc_cols:
+		db.query("ALTER TABLE accounts ADD COLUMN notes TEXT;")
+
+	if not "username" in acc_cols:
+		db.query("ALTER TABLE accounts ADD COLUMN username TEXT UNIQUE;")
+
+	if not "password" in acc_cols:
+		db.query("ALTER TABLE accounts ADD COLUMN password TEXT NOT NULL DEFAULT '';")
+
+	if not "role" in acc_cols:
+		db.query("ALTER TABLE accounts ADD COLUMN role TEXT NOT NULL DEFAULT 'customer';")
 
 	# ── Migrations (safe to run on every launch) ──────────────────────────────
 
@@ -92,7 +111,6 @@ func _create_tables() -> void:
 	var sales_cols := db.query_result.map(func(c): return c["name"])
 	if "customer_id" in sales_cols and not "account_id" in sales_cols:
 		db.query("""
-			BEGIN TRANSACTION;
 			CREATE TABLE sales_new (
 				id             INTEGER PRIMARY KEY AUTOINCREMENT,
 				account_id     INTEGER REFERENCES accounts(id) ON DELETE SET NULL,
@@ -105,16 +123,13 @@ func _create_tables() -> void:
 			INSERT INTO sales_new SELECT id, customer_id, payment_method, subtotal, tax, total, created_at FROM sales;
 			DROP TABLE sales;
 			ALTER TABLE sales_new RENAME TO sales;
-			COMMIT;
 		""")
 
 	# Add phone/notes to accounts if missing (older unified DBs).
-	db.query("PRAGMA table_info(accounts);")
-	var acc_cols := db.query_result.map(func(c): return c["name"])
-	if not "phone" in acc_cols:
-		db.query("ALTER TABLE accounts ADD COLUMN phone TEXT;")
-	if not "notes" in acc_cols:
-		db.query("ALTER TABLE accounts ADD COLUMN notes TEXT;")
+	#if not "phone" in acc_cols:
+		#db.query("ALTER TABLE accounts ADD COLUMN phone TEXT;")
+	#if not "notes" in acc_cols:
+		#db.query("ALTER TABLE accounts ADD COLUMN notes TEXT;")
 
 	# Sales (one row per transaction)
 	db.query("""
@@ -133,13 +148,56 @@ func _create_tables() -> void:
 	db.query("""
 		CREATE TABLE IF NOT EXISTS sale_items (
 			id       INTEGER PRIMARY KEY AUTOINCREMENT,
-			sale_id  INTEGER NOT NULL REFERENCES sales(id)    ON DELETE CASCADE,
-			book_id  INTEGER NOT NULL REFERENCES books(id)    ON DELETE RESTRICT,
+			sale_id  INTEGER NOT NULL REFERENCES sales(id) ON DELETE CASCADE,
+			book_id  INTEGER NOT NULL REFERENCES books(id) ON DELETE RESTRICT,
 			qty      INTEGER NOT NULL DEFAULT 1,
 			price    REAL    NOT NULL DEFAULT 0.0
 		);
 	""")
 
+	# Migrate old customers table into accounts
+	db.query("SELECT name FROM sqlite_master WHERE type='table' AND name='customers';")
+	if not db.query_result.is_empty():
+		db.query("""
+			INSERT OR IGNORE INTO accounts 
+				(id, name, email, phone, notes, role, created_at)
+			SELECT 
+				id, name, email, phone, notes, 'customer', created_at
+			FROM customers
+			WHERE email IS NULL 
+			   OR email NOT IN (
+					SELECT email FROM accounts WHERE email IS NOT NULL
+			   );
+
+			DROP TABLE customers;
+		""")
+
+	# Rename sales.customer_id to sales.account_id if needed
+	#db.query("PRAGMA table_info(sales);")
+	#var sales_cols := db.query_result.map(func(c): return c["name"])
+
+	if "customer_id" in sales_cols and not "account_id" in sales_cols:
+		db.query("""
+			CREATE TABLE sales_new (
+				id             INTEGER PRIMARY KEY AUTOINCREMENT,
+				account_id     INTEGER REFERENCES accounts(id) ON DELETE SET NULL,
+				payment_method TEXT    NOT NULL DEFAULT 'cash',
+				subtotal       REAL    NOT NULL DEFAULT 0.0,
+				tax            REAL    NOT NULL DEFAULT 0.0,
+				total          REAL    NOT NULL DEFAULT 0.0,
+				created_at     TEXT    DEFAULT (datetime('now'))
+			);
+
+			INSERT INTO sales_new 
+				(id, account_id, payment_method, subtotal, tax, total, created_at)
+			SELECT 
+				id, customer_id, payment_method, subtotal, tax, total, created_at
+			FROM sales;
+
+			DROP TABLE sales;
+
+			ALTER TABLE sales_new RENAME TO sales;
+		""")
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  BOOKS
@@ -364,28 +422,42 @@ func get_customer_sales(account_id: int) -> Array:
 # cart_items: Array of { "book_id": int, "qty": int, "price": float }
 func complete_sale(cart_items: Array, payment_method: String, account_id: int = -1) -> int:
 	var subtotal := 0.0
+
 	for item in cart_items:
 		subtotal += item["price"] * item["qty"]
-	var tax   := subtotal * 0.08
+
+	var tax := subtotal * 0.08
 	var total := subtotal + tax
+
+	var sale_account_id = null
+
+	if account_id > 0:
+		sale_account_id = account_id
 
 	db.query_with_bindings("""
 		INSERT INTO sales (account_id, payment_method, subtotal, tax, total)
 		VALUES (?, ?, ?, ?, ?);
 	""", [
-		account_id if account_id > 0 else null,
+		sale_account_id,
 		payment_method,
 		subtotal,
 		tax,
 		total,
 	])
+
 	var sale_id: int = db.last_insert_rowid
 
 	for item in cart_items:
 		db.query_with_bindings("""
 			INSERT INTO sale_items (sale_id, book_id, qty, price)
 			VALUES (?, ?, ?, ?);
-		""", [sale_id, item["book_id"], item["qty"], item["price"]])
+		""", [
+			sale_id,
+			item["book_id"],
+			item["qty"],
+			item["price"]
+		])
+
 		update_stock(item["book_id"], -item["qty"])
 
 	return sale_id
@@ -468,7 +540,7 @@ func get_dashboard_metrics() -> Dictionary:
 #     "prev_new_customers": int,
 #   }
 func get_dashboard_metrics_for(range_key: String) -> Dictionary:
-	var r = BookStore.date_range_for(range_key)
+	var r = date_range_for(range_key)
  
 	# Revenue — current period.
 	db.query_with_bindings("""
@@ -553,7 +625,7 @@ func get_dashboard_metrics_for(range_key: String) -> Dictionary:
 #   year     → one bar per month (Mon)
 #   alltime  → one bar per year  (YYYY)
 func get_time_series_for(range_key: String, metric: String) -> Array:
-	var r := BookStore.date_range_for(range_key)
+	var r := date_range_for(range_key)
  
 	match range_key:
  

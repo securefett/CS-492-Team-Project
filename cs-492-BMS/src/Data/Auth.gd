@@ -96,21 +96,21 @@ func _ensure_schema() -> void:
 
 
 func _seed_accounts() -> void:
-	# Only seed if there are no staff accounts yet (avoids re-seeding on every launch).
-	_db.query("SELECT COUNT(*) AS n FROM accounts WHERE role IN ('admin','employee');")
-	if _db.query_result[0]["n"] > 0:
-		return
-
 	var defaults := [
-		{ "name": "Admin User",    "email": "admin@bookstore.com",    "username": "admin",    "password": _hash_password("password"), "role": "admin"    },
+		{ "name": "Admin User", "email": "admin@bookstore.com", "username": "admin", "password": _hash_password("password"), "role": "admin" },
 		{ "name": "Employee User", "email": "employee@bookstore.com", "username": "employee", "password": _hash_password("password"), "role": "employee" },
 		{ "name": "Customer User", "email": "customer@bookstore.com", "username": "customer", "password": _hash_password("password"), "role": "customer" },
 	]
+
 	for acc in defaults:
-		_db.query_with_bindings(
-			"INSERT OR IGNORE INTO accounts (name, email, username, password, role) VALUES (?, ?, ?, ?, ?);",
-			[acc["name"], acc["email"], acc["username"], acc["password"], acc["role"]]
-		)
+		_db.query_with_bindings("""
+			INSERT INTO accounts (name, email, username, password, role)
+			VALUES (?, ?, ?, ?, ?)
+			ON CONFLICT(email) DO UPDATE SET
+				username = excluded.username,
+				password = excluded.password,
+				role = excluded.role;
+		""", [acc["name"], acc["email"], acc["username"], acc["password"], acc["role"]])
 
 
 # ── Session ───────────────────────────────────────────────────────────────────
@@ -234,8 +234,15 @@ func add_account(display_name: String, email: String, username: String, password
 		if _db.query_result[0]["n"] > 0:
 			return "That username is already taken."
 
-	var email_val = email.strip_edges().to_lower() if email.strip_edges() != "" else null
-	var user_val  = username.strip_edges().to_lower() if username.strip_edges() != "" else null
+	var email_val = null
+
+	if email.strip_edges() != "":
+		email_val = email.strip_edges().to_lower()
+
+	var user_val = null
+
+	if username.strip_edges() != "":
+		user_val = username.strip_edges().to_lower()
 
 	_db.query_with_bindings(
 		"INSERT INTO accounts (name, email, username, password, role) VALUES (?, ?, ?, ?, ?);",
@@ -275,8 +282,15 @@ func update_account(account_id: int, display_name: String, email: String, userna
 		if _db.query_result[0]["n"] > 0:
 			return "That username is already taken."
 
-	var email_val    = email.strip_edges().to_lower()    if email.strip_edges()    != "" else null
-	var username_val = username.strip_edges().to_lower() if username.strip_edges() != "" else null
+	var email_val = null
+
+	if email.strip_edges() != "":
+		email_val = email.strip_edges().to_lower()
+
+	var username_val = null
+
+	if username.strip_edges() != "":
+		username_val = username.strip_edges().to_lower()
 
 	_db.query_with_bindings(
 		"UPDATE accounts SET name = ?, email = ?, username = ? WHERE id = ?;",
