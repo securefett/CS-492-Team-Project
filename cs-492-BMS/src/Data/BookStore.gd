@@ -9,7 +9,12 @@ signal accounts_changed
 
 var db: SQLite
 
-const DB_PATH := "user://bookstore.db"
+const DB_PATH    := "user://bookstore.db"
+
+# ── Version ───────────────────────────────────────────────────────────────────
+# Bump this whenever a schema or seed-data change requires a clean slate.
+# On next launch all tables will be dropped and rebuilt from scratch.
+const DB_VERSION := 2
 
 # ── Startup ───────────────────────────────────────────────────────────────────
 
@@ -18,11 +23,36 @@ func _ready() -> void:
 	db.path = DB_PATH
 	db.verbosity_level = SQLite.QUIET  # Change to VERBOSE to debug queries
 	db.open_db()
+	_check_version()
 	_create_tables()
 
 
 func _exit_tree() -> void:
 	db.close_db()
+
+
+# ── Version check ─────────────────────────────────────────────────────────────
+# Stores DB_VERSION in a single-row `db_version` table.
+# If the stored version doesn't match, all tables are dropped so _create_tables()
+# rebuilds the schema from scratch on this same launch.
+
+func _check_version() -> void:
+	db.query("CREATE TABLE IF NOT EXISTS db_version (version INTEGER NOT NULL);")
+	db.query("SELECT version FROM db_version LIMIT 1;")
+	var stored: int = db.query_result[0]["version"] if not db.query_result.is_empty() else -1
+
+	if stored == DB_VERSION:
+		return  # All good — nothing to do.
+
+	print("BookStore: DB version mismatch (stored=%d, current=%d). Rebuilding." % [stored, DB_VERSION])
+
+	# Drop every table so _create_tables() starts with a clean slate.
+	db.query("SELECT name FROM sqlite_master WHERE type='table';")
+	for table in db.query_result:
+		db.query("DROP TABLE IF EXISTS [%s];" % table["name"])
+
+	db.query("CREATE TABLE IF NOT EXISTS db_version (version INTEGER NOT NULL);")
+	db.query_with_bindings("INSERT INTO db_version (version) VALUES (?);", [DB_VERSION])
 
 
 # ── Schema ────────────────────────────────────────────────────────────────────

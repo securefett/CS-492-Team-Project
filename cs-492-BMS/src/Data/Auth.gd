@@ -74,6 +74,7 @@ func _exit_tree() -> void:
 	_db.close_db()
 
 
+
 # ── Schema ────────────────────────────────────────────────────────────────────
 # BookStore.gd owns CREATE TABLE for `accounts`; Auth only runs additive
 # migrations to avoid a race on first launch.
@@ -208,7 +209,7 @@ func get_all_accounts() -> Array:
 	return _db.query_result
 
 
-func add_account(display_name: String, email: String, username: String, password: String, role: String) -> String:
+func add_account(display_name: String, email: String, username: String, password: String, role: String, phone: String = "", notes: String = "") -> String:
 	if display_name.strip_edges().is_empty():
 		return "Name is required."
 	if email.strip_edges().is_empty() and username.strip_edges().is_empty():
@@ -236,10 +237,12 @@ func add_account(display_name: String, email: String, username: String, password
 
 	var email_val = email.strip_edges().to_lower() if email.strip_edges() != "" else null
 	var user_val  = username.strip_edges().to_lower() if username.strip_edges() != "" else null
+	var phone_val = phone.strip_edges() if phone.strip_edges() != "" else null
+	var notes_val = notes.strip_edges() if notes.strip_edges() != "" else null
 
 	_db.query_with_bindings(
-		"INSERT INTO accounts (name, email, username, password, role) VALUES (?, ?, ?, ?, ?);",
-		[display_name.strip_edges(), email_val, user_val, _hash_password(password), role]
+		"INSERT INTO accounts (name, email, username, password, role, phone, notes) VALUES (?, ?, ?, ?, ?, ?, ?);",
+		[display_name.strip_edges(), email_val, user_val, _hash_password(password), role, phone_val, notes_val]
 	)
 	return ""
 

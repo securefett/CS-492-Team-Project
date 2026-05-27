@@ -148,10 +148,23 @@ func _show_low_stock() -> void:
 
 func _seed_customers() -> void:
 	var added := 0
+	var skipped := 0
 	for c in SEED_CUSTOMERS:
-		BookStore.add_customer(c)
-		added += 1
-	_set_status("Seeded %d customers." % added)
+		var err := Auth.add_account(
+			c["name"],
+			c.get("email", ""),
+			c.get("username", ""),
+			c.get("password", "password"),
+			"customer",
+			c.get("phone", ""),
+			c.get("notes", "")
+		)
+		if err == "":
+			added += 1
+		else:
+			skipped += 1
+			print("DevTools: skipped customer '%s': %s" % [c["name"], err])
+	_set_status("Seeded %d customers (%d skipped)." % [added, skipped])
 	_show_customers()
 
 
