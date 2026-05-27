@@ -43,9 +43,9 @@ const SEED_BOOKS := [
 	# ── In manufacturer catalogue ─────────────────────────────────────────────
 	{ "title": "The Midnight Library", "author": "Matt Haig",         "isbn": "9780525553605", "genre": "Fiction",     "publisher": "Canongate",        "year": 2020, "description": "Between life and death, infinite choices.",                "price": 14.99, "cost": 7.50, "stock": 20, "low_stock_alert": 5 },
 	{ "title": "Atomic Habits",        "author": "James Clear",        "isbn": "9780593189216", "genre": "Non-Fiction", "publisher": "Avery",            "year": 2018, "description": "Small habits, remarkable results.",                       "price": 16.99, "cost": 8.00, "stock": 25, "low_stock_alert": 5 },
-	{ "title": "Project Hail Mary",    "author": "Andy Weir",          "isbn": "9780593135204", "genre": "Sci-Fi",      "publisher": "Ballantine Books", "year": 2021, "description": "Lone astronaut must save the solar system.",               "price": 15.99, "cost": 7.00, "stock": 15, "low_stock_alert": 4 },
+	{ "title": "Project Hail Mary",    "author": "Andy Weir",          "isbn": "9780593135204", "genre": "Sci-Fi",      "publisher": "Ballantine Books", "year": 2021, "description": "Lone astronaut must save the solar system.",               "price": 15.99, "cost": 7.00, "stock": 3,  "low_stock_alert": 4 },
 	{ "title": "The Alchemist",        "author": "Paulo Coelho",       "isbn": "9780061929439", "genre": "Fiction",     "publisher": "HarperOne",        "year": 1988, "description": "A shepherd's journey to find his destiny.",               "price": 12.99, "cost": 5.50, "stock": 30, "low_stock_alert": 5 },
-	{ "title": "The Silent Patient",   "author": "Alex Michaelides",   "isbn": "9781250301702", "genre": "Fiction",     "publisher": "Celadon Books",    "year": 2019, "description": "A famous painter shoots her husband and never speaks again.", "price": 15.49, "cost": 7.00, "stock": 18, "low_stock_alert": 4 },
+	{ "title": "The Silent Patient",   "author": "Alex Michaelides",   "isbn": "9781250301702", "genre": "Fiction",     "publisher": "Celadon Books",    "year": 2019, "description": "A famous painter shoots her husband and never speaks again.", "price": 15.49, "cost": 7.00, "stock": 2,  "low_stock_alert": 4 },
 	# ── Not in manufacturer catalogue ────────────────────────────────────────
 	{ "title": "1984",                 "author": "George Orwell",      "isbn": "9780451524935", "genre": "Fiction",     "publisher": "Signet Classics",  "year": 1949, "description": "Dystopian surveillance state.",                           "price":  9.99, "cost": 3.50, "stock": 30, "low_stock_alert": 5 },
 	{ "title": "Diary of a Wimpy Kid", "author": "Jeff Kinney",        "isbn": "9780810993136", "genre": "Children",    "publisher": "Amulet Books",     "year": 2007, "description": "Greg Heffley survives middle school one bad day at a time.", "price":  8.99, "cost": 3.00, "stock": 22, "low_stock_alert": 5 },
@@ -259,7 +259,7 @@ func _seed_historical_sales() -> void:
 				cart.append({ "book_id": book["id"], "qty": rng.randi_range(1, 2), "price": book["price"] })
 
 			var account_id: int = -1
-			if not customers.is_empty():
+			if not customers.is_empty() and rng.randf() > 0.25:
 				account_id = customers[rng.randi() % customers.size()]["id"]
 			var method: String = methods[rng.randi() % 2]
 
