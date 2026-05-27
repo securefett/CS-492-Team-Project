@@ -14,10 +14,9 @@ extends VBoxContainer
 var _monthly_data: Array
 var _label_style:  StyleBoxTexture
 
+
 func _ready() -> void:
 	_label_style = _make_label_style()
-	greeting_label.add_theme_stylebox_override("normal", _label_style)
-	stats_label.add_theme_stylebox_override("normal", _label_style)
 	var account_id: int = Auth.get_current_account().get("id", -1)
 	greeting_label.text = "Welcome back, %s!" % Auth.get_account_name()
 	_monthly_data = _get_customer_monthly_spend(account_id)
@@ -176,7 +175,6 @@ func _clear_children(node: Control) -> void:
 
 func _add_placeholder(parent: Control, message: String) -> void:
 	var lbl := Label.new()
-	lbl.add_theme_stylebox_override("normal", _label_style)
 	lbl.text = message
 	parent.add_child(lbl)
 

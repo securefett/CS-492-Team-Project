@@ -93,13 +93,14 @@ theme_override_constants/separation = 20
 
 [node name="TabContainer" type="TabContainer" parent="Content" unique_id=362921019]
 layout_mode = 2
-current_tab = 0
+current_tab = 3
 tab_0/title = "Sales"
 tab_1/title = "Books"
 tab_2/title = "Inventory"
 tab_3/title = "Customers"
 
 [node name="CardSales" type="PanelContainer" parent="Content/TabContainer" unique_id=1231064434]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 metadata/_tab_index = 0
@@ -168,7 +169,6 @@ layout_mode = 2
 text = "Across 247 titles"
 
 [node name="CardCustomers" type="PanelContainer" parent="Content/TabContainer" unique_id=1792284017]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 metadata/_tab_index = 3

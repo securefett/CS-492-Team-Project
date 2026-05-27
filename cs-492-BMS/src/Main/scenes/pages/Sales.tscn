@@ -1,50 +1,6 @@
 [gd_scene format=3 uid="uid://bxvh3pl5r7cpc"]
 
 [ext_resource type="Script" uid="uid://vt2nagoll8ik" path="res://src/Main/scripts/pages/Sales.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://cyeavj0tefdhb" path="res://src/Main/themes/textures/tree_panel.png" id="2_lg20o"]
-[ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="3_rn2mc"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ydse0"]
-texture = ExtResource("2_lg20o")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3xs4x"]
-texture = ExtResource("3_rn2mc")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6aujd"]
-texture = ExtResource("3_rn2mc")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gsffk"]
-texture = ExtResource("3_rn2mc")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s3ja4"]
-texture = ExtResource("3_rn2mc")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7snmd"]
-texture = ExtResource("3_rn2mc")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_payment"]
 
@@ -142,7 +98,6 @@ theme_override_constants/separation = 8
 
 [node name="EmptyLabel" type="Label" parent="CartPanel/CartScroll" unique_id=599634932]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxTexture_ydse0")
 text = "No items in cart yet. Search for a book above to get started."
 
 [node name="SummaryPanel" type="PanelContainer" parent="." unique_id=1514265527]
@@ -156,7 +111,6 @@ theme_override_constants/separation = 10
 
 [node name="SummaryTitle" type="Label" parent="SummaryPanel/SummaryLayout" unique_id=1347200046]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxTexture_3xs4x")
 text = "Order Summary"
 
 [node name="SubtotalRow" type="HBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=1212291250]
@@ -165,7 +119,6 @@ layout_mode = 2
 [node name="SubtotalLabel" type="Label" parent="SummaryPanel/SummaryLayout/SubtotalRow" unique_id=1038304941]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxTexture_6aujd")
 text = "Subtotal"
 
 [node name="SubtotalValue" type="Label" parent="SummaryPanel/SummaryLayout/SubtotalRow" unique_id=1714296122]
@@ -178,7 +131,6 @@ layout_mode = 2
 [node name="TaxLabel" type="Label" parent="SummaryPanel/SummaryLayout/TaxRow" unique_id=1324570756]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxTexture_gsffk")
 text = "Tax (8%)"
 
 [node name="TaxValue" type="Label" parent="SummaryPanel/SummaryLayout/TaxRow" unique_id=1281080265]
@@ -191,7 +143,6 @@ layout_mode = 2
 [node name="TotalLabel" type="Label" parent="SummaryPanel/SummaryLayout/TotalRow" unique_id=1433155467]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxTexture_s3ja4")
 text = "Total"
 
 [node name="TotalValue" type="Label" parent="SummaryPanel/SummaryLayout/TotalRow" unique_id=325954647]
@@ -200,7 +151,6 @@ text = "$0.00"
 
 [node name="PaymentLabel" type="Label" parent="SummaryPanel/SummaryLayout" unique_id=760678264]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxTexture_7snmd")
 text = "Payment Method"
 
 [node name="PaymentOptions" type="HBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=55235235]
