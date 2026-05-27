@@ -117,10 +117,6 @@ func _open_dialog_for_edit(acc: Dictionary) -> void:
 	d_error_label.visible  = false
 	edit_dialog.popup_centered()
 	d_name_input.grab_focus()
-	# TODO: if you want admins to edit phone/notes for customer-role accounts,
-	# add PhoneInput and NotesInput fields to the EditDialog scene and wire them
-	# up here, then pass them through to a new Auth.update_account_details()
-	# function or directly via BookStore.update_customer().
 
 
 func _close_dialog() -> void:
