@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://d34xupyj3cid5" path="res://src/Main/scripts/pages/AccountsManager.gd" id="1"]
 
 [node name="AccountsManager" type="VBoxContainer" unique_id=1672527540]
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -129,6 +128,7 @@ size_flags_horizontal = 3
 text = "Cancel"
 
 [node name="ConfirmDialog" type="Window" parent="." unique_id=1679158564]
+oversampling_override = 1.0
 title = "Confirm Delete"
 initial_position = 2
 size = Vector2i(320, 140)

@@ -1,117 +1,158 @@
-[gd_scene format=3 uid="uid://account_settings"]
+[gd_scene format=3 uid="uid://col17jq83lft6"]
 
-[ext_resource type="Script" path="res://src/Main/scripts/pages/AccountSettings.gd" id="1"]
+[ext_resource type="Script" uid="uid://rvmw5ggpurs5" path="res://src/Main/scripts/pages/AccountSettings.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="2_saj2s"]
 
-[node name="AccountSettings" type="VBoxContainer"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ybk3k"]
+texture = ExtResource("2_saj2s")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_p7jpb"]
+texture = ExtResource("2_saj2s")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ouofc"]
+texture = ExtResource("2_saj2s")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[node name="AccountSettings" type="VBoxContainer" unique_id=2052203284]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1")
 
-[node name="Header" type="HBoxContainer" parent="."]
+[node name="Header" type="HBoxContainer" parent="." unique_id=34696859]
+layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Title" type="Label" parent="Header"]
+[node name="Title" type="Label" parent="Header" unique_id=320935122]
+layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_ybk3k")
 text = "Account Settings"
-theme_override_font_sizes/font_size = 20
 
-[node name="Scroll" type="ScrollContainer" parent="."]
+[node name="Scroll" type="ScrollContainer" parent="." unique_id=1021454664]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Sections" type="VBoxContainer" parent="Scroll"]
+[node name="Sections" type="VBoxContainer" parent="Scroll" unique_id=752577675]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 16
 
-; ── Profile ───────────────────────────────────────────────────────────────────
-
-[node name="Profile" type="VBoxContainer" parent="Scroll/Sections"]
+[node name="Profile" type="VBoxContainer" parent="Scroll/Sections" unique_id=863841941]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="SectionLabel" type="Label" parent="Scroll/Sections/Profile"]
+[node name="SectionLabel" type="Label" parent="Scroll/Sections/Profile" unique_id=1823895547]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_p7jpb")
 text = "Profile"
-theme_override_font_sizes/font_size = 15
 
-[node name="Card" type="VBoxContainer" parent="Scroll/Sections/Profile"]
+[node name="Card" type="VBoxContainer" parent="Scroll/Sections/Profile" unique_id=613126612]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="Fields" type="VBoxContainer" parent="Scroll/Sections/Profile/Card"]
+[node name="Fields" type="VBoxContainer" parent="Scroll/Sections/Profile/Card" unique_id=855963473]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="NameInput" type="LineEdit" parent="Scroll/Sections/Profile/Card/Fields"]
+[node name="NameInput" type="LineEdit" parent="Scroll/Sections/Profile/Card/Fields" unique_id=818252007]
+layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Full name"
 
-[node name="EmailInput" type="LineEdit" parent="Scroll/Sections/Profile/Card/Fields"]
+[node name="EmailInput" type="LineEdit" parent="Scroll/Sections/Profile/Card/Fields" unique_id=1731558713]
+layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Email"
 
-[node name="UsernameInput" type="LineEdit" parent="Scroll/Sections/Profile/Card/Fields"]
+[node name="UsernameInput" type="LineEdit" parent="Scroll/Sections/Profile/Card/Fields" unique_id=587973937]
+layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Username"
 
-[node name="ProfileError" type="Label" parent="Scroll/Sections/Profile/Card"]
+[node name="ProfileError" type="Label" parent="Scroll/Sections/Profile/Card" unique_id=1093432320]
 visible = false
+layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
 
-[node name="ProfileOk" type="Label" parent="Scroll/Sections/Profile/Card"]
+[node name="ProfileOk" type="Label" parent="Scroll/Sections/Profile/Card" unique_id=1528721733]
 visible = false
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Profile updated."
 
-[node name="SaveProfileBtn" type="Button" parent="Scroll/Sections/Profile/Card"]
-size_flags_horizontal = 1
+[node name="SaveProfileBtn" type="Button" parent="Scroll/Sections/Profile/Card" unique_id=116068549]
+layout_mode = 2
 text = "Save Profile"
 
-; ── Password ──────────────────────────────────────────────────────────────────
-
-[node name="Password" type="VBoxContainer" parent="Scroll/Sections"]
+[node name="Password" type="VBoxContainer" parent="Scroll/Sections" unique_id=741397917]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="SectionLabel" type="Label" parent="Scroll/Sections/Password"]
+[node name="SectionLabel" type="Label" parent="Scroll/Sections/Password" unique_id=477827564]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_ouofc")
 text = "Change Password"
-theme_override_font_sizes/font_size = 15
 
-[node name="Card" type="VBoxContainer" parent="Scroll/Sections/Password"]
+[node name="Card" type="VBoxContainer" parent="Scroll/Sections/Password" unique_id=884193394]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="Fields" type="VBoxContainer" parent="Scroll/Sections/Password/Card"]
+[node name="Fields" type="VBoxContainer" parent="Scroll/Sections/Password/Card" unique_id=1074738438]
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="CurrentPwInput" type="LineEdit" parent="Scroll/Sections/Password/Card/Fields"]
+[node name="CurrentPwInput" type="LineEdit" parent="Scroll/Sections/Password/Card/Fields" unique_id=1406185382]
+layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Current password"
 secret = true
 
-[node name="NewPwInput" type="LineEdit" parent="Scroll/Sections/Password/Card/Fields"]
+[node name="NewPwInput" type="LineEdit" parent="Scroll/Sections/Password/Card/Fields" unique_id=775785927]
+layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "New password (min. 6 characters)"
 secret = true
 
-[node name="ConfirmPwInput" type="LineEdit" parent="Scroll/Sections/Password/Card/Fields"]
+[node name="ConfirmPwInput" type="LineEdit" parent="Scroll/Sections/Password/Card/Fields" unique_id=2047249776]
+layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Confirm new password"
 secret = true
 
-[node name="PasswordError" type="Label" parent="Scroll/Sections/Password/Card"]
+[node name="PasswordError" type="Label" parent="Scroll/Sections/Password/Card" unique_id=596200561]
 visible = false
+layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
 
-[node name="PasswordOk" type="Label" parent="Scroll/Sections/Password/Card"]
+[node name="PasswordOk" type="Label" parent="Scroll/Sections/Password/Card" unique_id=1138612551]
 visible = false
+layout_mode = 2
 size_flags_horizontal = 3
 text = "Password changed."
 
-[node name="SavePasswordBtn" type="Button" parent="Scroll/Sections/Password/Card"]
-size_flags_horizontal = 1
+[node name="SavePasswordBtn" type="Button" parent="Scroll/Sections/Password/Card" unique_id=958141135]
+layout_mode = 2
 text = "Change Password"

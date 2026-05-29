@@ -2,6 +2,14 @@
 
 [ext_resource type="Script" uid="uid://bfsa48vristy6" path="res://src/Main/scripts/Main.gd" id="1_dohow"]
 [ext_resource type="Texture2D" uid="uid://6bd162p1ntod" path="res://src/Main/themes/textures/popup_menu_panel.png" id="2_aaj1p"]
+[ext_resource type="Texture2D" uid="uid://dsr5h6vdf5qjg" path="res://src/Main/themes/textures/Sprite-book.png" id="2_oangg"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ogjp8"]
+texture = ExtResource("2_oangg")
+expand_margin_left = 5.0
+expand_margin_top = 10.0
+expand_margin_right = 5.0
+expand_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fc3xa"]
 texture = ExtResource("2_aaj1p")
@@ -61,10 +69,18 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AppTitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=698284288]
+[node name="HBoxContainer" type="HBoxContainer" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=78565217]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection/HBoxContainer" unique_id=1378446054]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_ogjp8")
+text = "             "
+
+[node name="AppTitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection/HBoxContainer" unique_id=698284288]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_fc3xa")
-text = "📚 BookShop"
+text = "BookShop                                     "
 
 [node name="AppSubtitle" type="Label" parent="RootLayout/Sidebar/SidebarLayout/LogoSection" unique_id=1205589341]
 layout_mode = 2
