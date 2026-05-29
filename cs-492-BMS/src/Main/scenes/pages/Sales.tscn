@@ -5,49 +5,42 @@
 [sub_resource type="ButtonGroup" id="ButtonGroup_payment"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lg20o"]
-texture = ExtResource("3_rn2mc")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rn2mc"]
-texture = ExtResource("3_rn2mc")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q1mim"]
-texture = ExtResource("3_rn2mc")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lb16e"]
-texture = ExtResource("3_rn2mc")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l4x7t"]
-texture = ExtResource("3_rn2mc")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7thqg"]
-texture = ExtResource("3_rn2mc")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lf7rx"]
-texture = ExtResource("3_rn2mc")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
