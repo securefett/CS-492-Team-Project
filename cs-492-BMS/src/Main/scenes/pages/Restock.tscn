@@ -1,6 +1,100 @@
 [gd_scene format=3 uid="uid://restock"]
 
 [ext_resource type="Script" uid="uid://by0koraiq4g4s" path="res://src/Main/scripts/pages/Restock.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="2_wq23h"]
+[ext_resource type="Texture2D" uid="uid://cvyx8pcbyfxrp" path="res://src/Main/themes/textures/vscroll_decrement.png" id="3_7f6f6"]
+[ext_resource type="Texture2D" uid="uid://bsh50frtetc6h" path="res://src/Main/themes/textures/vslider_increment.png" id="4_mds6s"]
+[ext_resource type="Texture2D" uid="uid://b80faqmjmqlwk" path="res://src/Main/themes/textures/line_edit.png" id="5_mds6s"]
+[ext_resource type="Texture2D" uid="uid://6bd162p1ntod" path="res://src/Main/themes/textures/popup_menu_panel.png" id="6_6qp1f"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l8wnb"]
+texture = ExtResource("2_wq23h")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6qp1f"]
+texture = ExtResource("2_wq23h")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bvl3l"]
+texture = ExtResource("2_wq23h")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hk3ib"]
+texture = ExtResource("2_wq23h")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1wxtd"]
+texture = ExtResource("2_wq23h")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nus2g"]
+texture = ExtResource("2_wq23h")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_khqon"]
+texture = ExtResource("3_7f6f6")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5gg4x"]
+texture = ExtResource("4_mds6s")
+texture_margin_left = 5.0
+texture_margin_top = 5.0
+texture_margin_right = 5.0
+texture_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oa1me"]
+texture = ExtResource("2_wq23h")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ota0f"]
+content_margin_left = 6.0
+content_margin_top = 10.0
+content_margin_right = 6.0
+content_margin_bottom = 10.0
+texture = ExtResource("5_mds6s")
+texture_margin_left = 10.0
+texture_margin_top = 5.0
+texture_margin_right = 10.0
+texture_margin_bottom = 5.0
+region_rect = Rect2(0, 0, 23, 23)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_00bc1"]
+texture = ExtResource("2_wq23h")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_m6h3h"]
+texture = ExtResource("6_6qp1f")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
 
 [node name="Restock" type="HBoxContainer" unique_id=2059524070]
 anchors_preset = 15
@@ -19,6 +113,7 @@ theme_override_constants/separation = 12
 
 [node name="PanelTitle" type="Label" parent="OrderPanel" unique_id=324349411]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_l8wnb")
 text = "Place Restock Order"
 
 [node name="SearchBar" type="HBoxContainer" parent="OrderPanel" unique_id=380866722]
@@ -56,6 +151,7 @@ theme_override_constants/separation = 10
 
 [node name="FormTitle" type="Label" parent="RightPanel/FormCard/FormLayout" unique_id=1098039012]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_6qp1f")
 text = "Order Details"
 
 [node name="SelectedLabel" type="Label" parent="RightPanel/FormCard/FormLayout" unique_id=1516450456]
@@ -68,6 +164,7 @@ layout_mode = 2
 [node name="ISBNLabel" type="Label" parent="RightPanel/FormCard/FormLayout/ISBNRow" unique_id=602603194]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_bvl3l")
 text = "ISBN"
 
 [node name="ISBNValue" type="Label" parent="RightPanel/FormCard/FormLayout/ISBNRow" unique_id=1866969615]
@@ -80,6 +177,7 @@ layout_mode = 2
 [node name="CostLabel" type="Label" parent="RightPanel/FormCard/FormLayout/CostRow" unique_id=1518876642]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_hk3ib")
 text = "Unit cost"
 
 [node name="CostValue" type="Label" parent="RightPanel/FormCard/FormLayout/CostRow" unique_id=1287969254]
@@ -92,6 +190,7 @@ layout_mode = 2
 [node name="AvailLabel" type="Label" parent="RightPanel/FormCard/FormLayout/AvailRow" unique_id=957631680]
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_1wxtd")
 text = "Available"
 
 [node name="AvailValue" type="Label" parent="RightPanel/FormCard/FormLayout/AvailRow" unique_id=1113269061]
@@ -100,23 +199,28 @@ text = "—"
 
 [node name="QtyLabel" type="Label" parent="RightPanel/FormCard/FormLayout" unique_id=470110764]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_nus2g")
 text = "Quantity to order"
 
 [node name="QtyInput" type="SpinBox" parent="RightPanel/FormCard/FormLayout" unique_id=686364387]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/up_background = SubResource("StyleBoxTexture_khqon")
+theme_override_styles/down_background = SubResource("StyleBoxTexture_5gg4x")
 min_value = 1.0
 max_value = 9999.0
 value = 1.0
 
 [node name="NotesLabel" type="Label" parent="RightPanel/FormCard/FormLayout" unique_id=356279052]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_oa1me")
 text = "Notes (optional)"
 
 [node name="NotesInput" type="TextEdit" parent="RightPanel/FormCard/FormLayout" unique_id=1214426168]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_ota0f")
 placeholder_text = "e.g. Urgent restock, seasonal order…"
 
 [node name="TotalRow" type="HBoxContainer" parent="RightPanel/FormCard/FormLayout" unique_id=1044673406]
@@ -125,6 +229,7 @@ layout_mode = 2
 [node name="TotalLabel" type="Label" parent="RightPanel/FormCard/FormLayout/TotalRow" unique_id=324856440]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_00bc1")
 text = "Order total"
 
 [node name="TotalValue" type="Label" parent="RightPanel/FormCard/FormLayout/TotalRow" unique_id=644678103]
@@ -154,6 +259,7 @@ theme_override_constants/separation = 8
 
 [node name="HistoryTitle" type="Label" parent="RightPanel/HistoryCard/HistoryLayout" unique_id=50180415]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_m6h3h")
 text = "Purchase Order History"
 
 [node name="HistoryScroll" type="ScrollContainer" parent="RightPanel/HistoryCard/HistoryLayout" unique_id=246608366]

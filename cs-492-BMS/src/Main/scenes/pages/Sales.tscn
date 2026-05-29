@@ -4,6 +4,55 @@
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_payment"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lg20o"]
+texture = ExtResource("3_rn2mc")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rn2mc"]
+texture = ExtResource("3_rn2mc")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q1mim"]
+texture = ExtResource("3_rn2mc")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lb16e"]
+texture = ExtResource("3_rn2mc")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l4x7t"]
+texture = ExtResource("3_rn2mc")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7thqg"]
+texture = ExtResource("3_rn2mc")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lf7rx"]
+texture = ExtResource("3_rn2mc")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+
 [node name="Sales" type="HBoxContainer" unique_id=1226134346]
 anchors_preset = 15
 anchor_right = 1.0
@@ -124,6 +173,7 @@ button_group = SubResource("ButtonGroup_payment")
 text = "Cash"
 
 [node name="CardDetails" type="VBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=111111001]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 6
 
@@ -132,6 +182,7 @@ layout_mode = 2
 
 [node name="CardNumberLabel" type="Label" parent="SummaryPanel/SummaryLayout/CardDetails/CardNumberRow" unique_id=111111003]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_lg20o")
 text = "Card Number"
 
 [node name="CardNumber" type="LineEdit" parent="SummaryPanel/SummaryLayout/CardDetails/CardNumberRow" unique_id=111111004]
@@ -150,6 +201,7 @@ size_flags_horizontal = 3
 
 [node name="ExpiryLabel" type="Label" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/ExpiryCol" unique_id=111111007]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_rn2mc")
 text = "Expiry (MM/YY)"
 
 [node name="CardExpiry" type="LineEdit" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/ExpiryCol" unique_id=111111008]
@@ -164,6 +216,7 @@ size_flags_horizontal = 3
 
 [node name="CVVLabel" type="Label" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/CVVCol" unique_id=111111010]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_q1mim")
 text = "CVV"
 
 [node name="CardCVV" type="LineEdit" parent="SummaryPanel/SummaryLayout/CardDetails/ExpiryRow/CVVCol" unique_id=111111011]
@@ -178,6 +231,7 @@ layout_mode = 2
 
 [node name="CardNameLabel" type="Label" parent="SummaryPanel/SummaryLayout/CardDetails/CardNameRow" unique_id=111111013]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_lb16e")
 text = "Name on Card"
 
 [node name="CardName" type="LineEdit" parent="SummaryPanel/SummaryLayout/CardDetails/CardNameRow" unique_id=111111014]
@@ -186,7 +240,6 @@ size_flags_horizontal = 3
 placeholder_text = "J. Smith"
 
 [node name="CashDetails" type="VBoxContainer" parent="SummaryPanel/SummaryLayout" unique_id=222222001]
-visible = false
 layout_mode = 2
 theme_override_constants/separation = 6
 
@@ -195,6 +248,7 @@ layout_mode = 2
 
 [node name="TenderedLabel" type="Label" parent="SummaryPanel/SummaryLayout/CashDetails/TenderedRow" unique_id=222222003]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_l4x7t")
 text = "Cash Tendered ($)"
 
 [node name="CashTendered" type="LineEdit" parent="SummaryPanel/SummaryLayout/CashDetails/TenderedRow" unique_id=222222004]
@@ -208,6 +262,7 @@ layout_mode = 2
 [node name="ChangeLabel" type="Label" parent="SummaryPanel/SummaryLayout/CashDetails/ChangeRow" unique_id=222222006]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxTexture_7thqg")
 text = "Change Due"
 
 [node name="ChangeValue" type="Label" parent="SummaryPanel/SummaryLayout/CashDetails/ChangeRow" unique_id=222222007]
@@ -216,6 +271,7 @@ text = "-"
 
 [node name="CustomerLabel" type="Label" parent="SummaryPanel/SummaryLayout" unique_id=1232601827]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_lf7rx")
 text = "Customer (optional)"
 
 [node name="CustomerOption" type="OptionButton" parent="SummaryPanel/SummaryLayout" unique_id=474598403]

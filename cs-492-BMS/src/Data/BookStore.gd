@@ -355,8 +355,8 @@ func update_customer(id: int, data: Dictionary) -> void:
 
 func update_customer_notes(id: int, notes: String) -> void:
 	db.query_with_bindings("""
-        UPDATE accounts SET notes = ?
-        WHERE id = ? AND role = 'customer';
+		UPDATE accounts SET notes = ?
+		WHERE id = ? AND role = 'customer';
 	""", [notes, id])
 	accounts_changed.emit()
 
@@ -593,7 +593,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"revenue":
 					db.query_with_bindings("""
 						SELECT strftime('%d', created_at) AS lbl,
-						       COALESCE(SUM(total), 0.0)  AS val
+							   COALESCE(SUM(total), 0.0)  AS val
 						FROM sales
 						WHERE date(created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -601,7 +601,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"books_sold":
 					db.query_with_bindings("""
 						SELECT strftime('%d', s.created_at) AS lbl,
-						       COALESCE(SUM(si.qty), 0)     AS val
+							   COALESCE(SUM(si.qty), 0)     AS val
 						FROM sale_items si JOIN sales s ON s.id = si.sale_id
 						WHERE date(s.created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -609,7 +609,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"new_customers":
 					db.query_with_bindings("""
 						SELECT strftime('%d', created_at) AS lbl,
-						       COUNT(*)                   AS val
+							   COUNT(*)                   AS val
 						FROM accounts
 						WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -621,7 +621,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"revenue":
 					db.query_with_bindings("""
 						SELECT strftime('%Y-%m', created_at) AS lbl,
-						       COALESCE(SUM(total), 0.0)     AS val
+							   COALESCE(SUM(total), 0.0)     AS val
 						FROM sales
 						WHERE date(created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -629,7 +629,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"books_sold":
 					db.query_with_bindings("""
 						SELECT strftime('%Y-%m', s.created_at) AS lbl,
-						       COALESCE(SUM(si.qty), 0)        AS val
+							   COALESCE(SUM(si.qty), 0)        AS val
 						FROM sale_items si JOIN sales s ON s.id = si.sale_id
 						WHERE date(s.created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -637,7 +637,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"new_customers":
 					db.query_with_bindings("""
 						SELECT strftime('%Y-%m', created_at) AS lbl,
-						       COUNT(*)                      AS val
+							   COUNT(*)                      AS val
 						FROM accounts
 						WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -649,7 +649,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"revenue":
 					db.query_with_bindings("""
 						SELECT strftime('%m', created_at) AS lbl,
-						       COALESCE(SUM(total), 0.0)  AS val
+							   COALESCE(SUM(total), 0.0)  AS val
 						FROM sales
 						WHERE date(created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -657,7 +657,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"books_sold":
 					db.query_with_bindings("""
 						SELECT strftime('%m', s.created_at) AS lbl,
-						       COALESCE(SUM(si.qty), 0)     AS val
+							   COALESCE(SUM(si.qty), 0)     AS val
 						FROM sale_items si JOIN sales s ON s.id = si.sale_id
 						WHERE date(s.created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -665,7 +665,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"new_customers":
 					db.query_with_bindings("""
 						SELECT strftime('%m', created_at) AS lbl,
-						       COUNT(*)                   AS val
+							   COUNT(*)                   AS val
 						FROM accounts
 						WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -677,7 +677,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"revenue":
 					db.query_with_bindings("""
 						SELECT strftime('%Y', created_at) AS lbl,
-						       COALESCE(SUM(total), 0.0)  AS val
+							   COALESCE(SUM(total), 0.0)  AS val
 						FROM sales
 						WHERE date(created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -685,7 +685,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"books_sold":
 					db.query_with_bindings("""
 						SELECT strftime('%Y', s.created_at) AS lbl,
-						       COALESCE(SUM(si.qty), 0)     AS val
+							   COALESCE(SUM(si.qty), 0)     AS val
 						FROM sale_items si JOIN sales s ON s.id = si.sale_id
 						WHERE date(s.created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
@@ -693,7 +693,7 @@ func get_time_series_for(range_key: String, metric: String) -> Array:
 				"new_customers":
 					db.query_with_bindings("""
 						SELECT strftime('%Y', created_at) AS lbl,
-						       COUNT(*)                   AS val
+							   COUNT(*)                   AS val
 						FROM accounts
 						WHERE role = 'customer' AND date(created_at) BETWEEN ? AND ?
 						GROUP BY lbl ORDER BY lbl ASC;
