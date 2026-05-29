@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://bd2wvyyd6mt1o"]
+
+[ext_resource type="Script" uid="uid://xd6o8b5kacup" path="res://src/Main/scripts/pages/Reports.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://6bd162p1ntod" path="res://src/Main/themes/textures/popup_menu_panel.png" id="2_krq5a"]
+[ext_resource type="Texture2D" uid="uid://co0pi7qgf65ms" path="res://src/Main/themes/textures/panel_container.png" id="2_q08o4"]
