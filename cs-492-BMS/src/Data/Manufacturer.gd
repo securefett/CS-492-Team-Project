@@ -77,16 +77,16 @@ func _seed_catalogue() -> void:
 		return  # Already seeded
 
 	var titles := [
-		{ "isbn": "978-0-525-55360-5", "title": "The Midnight Library",  "author": "Matt Haig",         "unit_cost": 7.50,  "available_qty": 200 },
-		{ "isbn": "978-0-593-18921-6", "title": "Atomic Habits",         "author": "James Clear",       "unit_cost": 8.00,  "available_qty": 150 },
-		{ "isbn": "978-0-593-13520-4", "title": "Project Hail Mary",     "author": "Andy Weir",         "unit_cost": 7.00,  "available_qty": 180 },
-		{ "isbn": "978-0-441-01359-7", "title": "Dune",                  "author": "Frank Herbert",     "unit_cost": 6.50,  "available_qty": 300 },
-		{ "isbn": "978-0-061-92943-9", "title": "The Alchemist",         "author": "Paulo Coelho",      "unit_cost": 5.50,  "available_qty": 250 },
-		{ "isbn": "978-0-062-31609-7", "title": "Sapiens",               "author": "Yuval Noah Harari", "unit_cost": 9.00,  "available_qty": 120 },
-		{ "isbn": "978-0-385-54734-9", "title": "The Overstory",         "author": "Richard Powers",    "unit_cost": 8.50,  "available_qty": 90  },
-		{ "isbn": "978-0-525-53582-6", "title": "Normal People",         "author": "Sally Rooney",      "unit_cost": 7.00,  "available_qty": 110 },
-		{ "isbn": "978-0-735-22472-2", "title": "Little Fires Everywhere","author": "Celeste Ng",       "unit_cost": 7.50,  "available_qty": 130 },
-		{ "isbn": "978-1-250-30170-2", "title": "The Silent Patient",    "author": "Alex Michaelides",  "unit_cost": 7.00,  "available_qty": 160 },
+		{ "isbn": "9780525553605", "title": "The Midnight Library",   "author": "Matt Haig",         "unit_cost": 7.50, "available_qty": 200 },
+		{ "isbn": "9780593189216", "title": "Atomic Habits",          "author": "James Clear",       "unit_cost": 8.00, "available_qty": 150 },
+		{ "isbn": "9780593135204", "title": "Project Hail Mary",      "author": "Andy Weir",         "unit_cost": 7.00, "available_qty": 180 },
+		{ "isbn": "9780441013593", "title": "Dune",                   "author": "Frank Herbert",     "unit_cost": 6.50, "available_qty": 300 },
+		{ "isbn": "9780061929439", "title": "The Alchemist",          "author": "Paulo Coelho",      "unit_cost": 5.50, "available_qty": 250 },
+		{ "isbn": "9780062316097", "title": "Sapiens",                "author": "Yuval Noah Harari", "unit_cost": 9.00, "available_qty": 120 },
+		{ "isbn": "9780385547345", "title": "The Overstory",          "author": "Richard Powers",    "unit_cost": 8.50, "available_qty": 90  },
+		{ "isbn": "9780525535829", "title": "Normal People",          "author": "Sally Rooney",      "unit_cost": 7.00, "available_qty": 110 },
+		{ "isbn": "9780735224728", "title": "Little Fires Everywhere","author": "Celeste Ng",        "unit_cost": 7.50, "available_qty": 130 },
+		{ "isbn": "9781250301703", "title": "The Silent Patient",     "author": "Alex Michaelides",  "unit_cost": 7.00, "available_qty": 160 },
 	]
 	for t in titles:
 		db.query_with_bindings("""

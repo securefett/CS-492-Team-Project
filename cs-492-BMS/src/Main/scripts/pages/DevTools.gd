@@ -40,16 +40,18 @@ var _current_tab := 0
 # ── Sample data ────────────────────────────────────────────────────────────────
 
 const SEED_BOOKS := [
-	{ "title": "The Hitchhiker's Guide to the Galaxy", "author": "Douglas Adams",    "isbn": "9780345391803", "genre": "Science Fiction", "publisher": "Del Rey",          "year": 1979, "description": "A comedy sci-fi classic.",       "price": 12.99, "cost": 5.00,  "stock": 20, "low_stock_alert": 5 },
-	{ "title": "Dune",                                  "author": "Frank Herbert",    "isbn": "9780441013593", "genre": "Science Fiction", "publisher": "Ace",              "year": 1965, "description": "Epic desert planet saga.",        "price": 14.99, "cost": 6.00,  "stock": 15, "low_stock_alert": 4 },
-	{ "title": "Neuromancer",                           "author": "William Gibson",   "isbn": "9780441569595", "genre": "Science Fiction", "publisher": "Ace",              "year": 1984, "description": "Founding cyberpunk novel.",       "price": 13.99, "cost": 5.50,  "stock": 8,  "low_stock_alert": 3 },
-	{ "title": "Pride and Prejudice",                   "author": "Jane Austen",      "isbn": "9780141439518", "genre": "Classic",         "publisher": "Penguin Classics", "year": 1813, "description": "Timeless Regency romance.",      "price": 8.99,  "cost": 3.00,  "stock": 25, "low_stock_alert": 5 },
-	{ "title": "1984",                                  "author": "George Orwell",    "isbn": "9780451524935", "genre": "Classic",         "publisher": "Signet Classics",  "year": 1949, "description": "Dystopian political fiction.",   "price": 9.99,  "cost": 3.50,  "stock": 30, "low_stock_alert": 5 },
-	{ "title": "The Great Gatsby",                      "author": "F. Scott Fitzgerald", "isbn": "9780743273565", "genre": "Classic",      "publisher": "Scribner",         "year": 1925, "description": "Jazz Age American tragedy.",    "price": 10.99, "cost": 4.00,  "stock": 12, "low_stock_alert": 4 },
-	{ "title": "To Kill a Mockingbird",                 "author": "Harper Lee",       "isbn": "9780061935466", "genre": "Classic",         "publisher": "Harper Perennial", "year": 1960, "description": "A story of racial injustice.",  "price": 11.99, "cost": 4.50,  "stock": 18, "low_stock_alert": 5 },
-	{ "title": "The Name of the Wind",                  "author": "Patrick Rothfuss", "isbn": "9780756404741", "genre": "Fantasy",         "publisher": "DAW Books",        "year": 2007, "description": "Kvothe's legendary tale.",       "price": 15.99, "cost": 7.00,  "stock": 3,  "low_stock_alert": 5 },
-	{ "title": "The Way of Kings",                      "author": "Brandon Sanderson","isbn": "9780765326355", "genre": "Fantasy",         "publisher": "Tor Books",        "year": 2010, "description": "Epic Stormlight Archive #1.",    "price": 17.99, "cost": 8.00,  "stock": 10, "low_stock_alert": 4 },
-	{ "title": "Gone Girl",                             "author": "Gillian Flynn",    "isbn": "9780307588371", "genre": "Thriller",        "publisher": "Crown",            "year": 2012, "description": "Twisted psychological thriller.", "price": 13.49, "cost": 5.75,  "stock": 2,  "low_stock_alert": 5 },
+	# ── In manufacturer catalogue ─────────────────────────────────────────────
+	{ "title": "The Midnight Library", "author": "Matt Haig",         "isbn": "9780525553605", "genre": "Fiction",     "publisher": "Canongate",        "year": 2020, "description": "Between life and death, infinite choices.",                "price": 14.99, "cost": 7.50, "stock": 20, "low_stock_alert": 5 },
+	{ "title": "Atomic Habits",        "author": "James Clear",        "isbn": "9780593189216", "genre": "Non-Fiction", "publisher": "Avery",            "year": 2018, "description": "Small habits, remarkable results.",                       "price": 16.99, "cost": 8.00, "stock": 25, "low_stock_alert": 5 },
+	{ "title": "Project Hail Mary",    "author": "Andy Weir",          "isbn": "9780593135204", "genre": "Sci-Fi",      "publisher": "Ballantine Books", "year": 2021, "description": "Lone astronaut must save the solar system.",               "price": 15.99, "cost": 7.00, "stock": 3,  "low_stock_alert": 4 },
+	{ "title": "The Alchemist",        "author": "Paulo Coelho",       "isbn": "9780061929439", "genre": "Fiction",     "publisher": "HarperOne",        "year": 1988, "description": "A shepherd's journey to find his destiny.",               "price": 12.99, "cost": 5.50, "stock": 30, "low_stock_alert": 5 },
+	{ "title": "The Silent Patient",   "author": "Alex Michaelides",   "isbn": "9781250301702", "genre": "Fiction",     "publisher": "Celadon Books",    "year": 2019, "description": "A famous painter shoots her husband and never speaks again.", "price": 15.49, "cost": 7.00, "stock": 2,  "low_stock_alert": 4 },
+	# ── Not in manufacturer catalogue ────────────────────────────────────────
+	{ "title": "1984",                 "author": "George Orwell",      "isbn": "9780451524935", "genre": "Fiction",     "publisher": "Signet Classics",  "year": 1949, "description": "Dystopian surveillance state.",                           "price":  9.99, "cost": 3.50, "stock": 30, "low_stock_alert": 5 },
+	{ "title": "Diary of a Wimpy Kid", "author": "Jeff Kinney",        "isbn": "9780810993136", "genre": "Children",    "publisher": "Amulet Books",     "year": 2007, "description": "Greg Heffley survives middle school one bad day at a time.", "price":  8.99, "cost": 3.00, "stock": 22, "low_stock_alert": 5 },
+	{ "title": "Educated",             "author": "Tara Westover",      "isbn": "9780399590504", "genre": "Biography",   "publisher": "Random House",     "year": 2018, "description": "A memoir of self-invention against all odds.",             "price": 14.99, "cost": 6.00, "stock": 14, "low_stock_alert": 4 },
+	{ "title": "Dune",                 "author": "Frank Herbert",       "isbn": "9780441013593", "genre": "Sci-Fi",      "publisher": "Ace",              "year": 1965, "description": "Epic politics and survival on a desert planet.",           "price": 14.99, "cost": 6.50, "stock": 15, "low_stock_alert": 4 },
+	{ "title": "Becoming",             "author": "Michelle Obama",      "isbn": "9781524763138", "genre": "Biography",   "publisher": "Crown",            "year": 2018, "description": "Michelle Obama's journey from Chicago to the White House.", "price": 17.99, "cost": 7.50, "stock": 12, "low_stock_alert": 4 },
 ]
 
 const SEED_CUSTOMERS := [
@@ -148,10 +150,23 @@ func _show_low_stock() -> void:
 
 func _seed_customers() -> void:
 	var added := 0
+	var skipped := 0
 	for c in SEED_CUSTOMERS:
-		BookStore.add_customer(c)
-		added += 1
-	_set_status("Seeded %d customers." % added)
+		var err := Auth.add_account(
+			c["name"],
+			c.get("email", ""),
+			c.get("username", ""),
+			c.get("password", "password"),
+			"customer",
+			c.get("phone", ""),
+			c.get("notes", "")
+		)
+		if err == "":
+			added += 1
+		else:
+			skipped += 1
+			print("DevTools: skipped customer '%s': %s" % [c["name"], err])
+	_set_status("Seeded %d customers (%d skipped)." % [added, skipped])
 	_show_customers()
 
 
@@ -244,7 +259,7 @@ func _seed_historical_sales() -> void:
 				cart.append({ "book_id": book["id"], "qty": rng.randi_range(1, 2), "price": book["price"] })
 
 			var account_id: int = -1
-			if not customers.is_empty():
+			if not customers.is_empty() and rng.randf() > 0.25:
 				account_id = customers[rng.randi() % customers.size()]["id"]
 			var method: String = methods[rng.randi() % 2]
 
