@@ -41,6 +41,7 @@ const ROLE_PERMISSIONS := {
 		"sales",
 		"customers",
 		"restock",
+		"reports",
 		"accountsettings",
 	],
 	"customer": [
