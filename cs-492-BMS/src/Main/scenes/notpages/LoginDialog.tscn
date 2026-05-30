@@ -76,7 +76,6 @@ title = "Sign In"
 position = Vector2i(0, 28)
 size = Vector2i(380, 450)
 unresizable = true
-borderless = true
 script = ExtResource("1")
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=1233483237]
