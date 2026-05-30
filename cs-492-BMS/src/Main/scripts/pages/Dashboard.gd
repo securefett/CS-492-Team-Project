@@ -168,9 +168,9 @@ func _draw_graph(slot: int) -> void:
 	var count      := data.size()
 	var gap_w      := chart_w / count
 	var bar_w      := gap_w * 0.6
-	var bar_color  := Color(0.37, 0.62, 0.95)
-	var line_color := Color(1, 1, 1, 0.12)
-	var text_color := Color(1, 1, 1, 0.65)
+	var bar_color  := Color(0.37, 0.62, 0.95, 0.75)
+	var line_color := Color(0, 0, 0, 0.5)
+	var text_color := Color(0, 0, 0)
 	var font       := ThemeDB.fallback_font
 
 	for s in range(1, 4):
